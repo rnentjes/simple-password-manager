@@ -1,0 +1,5 @@
+nexusUsername = admin
+nexusPassword = <password>
+
+kotlin.incremental=true
+gradle.daemon=true

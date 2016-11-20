@@ -1,0 +1,43 @@
+apply plugin: 'kotlin2js'
+apply plugin: 'com.github.fgiannesini.libsass.gradle.plugin'
+
+sourceSets {
+    main.kotlin.srcDirs += 'src'
+    main.java.srcDirs += 'src'
+}
+
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+
+    compileKotlin2Js.kotlinOptions.sourceMap = true
+    compileKotlin2Js.kotlinOptions.outputFile = "${projectDir}/web/js/generated/spm.js"
+    compileKotlin2Js.kotlinOptions.suppressWarnings = true
+    compileKotlin2Js.kotlinOptions.verbose = true
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-js-library:$kotlin_version"
+}
+
+libSassParameters {
+    //Type: String Mandatory
+    //File path to compile (normally import other scss files)
+    inputFilePath = "client/web/scss/spm.scss"
+
+    //Type: String Mandatory
+    //Compiled file path
+    outputFilePath = "client/web/css/spm.css"
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
