@@ -4,3 +4,4 @@ gradle.properties
 */gradle.properties
 build
 .gradle
+logs
