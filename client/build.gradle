@@ -22,7 +22,7 @@ dependencies {
 libSassParameters {
     //Type: String Mandatory
     //File path to compile (normally import other scss files)
-    inputFilePath = "client/web/scss/spm.scss"
+    inputFilePath = "client/web/sass/materialize.scss"
 
     //Type: String Mandatory
     //Compiled file path

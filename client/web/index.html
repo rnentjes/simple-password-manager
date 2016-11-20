@@ -6,14 +6,49 @@
 
     <!--<link href='https://fonts.googleapis.com/css?family=Inconsolata:700' rel='stylesheet' type='text/css'>-->
     <!-- Tracker -->
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
     <link href="css/spm.css" rel="stylesheet">
 </head>
 <body>
 
+<div class="container">
+    <H1>Hello!</H1>
+</div>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-4 col-lg-offset-4 col-xs-6 col-xs-6">
+        <form class="form-signin">
+            <h2 class="form-signin-heading">Please sign in</h2>
+
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" value="remember-me"> Remember me
+                </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+        </div>
+    </div>
+
+</div>
+
 <script type="application/javascript" src="js/kotlin/kotlin.js"></script>
 <script type="application/javascript" src="js/generated/spm.js"></script>
 
-<script type="text/javascript">
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+
+<script defer type="text/javascript">
     document.open();
     document.write("<img style='border: 0; display:none;' alt='' src='https://stats.astraeus.nl/stats?");
     document.write("id=15&referrer=" + document.referrer + "&url=" + window.location.href + "' />");
