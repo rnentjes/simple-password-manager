@@ -1,6 +1,6 @@
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <appender tag="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>warn</level>
         </filter>
@@ -9,7 +9,7 @@
         </encoder>
     </appender>
 
-    <appender name="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender tag="WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>warn</level>
         </filter>
@@ -22,7 +22,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender tag="DEBUG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>debug</level>
         </filter>
@@ -35,7 +35,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender tag="ACCESS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>%d{dd-MM-YY HH:mm:ss.SSS} [%thread] - %msg%n</pattern>
         </encoder>
@@ -44,7 +44,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="STATS" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender tag="STATS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>%d{dd-MM-YY HH:mm:ss.SSS} [%thread] - %msg%n</pattern>
         </encoder>
@@ -54,7 +54,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="LOAD" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender tag="LOAD" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <encoder>
             <pattern>%d{dd-MM-YY HH:mm:ss.SSS} [%thread] - %msg%n</pattern>
         </encoder>
@@ -64,21 +64,21 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="nl.astraeus.daw" additivity="false" level="DEBUG">
+    <logger tag="nl.astraeus.daw" additivity="false" level="DEBUG">
         <appender-ref ref="WARN" />
         <appender-ref ref="DEBUG" />
         <appender-ref ref="STDOUT" />
     </logger>
 
-    <logger name="ACCESS" additivity="false" level="INFO">
+    <logger tag="ACCESS" additivity="false" level="INFO">
         <appender-ref ref="ACCESS" />
     </logger>
 
-    <logger name="STATS" additivity="false" level="INFO">
+    <logger tag="STATS" additivity="false" level="INFO">
         <appender-ref ref="STATS" />
     </logger>
 
-    <logger name="LOAD" additivity="false" level="INFO">
+    <logger tag="LOAD" additivity="false" level="INFO">
         <appender-ref ref="LOAD" />
     </logger>
 

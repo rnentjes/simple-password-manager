@@ -2,6 +2,7 @@
   <library name="Gradle: nl.astraeus.template:very-simple-templates:1.3-SNAPSHOT">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/nl/astraeus/template/very-simple-templates/1.3-SNAPSHOT/very-simple-templates-1.3-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus.template/very-simple-templates/1.3-SNAPSHOT/656d4038ea2a4369e2ad60bd06973be7da05d3b2/very-simple-templates-1.3-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

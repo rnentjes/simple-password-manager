@@ -2,4 +2,4 @@ nexusUsername = admin
 nexusPassword = <password>
 
 kotlin.incremental=true
-gradle.daemon=true
+org.gradle.daemon=true

@@ -1,5 +1,8 @@
 package spm
 
+import spm.view.login.LoginView
+import kotlin.browser.document
+
 /**
  * User: rnentjes
  * Date: 20-11-16
@@ -7,5 +10,5 @@ package spm
  */
 
 fun main(args: Array<String>) {
-    println("ok 3")
+    document.body?.appendChild(LoginView.create())
 }
