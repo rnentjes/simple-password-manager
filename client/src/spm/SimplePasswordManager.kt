@@ -10,5 +10,7 @@ import kotlin.browser.document
  */
 
 fun main(args: Array<String>) {
-    document.body?.appendChild(LoginView.create())
+    val body = document.body ?: throw IllegalStateException("document.body not defined! Are you sure this is a browser?")
+
+    body.appendChild(LoginView.create())
 }

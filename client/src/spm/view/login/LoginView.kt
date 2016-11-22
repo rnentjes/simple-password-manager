@@ -1,11 +1,9 @@
 package spm.view.login
 
 import org.w3c.dom.Element
-import spm.view.div
-import spm.view.form.Form
-import spm.view.form.FormType
-import spm.view.form.Input
-import spm.view.with
+import spm.view.*
+import spm.view.form.*
+import spm.view.main.MainView
 
 /**
  * Created by rnentjes on 20-11-16.
@@ -39,12 +37,30 @@ object LoginView {
 
         result.setAttribute("class", "container")
 
-        result.with(Form.create(FormType.HORIZONTAL).with(
-          Input.create("login_name", label = "Login name")).with(
-          Input.create("password", type = "password", label = "Password"))
+        val div = div().cls("col-md-5 col-md-offset-3")
+
+        div.with(Form.create(FormType.HORIZONTAL).with(
+              Input.create("login_name", label = "Login name", labelWidth = 4)
+            ).with(
+              Input.create("password", type = "password", label = "Password", labelWidth = 4)
+            ).with(
+              FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
+                  showMainView(result)
+              })
+            )
         )
 
+        result.with(createTag("h1").txt("Login")).with(div().cls("row").with(div))
+
         return result
+    }
+
+    private fun showMainView(parent: Element) {
+        while(parent.children.length > 0) {
+            parent.removeChild(parent.firstChild!!)
+        }
+
+        parent.with(MainView.create())
     }
 
 }
