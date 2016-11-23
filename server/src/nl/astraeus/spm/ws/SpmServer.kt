@@ -1,12 +1,8 @@
 package nl.astraeus.spm.ws
 
-import org.eclipse.jetty.websocket.api.Session
-import org.eclipse.jetty.websocket.api.WebSocketAdapter
-import org.eclipse.jetty.websocket.servlet.WebSocketCreator
-import org.eclipse.jetty.websocket.servlet.WebSocketServlet
-import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory
-import org.slf4j.LoggerFactory
-import javax.servlet.http.HttpSession
+import fi.iki.elonen.NanoHTTPD
+import fi.iki.elonen.NanoWSD
+import java.io.IOException
 
 /**
  * User: rnentjes
@@ -15,6 +11,39 @@ import javax.servlet.http.HttpSession
  */
 
 
+class SimpleWebSocketServer(port: Int): NanoWSD(port) {
+
+    override fun openWebSocket(handshake: IHTTPSession?) = SimpleWebSocket(this, handshake)
+
+    override fun serveHttp(session: IHTTPSession?): Response {
+
+        return NanoHTTPD.newFixedLengthResponse(Response.Status.FORBIDDEN, NanoHTTPD.MIME_PLAINTEXT, "FORBIDDEN")
+    }
+}
+
+class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPSession?): NanoWSD.WebSocket(handshake) {
+    override fun onOpen() {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClose(code: NanoWSD.WebSocketFrame.CloseCode?, reason: String?, initiatedByRemote: Boolean) {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onPong(pong: NanoWSD.WebSocketFrame?) {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMessage(message: NanoWSD.WebSocketFrame?) {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onException(exception: IOException?) {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+}
+
+/*
 class SimpleWebSocketServlet: WebSocketServlet() {
 
     override fun configure(factory: WebSocketServletFactory) {
@@ -74,3 +103,4 @@ class SimpleWebSocket(): WebSocketAdapter() {
     }
 
 }
+*/

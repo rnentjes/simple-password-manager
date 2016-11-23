@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: nl.astraeus.jdbc:simple-jdbc-stats:1.5.0">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus.jdbc/simple-jdbc-stats/1.5.0/107d585bc0ba7b97b0d0372fec0f8dd9554fffff/simple-jdbc-stats-1.5.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus.jdbc/simple-jdbc-stats/1.5.0/66f46c70295e62f28ddc3eb89e3e84960e682820/simple-jdbc-stats-1.5.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

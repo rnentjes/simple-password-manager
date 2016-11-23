@@ -1,18 +1,10 @@
 package nl.astraeus.spm
 
-import java.text.SimpleDateFormat
-import java.util.*
 import javax.servlet.http.HttpServlet
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 class InfoServlet: HttpServlet() {
-
-    val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm")
-
-    private fun formatDate(date: Date):String {
-        return dateFormatter.format(date)
-    }
 
     override fun doGet(req: HttpServletRequest?, resp: HttpServletResponse?) {
         if (resp != null) {
@@ -37,6 +29,7 @@ class InfoServlet: HttpServlet() {
                 }
             }
 */
+
             writer.print("simple-password-manager v0.1")
 
             writer.print("""

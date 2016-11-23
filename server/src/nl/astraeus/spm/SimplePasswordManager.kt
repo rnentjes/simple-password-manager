@@ -2,14 +2,14 @@ package nl.astraeus.spm
 
 import nl.astraeus.database.DdlMapping
 import nl.astraeus.database.setConnectionProvider
+import nl.astraeus.database.transaction
+import nl.astraeus.spm.model.User
+import nl.astraeus.spm.model.UserDao
 import nl.astraeus.spm.sql.DatabaseMigration
-import nl.astraeus.spm.ws.SimpleWebSocketServlet
-import org.eclipse.jetty.server.Server
-import org.eclipse.jetty.server.ServerConnector
-import org.eclipse.jetty.servlet.ServletContextHandler
-import org.eclipse.jetty.servlet.ServletHolder
+import nl.astraeus.spm.ws.SimpleWebSocketServer
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
+import java.util.*
 
 /**
  * User: rnentjes
@@ -32,31 +32,30 @@ fun initDbConnection(connectionString: String) {
     }
 }
 
+fun checkAdminUser() {
+    transaction {
+        if (UserDao.findByEmail("admin@astraeus.nl") == null) {
+            val user = User(0, "admin@astraeus.nl", "admin", "Rien", Date(), Date())
+
+            UserDao.insert(user)
+        }
+    }
+}
+
 fun main(args: Array<String>) {
     val logger = LoggerFactory.getLogger("nl.astraeus.daw.Main")
 
-    val server = Server()
-    val connector = ServerConnector(server)
-    connector.idleTimeout = 1000
-    connector.acceptQueueSize = 10
-    connector.port = 3456
-    connector.host = "0.0.0.0"
-
-    val servletContext = ServletContextHandler(server, "", true, false)
-
-    servletContext.addServlet(ServletHolder("websocket", SimpleWebSocketServlet::class.java), "/spm")
-    servletContext.addServlet(ServletHolder("info", InfoServlet::class.java), "/info")
-
-    server.addConnector(connector)
+    val server = SimpleWebSocketServer(3456)
 
     val cs = "jdbc:stat:webServerPort=18100:jdbc:h2:file:/home/rnentjes/apps/spm/data/data"
 
     initDbConnection(cs)
-//    checkAdminUser()
+    checkAdminUser()
     DatabaseMigration.check()
 
     //server.dump(System.out)
-    server.start()
+    //server.start()
+    server.start(5000, false)
 
     logger.warn("Started server!")
 }
