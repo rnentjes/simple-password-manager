@@ -1,7 +1,5 @@
 package nl.astraeus.spm.ws
 
-import nl.astraeus.spm.ws.SimpleWebSocket
-import nl.astraeus.spm.ws.Tokenizer
 import org.slf4j.LoggerFactory
 import java.util.*
 

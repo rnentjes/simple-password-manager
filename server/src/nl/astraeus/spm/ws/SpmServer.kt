@@ -2,6 +2,8 @@ package nl.astraeus.spm.ws
 
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
+import org.h2.command.Command
+import org.slf4j.LoggerFactory
 import java.io.IOException
 
 /**
@@ -22,24 +24,31 @@ class SimpleWebSocketServer(port: Int): NanoWSD(port) {
 }
 
 class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPSession?): NanoWSD.WebSocket(handshake) {
+    val logger = LoggerFactory.getLogger(SimpleWebSocket::class.java)
+
     override fun onOpen() {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        logger.info("Websocket opened")
     }
 
     override fun onClose(code: NanoWSD.WebSocketFrame.CloseCode?, reason: String?, initiatedByRemote: Boolean) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        logger.info("Websocket close: $code")
     }
 
     override fun onPong(pong: NanoWSD.WebSocketFrame?) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        logger.info("Websocket pong")
     }
 
     override fun onMessage(message: NanoWSD.WebSocketFrame?) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        logger.info("Websocket message")
+        val text = message?.textPayload
+
+        if (text != null && text.isNotEmpty()) {
+            CommandDispatcher.handle(this, text)
+        }
     }
 
     override fun onException(exception: IOException?) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        logger.info("Websocket exception: $exception")
     }
 }
 

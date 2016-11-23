@@ -18,7 +18,7 @@ class Tokenizer(val txt: String = "", val seperator: Char = '~', val escape: Cha
 
     fun next(): String {
         //println("Getting next $index/${txt.length} -> $txt")
-        var result = StringBuilder()
+        val result = StringBuilder()
         var escaped = false
 
         if (done()) {
@@ -28,10 +28,10 @@ class Tokenizer(val txt: String = "", val seperator: Char = '~', val escape: Cha
         }
 
         while(!done()) {
-            var ch = txt[index]
+            val ch = txt[index]
 
             if (escaped) {
-                result.append(ch);
+                result.append(ch)
                 escaped = false
             } else {
                 when (ch) {
@@ -104,11 +104,11 @@ class Tokenizer(val txt: String = "", val seperator: Char = '~', val escape: Cha
 }
 
 fun deTokenize(str: String, indent: Int = 1, seperator: Char = '~', escape: Char = '`') {
-    var t = Tokenizer(str, seperator, escape)
+    val t = Tokenizer(str, seperator, escape)
     var first = true
 
     while(!t.done()) {
-        var next = t.next()
+        val next = t.next()
         for(count in 0..indent-1) {
             print("-")
         }
