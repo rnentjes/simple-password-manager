@@ -64,7 +64,7 @@
         </rollingPolicy>
     </appender>
 
-    <logger tag="nl.astraeus.daw" additivity="false" level="DEBUG">
+    <logger tag="nl.astraeus.spm" additivity="false" level="DEBUG">
         <appender-ref ref="WARN" />
         <appender-ref ref="DEBUG" />
         <appender-ref ref="STDOUT" />

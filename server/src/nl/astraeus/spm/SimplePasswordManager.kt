@@ -2,6 +2,8 @@ package nl.astraeus.spm
 
 import nl.astraeus.database.DdlMapping
 import nl.astraeus.database.setConnectionProvider
+import nl.astraeus.spm.sql.DatabaseMigration
+import nl.astraeus.spm.ws.SimpleWebSocketServlet
 import org.eclipse.jetty.server.Server
 import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.servlet.ServletContextHandler
@@ -42,8 +44,7 @@ fun main(args: Array<String>) {
 
     val servletContext = ServletContextHandler(server, "", true, false)
 
-//    servletContext.addServlet(ServletHolder("websocket", SimpleWebSocketServlet::class.java), "/daw")
-//    servletContext.addServlet(ServletHolder("audio", AudioServlet::class.java), "/play")
+    servletContext.addServlet(ServletHolder("websocket", SimpleWebSocketServlet::class.java), "/spm")
     servletContext.addServlet(ServletHolder("info", InfoServlet::class.java), "/info")
 
     server.addConnector(connector)
@@ -52,7 +53,7 @@ fun main(args: Array<String>) {
 
     initDbConnection(cs)
 //    checkAdminUser()
-//    DatabaseMigration.check()
+    DatabaseMigration.check()
 
     //server.dump(System.out)
     server.start()

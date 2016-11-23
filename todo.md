@@ -18,4 +18,3 @@
 * User has personal passwords
 * Passwords can be stored in groups
 
-
