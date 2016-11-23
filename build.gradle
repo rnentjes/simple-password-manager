@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    kotlin_version = '1.0.5-2'
+    kotlin_version = '1.0.5'
   }
   repositories {
     mavenCentral()
@@ -20,8 +20,7 @@ allprojects {
   version = '1.0.0-SNAPSHOT'
 
   ext {
-    kotlin_version = '1.0.5-2'
-    // Lib versions go there.
+    kotlin_version = '1.0.5'
   }
 
   repositories {
