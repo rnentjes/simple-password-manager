@@ -2,6 +2,7 @@ package nl.astraeus.spm.ws
 
 import nl.astraeus.database.transaction
 import nl.astraeus.spm.model.GroupDao
+import nl.astraeus.spm.web.SimpleWebSocket
 
 /**
  * User: rnentjes

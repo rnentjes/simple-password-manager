@@ -1,5 +1,7 @@
 package nl.astraeus.spm.ws
 
+import nl.astraeus.spm.web.SimpleWebSocket
+
 /**
  * User: rnentjes
  * Date: 23-11-16
