@@ -53,7 +53,7 @@ fun main(args: Array<String>) {
     checkAdminUser()
     DatabaseMigration.check()
 
-    server.start(5000, false)
+    server.start(11000, false)
 
     logger.warn("Started server!")
 }

@@ -23,9 +23,13 @@ object CommandDispatcher {
         val tk = Tokenizer(msg)
         val cmd = tk.next()
 
-        val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
+        try {
+            val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
 
-        command.invoke(ws, tk)
+            command.invoke(ws, tk)
+        } catch(e: Exception) {
+            logger.warn(e.message, e)
+        }
 
         val time = (System.nanoTime() - start) / 1000000f
         logger.info("Command $cmd took ${time}ms")

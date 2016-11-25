@@ -13,18 +13,20 @@ import kotlin.browser.window
  */
 
 fun main(args: Array<String>) {
+    println("ACTION!")
+
     val body = document.body ?: throw IllegalStateException("document.body not defined! Are you sure this is a browser?")
 
     body.appendChild(LoginView.create())
-/*
+
     val ws = WebSocket("ws://${window.location.hostname}:3456")
 
     ws.onopen = {
-        ws.send("HELLO!")
+        ws.send("START")
 
         window.setInterval({
             ws.send("OK")
-        }, 60000)
+        }, 10000)
     }
 
     ws.onmessage = {
@@ -35,11 +37,15 @@ fun main(args: Array<String>) {
         }
     }
 
-    ws.onclose = {
+    ws.onclose = { e ->
+        println("Closed websocket! $e")
+
         "dynamic"
     }
 
-    ws.onerror = {
+    ws.onerror = { e ->
+        println("Error websocket! $e")
+
         "dynamic"
-    }*/
+    }
 }

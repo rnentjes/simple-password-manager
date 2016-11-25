@@ -13,6 +13,7 @@ compileKotlin2Js {
     kotlinOptions.outputFile = "${projectDir}/web/js/generated/spm.js"
     kotlinOptions.suppressWarnings = true
     kotlinOptions.verbose = true
+    //kotlinOptions.moduleKind = "amd"
 }
 
 dependencies {
@@ -40,4 +41,19 @@ buildscript {
 
 repositories {
     mavenCentral()
+}
+
+build.doLast {
+    configurations.compile.each { File file ->
+        copy {
+            includeEmptyDirs = false
+
+            from zipTree(file.absolutePath)
+            into "${projectDir}/web"
+            include { fileTreeElement ->
+                def path = fileTreeElement.path
+                path.endsWith(".js") && (path.startsWith("META-INF/resources/") || !path.startsWith("META-INF/"))
+            }
+        }
+    }
 }
