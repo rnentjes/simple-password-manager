@@ -34,11 +34,11 @@ fun initDbConnection(connectionString: String) {
 
 fun checkAdminUser() {
     transaction {
-        if (UserDao.findByEmail("admin@astraeus.nl") == null) {
-            val user = User(0, "admin@astraeus.nl", "admin", "Rien", Date(), Date())
-
-            UserDao.insert(user)
-        }
+//        if (UserDao.findByEmail("admin@astraeus.nl") == null) {
+//            val user = User("admin", 0, "admin@astraeus.nl", "admin", "", "Rien", Date(), Date())
+//
+//            UserDao.insert(user)
+//        }
     }
 }
 

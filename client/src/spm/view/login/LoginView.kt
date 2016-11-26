@@ -1,65 +1,185 @@
 package spm.view.login
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLInputElement
+import spm.crypt.Hash
+import spm.state.UserState
 import spm.view.*
 import spm.view.form.Form
 import spm.view.form.FormLinkButton
 import spm.view.form.FormType
 import spm.view.form.Input
-import spm.view.main.MainView
+import spm.ws.WebSocketConnection
+import kotlin.browser.window
+import kotlin.dom.addClass
+import kotlin.dom.onClick
+import kotlin.dom.removeClass
 
 /**
  * Created by rnentjes on 20-11-16.
  */
 
 object LoginView {
-    //language=HTML
-    var loginHtml = """
-  <div class="row">
-    <div class="col-md-6 col-lg-offset-3 col-sm-6 col-sm-offset-3 col-xs-12">
-      <form class="form-signin">
-        <h2 class="form-signin-heading">Please sign in</h2>
-
-        <label for="inputEmail" class="sr-only">Email address</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <div class="checkbox">
-          <label>
-            <input type="checkbox" value="remember-me"> Remember me
-          </label>
-        </div>
-        <a href="#" class="btn btn-lg btn-primary btn-block" id="login_submit">Sign in</a>
-      </form>
-    </div>
-  </div>
-    """
+    var showLogin: Boolean = true
 
     fun create(): Element {
         val result = div()
 
+        result.attr("style", "margin-top: 150px;")
         result.setAttribute("class", "container")
         result.setAttribute("id", "main")
 
-        val div = div().cls("col-md-5 col-md-offset-3")
+        val div = div().cls("col-md-6 col-md-offset-3")
 
-        div.with(Form.create(FormType.HORIZONTAL).with(
-              Input.create("login_name", label = "Login name", labelWidth = 4)
-            ).with(
-              Input.create("password", type = "password", label = "Password", labelWidth = 4)
-            ).with(
-              FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
-                  MainView.show()
-              })
-            )
+        div.with(createTag("ul").cls("nav nav-tabs nav-justified").with(createLoginTab()).with(createRegisterTab()))
+
+        div.with(createLogin())
+        div.with(createRegister())
+
+        result.with(div().cls("row").with(div))
+
+        return result
+    }
+
+    private fun createLoginTab(): Element {
+        val result = createTag("li").attr("id", "login_tab").attr("role", "presentation").cls("active")
+
+        if (showLogin) {
+            result.cls("active")
+        }
+
+        val link = createTag("a").txt("Login")
+
+        result.with(link)
+
+        link.onClick {
+            if (!showLogin) {
+                showLogin = true
+
+                elem("register_tab").removeClass("active")
+                elem("login_tab").addClass("active")
+
+                elem("login_form").attr("style", "display: block;")
+                elem("register_form").attr("style", "display: none;")
+            }
+        }
+
+        return result
+    }
+
+    private fun createRegisterTab(): Element {
+        val result = createTag("li").attr("id", "register_tab").attr("role", "presentation")
+
+        if (!showLogin) {
+            result.cls("active")
+        }
+
+        val link = createTag("a").txt("Register")
+
+        result.with(link)
+
+        link.onClick {
+            if (showLogin) {
+                showLogin = false
+
+                elem("login_tab").removeClass("active")
+                elem("register_tab").addClass("active")
+
+                elem("login_form").attr("style", "display: none;")
+                elem("register_form").attr("style", "display: block;")
+            }
+        }
+
+        return result
+    }
+
+    private fun createLogin(): Element {
+        val result = div().attr("id", "login_form")
+
+        if (!showLogin) {
+            result.attr("style", "display: none;")
+        }
+
+        result.with(div().cls("row").txt("&nbsp;"))
+        result.with(Form.create(FormType.HORIZONTAL).with(
+          Input.create("login_name", label = "Login name", labelWidth = 4)
+        ).with(
+          Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4)
+        ).with(
+          FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
+              login()
+          })
+        )
         )
 
-        result.with(createTag("h1").txt("Login")).with(div().cls("row").with(div))
+        return result
+    }
+
+    private fun createRegister(): Element {
+        val result = div().attr("id", "register_form")
+
+        if (showLogin) {
+            result.attr("style", "display: none;")
+        }
+
+        result.with(div().cls("row").txt("&nbsp;"))
+        result.with(Form.create(FormType.HORIZONTAL).with(
+          Input.create("register_name", label = "Login name", labelWidth = 4)
+        ).with(
+          Input.create("register_password", type = "password", label = "Passphrase", labelWidth = 4)
+        ).with(
+          Input.create("register_password2", type = "password", label = "Confirm passphraseHash", labelWidth = 4)
+        ).with(
+          FormLinkButton.create("Register", buttonClass = "btn-primary btn-xl", labelWidth = 4, click = {
+              register()
+          })
+        )
+        )
 
         return result
     }
 
     fun login() {
+        val username = elem("login_name") as HTMLInputElement
+        val password = elem("login_password") as HTMLInputElement
 
+        if (username.value.isBlank()) {
+            window.alert("Login name must be filled in!")
+        } else if (password.value.isBlank()) {
+            window.alert("Password must be filled in!")
+        } else {
+            UserState.loginname = username.value
+            UserState.loginPasswordHash = Hash.sha256(password.value).toString()
+            UserState.decryptPassphraseHash = Hash.sha512(password.value).toString()
+
+            WebSocketConnection.send("LOGIN",
+              UserState.loginname ?: throw IllegalStateException("Whut!"),
+              UserState.loginPasswordHash ?: throw IllegalStateException("Whut!")
+            )
+        }
+    }
+
+    fun register() {
+        val username = elem("register_name") as HTMLInputElement
+        val password = elem("register_password") as HTMLInputElement
+        val password2 = elem("register_password2") as HTMLInputElement
+
+        if (username.value.isBlank()) {
+            window.alert("Login name must be filled in!")
+        } else if (password.value.isBlank()) {
+            window.alert("Password must be filled in!")
+        } else if (password.value != password2.value) {
+            window.alert("Passwords must match!")
+        } else {
+            UserState.loginname = username.value
+            UserState.loginPasswordHash = Hash.sha256(password.value).toString()
+            UserState.decryptPassphraseHash = Hash.sha512(password.value).toString()
+
+            WebSocketConnection.send("REGISTER",
+              UserState.loginname ?: throw IllegalStateException("Whut!"),
+              UserState.loginPasswordHash ?: throw IllegalStateException("Whut!"),
+              UserState.createEncryptionKey()
+            )
+        }
     }
 }

@@ -16,6 +16,8 @@ object CommandDispatcher {
     init {
         commands.put("START", ::start)
         commands.put("CREATEGROUP", ::createGroup)
+        commands.put("LOGIN", ::login)
+        commands.put("REGISTER", ::register)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {

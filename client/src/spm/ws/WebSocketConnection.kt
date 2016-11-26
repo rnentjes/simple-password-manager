@@ -67,4 +67,12 @@ object WebSocketConnection {
         return "dynamic"
     }
 
+    fun send(message: String) {
+        websocket?.send(message)
+    }
+
+    fun send(vararg args: String) {
+        websocket?.send(Tokenizer.tokenize(*args))
+    }
+
 }
