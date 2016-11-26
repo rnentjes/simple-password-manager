@@ -43,11 +43,7 @@ object UserState {
             builder.append(chars[(Math.random() * 16).toInt()])
         }
 
-        println("SECRET: $builder, $pp")
-
         val eek = Aes.encrypt(builder.toString(), pp).toString()
-
-        println("ENCRYPTED: $eek")
 
         return eek
     }
