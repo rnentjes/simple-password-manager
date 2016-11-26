@@ -43,8 +43,6 @@ object UserState {
             builder.append(chars[(Math.random() * 16).toInt()])
         }
 
-        val eek = Aes.encrypt(builder.toString(), pp).toString()
-
-        return eek
+        return Aes.encrypt(builder.toString(), pp).toString()
     }
 }
