@@ -1,5 +1,6 @@
 package spm
 
+import spm.crypt.Aes
 import spm.view.login.LoginView
 import spm.ws.WebSocketConnection
 import kotlin.browser.document
@@ -16,4 +17,9 @@ fun main(args: Array<String>) {
     body.appendChild(LoginView.create())
 
     WebSocketConnection.open()
+
+    val sha1 = Aes.sha256("abc")
+    val sha2 = Aes.sha256("cde")
+
+    println("SHA256 'abc' = $sha1 -> 'cde' = $sha2")
 }
