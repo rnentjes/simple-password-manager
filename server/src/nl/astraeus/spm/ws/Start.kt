@@ -13,4 +13,6 @@ fun start(ws: SimpleWebSocket, tk: Tokenizer) {
     // if not login, send login action
     // else
     // send groups to client
+
+    ws.send("STARTED!")
 }

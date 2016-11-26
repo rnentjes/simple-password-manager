@@ -2,7 +2,10 @@ package spm.view.login
 
 import org.w3c.dom.Element
 import spm.view.*
-import spm.view.form.*
+import spm.view.form.Form
+import spm.view.form.FormLinkButton
+import spm.view.form.FormType
+import spm.view.form.Input
 import spm.view.main.MainView
 
 /**
@@ -36,6 +39,7 @@ object LoginView {
         val result = div()
 
         result.setAttribute("class", "container")
+        result.setAttribute("id", "main")
 
         val div = div().cls("col-md-5 col-md-offset-3")
 
@@ -45,7 +49,7 @@ object LoginView {
               Input.create("password", type = "password", label = "Password", labelWidth = 4)
             ).with(
               FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
-                  showMainView(result)
+                  MainView.show()
               })
             )
         )
@@ -55,12 +59,7 @@ object LoginView {
         return result
     }
 
-    private fun showMainView(parent: Element) {
-        while(parent.children.length > 0) {
-            parent.removeChild(parent.firstChild!!)
-        }
+    fun login() {
 
-        parent.with(MainView.create())
     }
-
 }
