@@ -14,5 +14,5 @@ fun start(ws: SimpleWebSocket, tk: Tokenizer) {
     // else
     // send groups to client
 
-    ws.send("STARTED!")
+    // ws.send("STARTED!")
 }

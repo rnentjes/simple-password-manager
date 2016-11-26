@@ -34,8 +34,6 @@ object WebSocketConnection {
     }
 
     fun onOpen(ws: WebSocket, event: Event) {
-        ws.send("START")
-
         window.setInterval({
             ws.send("OK")
         }, 10000)

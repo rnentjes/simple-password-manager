@@ -2,6 +2,7 @@ package nl.astraeus.spm.web
 
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
+import nl.astraeus.spm.model.User
 import nl.astraeus.spm.ws.CommandDispatcher
 import nl.astraeus.spm.ws.Tokenizer
 import org.h2.command.Command
@@ -66,6 +67,7 @@ class SimpleWebSocketServer(port: Int): NanoWSD(port) {
 
 class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPSession?): NanoWSD.WebSocket(handshake) {
     val logger = LoggerFactory.getLogger(SimpleWebSocket::class.java)
+    var user: User? = null
 
     override fun onOpen() {
         logger.info("Websocket opened")

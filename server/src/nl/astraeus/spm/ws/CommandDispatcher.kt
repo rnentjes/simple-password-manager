@@ -14,7 +14,6 @@ object CommandDispatcher {
     val commands: MutableMap<String, (ws: SimpleWebSocket, tk: Tokenizer) -> Unit> = HashMap()
 
     init {
-        commands.put("START", ::start)
         commands.put("CREATEGROUP", ::createGroup)
         commands.put("LOGIN", ::login)
         commands.put("REGISTER", ::register)
