@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
  * Time: 12:58
  */
 
-val logger: Logger = LoggerFactory.getLogger("nl.astraeus.spm.ws.Ok")
+private val logger: Logger = LoggerFactory.getLogger("nl.astraeus.spm.ws.Ok")
 
 fun ok(ws: SimpleWebSocket, tk: Tokenizer) {
     logger.debug("Ok - ${ws.handshakeRequest.remoteIpAddress}")

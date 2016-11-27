@@ -11,15 +11,17 @@ import java.util.*
  */
 
 object CommandDispatcher {
-    val logger = LoggerFactory.getLogger("WS")
+    val logger = LoggerFactory.getLogger(CommandDispatcher::class.java)
+    val commandLogger = LoggerFactory.getLogger("WS")
 
     val commands: MutableMap<String, (ws: SimpleWebSocket, tk: Tokenizer) -> Unit> = HashMap()
 
     init {
         commands.put("OK", ::ok)
-        commands.put("CREATEGROUP", ::createGroup)
         commands.put("LOGIN", ::login)
         commands.put("REGISTER", ::register)
+        commands.put("UPDATEGROUPNAME", ::updateGroupName)
+        commands.put("CREATEGROUP", ::createGroup)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
@@ -30,7 +32,7 @@ object CommandDispatcher {
         if (cmd == "OK") {
             // skip
             val time = (System.nanoTime() - start) / 1000000f
-            logger.debug(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
+            commandLogger.debug(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
         } else {
             try {
                 val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
@@ -47,7 +49,7 @@ object CommandDispatcher {
             }
 
             val time = (System.nanoTime() - start) / 1000000f
-            logger.info(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
+            commandLogger.info(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
         }
     }
 

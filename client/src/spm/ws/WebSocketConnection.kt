@@ -13,6 +13,7 @@ import kotlin.browser.window
 
 object WebSocketConnection {
     var websocket: WebSocket? = null
+    var loadingCalls: Int = 0
 
     fun open() {
         close()
@@ -71,6 +72,22 @@ object WebSocketConnection {
 
     fun send(vararg args: String) {
         websocket?.send(Tokenizer.tokenize(*args))
+    }
+
+    fun loading() {
+        loadingCalls++
+
+        if (loadingCalls == 1) {
+            // hide interface
+        }
+    }
+
+    fun doneLoading() {
+        loadingCalls--
+
+        if (loadingCalls == 0) {
+            // show interface
+        }
     }
 
 }

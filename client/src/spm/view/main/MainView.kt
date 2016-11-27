@@ -4,6 +4,8 @@ import org.w3c.dom.Element
 import spm.view.*
 import spm.view.group.Group
 import spm.view.group.GroupView
+import spm.view.password.Password
+import java.util.*
 import kotlin.browser.document
 
 /**
@@ -32,23 +34,38 @@ object MainView {
 
         val group = Group(1, "Group 1", null)
 
-        group.children = Array(2, { Group(0, "", null) })
-        group.children[0] = Group(2, "Child 1", null)
-        group.children[1] = Group(3, "Child 2", null)
+        group.children.add(Group(2, "Child 1", null))
+        group.children.add(Group(3, "Child 2", null))
 
-        group.children[0].children = Array(2, { Group(0, "", null) })
-        group.children[0].children[0] = Group(4, "Child 1 - 1", null)
-        group.children[0].children[1] = Group(5, "Child 1 - 2", null)
+        group.children[0].children.add(Group(4, "Child 1 - 1", null))
+        group.children[0].children.add(Group(5, "Child 1 - 2", null))
 
         container.add {
             GroupView.create(group)
         }.add {
-            div().attr("id", "group_edit").cls("col-md-9").add {
-                createTag("h1").txt("Group 1")
-            }
+            div().attr("id", "group_passwords_overview").cls("col-md-9")
         }
 
         parent.appendChild(container)
+    }
+
+    fun createButtonBar(): Element {
+/*
+        <button type="button" class="btn btn-default" aria-label="Left Align">
+        <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
+        </button>
+*/
+        return div().cls("btn-toolbar").attr("role", "toolbar").add {
+            div().cls("btn-group").add {
+                createTag("button").cls("btn btn-default").attr("aria-label", "Text").add {
+                    createTag("span").cls("glyphicon glyphicon-align-left").attr("aria-hidden", "true")
+                }
+            }.add {
+                createTag("button").cls("btn btn-default").attr("aria-label", "Text").add {
+                    createTag("span").cls("glyphicon glyphicon-align-left").attr("aria-hidden", "true")
+                }
+            }
+        }
     }
 
 }

@@ -12,3 +12,9 @@ fun setGroups(ws: WebSocket, tk: Tokenizer) {
 
 
 }
+
+fun createdGroup(ws: WebSocket, tk: Tokenizer) {
+
+
+    WebSocketConnection.doneLoading()
+}

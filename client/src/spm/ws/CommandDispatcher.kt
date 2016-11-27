@@ -14,6 +14,7 @@ object CommandDispatcher {
         commands.put("LOGIN", ::login)
         commands.put("ALERT", { ws, tk -> window.alert(tk.next()) })
         commands.put("SETGROUPS", ::setGroups)
+        commands.put("CREATEDGROUP", ::createdGroup)
     }
 
     fun handle(ws: WebSocket, msg: String) {
