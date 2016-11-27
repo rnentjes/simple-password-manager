@@ -3,6 +3,8 @@ package spm.ws
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
+import spm.view.main.MainView
+import spm.view.modal.ModalView
 import kotlin.browser.window
 
 /**
@@ -14,6 +16,7 @@ import kotlin.browser.window
 object WebSocketConnection {
     var websocket: WebSocket? = null
     var loadingCalls: Int = 0
+    var interval: Int = 0
 
     fun open() {
         close()
@@ -35,9 +38,36 @@ object WebSocketConnection {
     }
 
     fun onOpen(ws: WebSocket, event: Event) {
-        window.setInterval({
-            ws.send("OK")
+        WebSocketConnection.doneLoading()
+
+        interval = window.setInterval({
+            val actualWs = websocket
+
+            if (actualWs != null) {
+                ws.send("OK")
+            } else {
+                window.clearInterval(interval)
+                MainView.logout()
+
+                ModalView.showAlert("Error", "Connection to the server was lost!\nPlease try again later.")
+                WebSocketConnection.loading()
+                reconnect()
+            }
         }, 10000)
+    }
+
+    fun reconnect() {
+        val actualWs = websocket
+
+        if (actualWs != null) {
+            ModalView.showAlert("Succes", "Connection with the server was restored!")
+        } else {
+            open()
+
+            window.setTimeout({
+                reconnect()
+            }, 1000)
+        }
     }
 
     fun onMessage(ws: WebSocket, event: Event) {
@@ -68,10 +98,15 @@ object WebSocketConnection {
 
     fun send(message: String) {
         websocket?.send(message)
+
+        if(websocket == null) {
+            ModalView.showAlert("Error", "Cannot connect to the server!")
+        }
     }
 
     fun send(vararg args: String) {
-        websocket?.send(Tokenizer.tokenize(*args))
+        send(Tokenizer.tokenize(*args))
+
     }
 
     fun loading() {
@@ -83,7 +118,9 @@ object WebSocketConnection {
     }
 
     fun doneLoading() {
-        loadingCalls--
+        if (loadingCalls > 0) {
+            loadingCalls--
+        }
 
         if (loadingCalls == 0) {
             // show interface

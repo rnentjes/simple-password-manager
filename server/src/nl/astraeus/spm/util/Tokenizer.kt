@@ -100,6 +100,12 @@ class Tokenizer(val txt: String = "", val seperator: Char = '~', val escape: Cha
 
             return tokenizer.tokenize(*parts)
         }
+
+        fun escape(txt: String): String {
+            val tokenizer = Tokenizer()
+
+            return tokenizer.escape(txt)
+        }
     }
 }
 

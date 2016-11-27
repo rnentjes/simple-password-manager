@@ -23,8 +23,10 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
     if (found != null && found.password == password) {
         ws.user = found
         ws.send("LOGIN", found.encryptedKey)
+
+        sendGroups(ws)
     } else {
-        ws.send("ALERT", "Unable to authenticate user $loginName!")
+        ws.sendAlert("Error", "Unable to authenticate user $loginName!")
     }
 }
 
@@ -38,7 +40,7 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
     val found = UserDao.findByName(loginName)
 
     if (found != null) {
-        ws.send("ALERT", "Username already taken!")
+        ws.sendAlert("Error", "Username already taken!")
     } else {
         val user = User(loginName, password, encryptedKey)
 

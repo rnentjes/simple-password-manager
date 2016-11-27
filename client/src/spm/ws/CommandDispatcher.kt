@@ -1,6 +1,7 @@
 package spm.ws
 
 import org.w3c.dom.WebSocket
+import spm.view.modal.ModalView
 import kotlin.browser.window
 
 /**
@@ -12,9 +13,10 @@ object CommandDispatcher {
 
     init {
         commands.put("LOGIN", ::login)
-        commands.put("ALERT", { ws, tk -> window.alert(tk.next()) })
+        commands.put("ALERT", { ws, tk -> ModalView.showAlert(tk.next(), tk.next()) })
         commands.put("SETGROUPS", ::setGroups)
         commands.put("CREATEDGROUP", ::createdGroup)
+        commands.put("SETPASSWORDS", ::setPasswords)
     }
 
     fun handle(ws: WebSocket, msg: String) {

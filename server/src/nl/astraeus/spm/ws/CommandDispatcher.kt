@@ -22,6 +22,7 @@ object CommandDispatcher {
         commands.put("REGISTER", ::register)
         commands.put("UPDATEGROUPNAME", ::updateGroupName)
         commands.put("CREATEGROUP", ::createGroup)
+        commands.put("GETPASSWORDS", ::getPasswords)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
@@ -46,6 +47,8 @@ object CommandDispatcher {
                 logger.warn(e.message, e)
 
                 Persister.rollback()
+
+                ws.sendAlert("Error", "${e.message}")
             }
 
             val time = (System.nanoTime() - start) / 1000000f

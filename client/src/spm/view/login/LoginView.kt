@@ -10,6 +10,7 @@ import spm.view.form.Form
 import spm.view.form.FormLinkButton
 import spm.view.form.FormType
 import spm.view.form.Input
+import spm.view.modal.ModalView
 import spm.ws.WebSocketConnection
 import spm.ws.login
 import kotlin.browser.window
@@ -176,9 +177,9 @@ object LoginView {
         val password = elem("login_password") as HTMLInputElement
 
         if (username.value.isBlank()) {
-            window.alert("Login name must be filled in!")
+            ModalView.showAlert("Error", "Login name must be filled in!")
         } else if (password.value.isBlank()) {
-            window.alert("Password must be filled in!")
+            ModalView.showAlert("Error", "Password must be filled in!")
         } else {
             UserState.loginname = username.value
             UserState.loginPasswordHash = Hash.sha256(password.value).toString()
@@ -197,11 +198,11 @@ object LoginView {
         val password2 = elem("register_password2") as HTMLInputElement
 
         if (username.value.isBlank()) {
-            window.alert("Login name must be filled in!")
+            ModalView.showAlert("Error", "Login name must be filled in!")
         } else if (password.value.isBlank()) {
-            window.alert("Password must be filled in!")
+            ModalView.showAlert("Error", "Password must be filled in!")
         } else if (password.value != password2.value) {
-            window.alert("Passwords must match!")
+            ModalView.showAlert("Error", "Passwords must match!")
         } else {
             UserState.loginname = username.value
             UserState.loginPasswordHash = Hash.sha256(password.value).toString()

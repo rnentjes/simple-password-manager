@@ -1,9 +1,11 @@
 package spm.view.main
 
 import org.w3c.dom.Element
+import spm.state.UserState
 import spm.view.*
 import spm.view.group.Group
 import spm.view.group.GroupView
+import spm.view.login.LoginView
 import spm.view.password.Password
 import java.util.*
 import kotlin.browser.document
@@ -32,16 +34,8 @@ object MainView {
 
         container.setAttribute("id", "id_groups")
 
-        val group = Group(1, "Group 1", null)
-
-        group.children.add(Group(2, "Child 1", null))
-        group.children.add(Group(3, "Child 2", null))
-
-        group.children[0].children.add(Group(4, "Child 1 - 1", null))
-        group.children[0].children.add(Group(5, "Child 1 - 2", null))
-
         container.add {
-            GroupView.create(group)
+            GroupView.show(null)
         }.add {
             div().attr("id", "group_passwords_overview").cls("col-md-9")
         }
@@ -49,23 +43,21 @@ object MainView {
         parent.appendChild(container)
     }
 
-    fun createButtonBar(): Element {
-/*
-        <button type="button" class="btn btn-default" aria-label="Left Align">
-        <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
-        </button>
-*/
-        return div().cls("btn-toolbar").attr("role", "toolbar").add {
-            div().cls("btn-group").add {
-                createTag("button").cls("btn btn-default").attr("aria-label", "Text").add {
-                    createTag("span").cls("glyphicon glyphicon-align-left").attr("aria-hidden", "true")
-                }
-            }.add {
-                createTag("button").cls("btn btn-default").attr("aria-label", "Text").add {
-                    createTag("span").cls("glyphicon glyphicon-align-left").attr("aria-hidden", "true")
-                }
-            }
+    fun logout() {
+        val body = document.body ?: throw IllegalStateException("document.body not defined! Are you sure this is a browser?")
+
+        while(body.children.length > 0) {
+            body.removeChild(body.firstChild!!)
         }
+
+        // todo: move to a better place
+        GroupView.currentGroup = null
+        UserState.loginname = null
+        UserState.loginPasswordHash = null
+        UserState.decryptPassphraseHash = null
+        UserState.encryptedEncryptionKey = null
+
+        body.appendChild(LoginView.create())
     }
 
 }

@@ -101,4 +101,8 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
     fun send(vararg args: String) {
         send(Tokenizer.tokenize(*args))
     }
+
+    fun sendAlert(title: String, message: String) {
+        send("ALERT", title, message)
+    }
 }
