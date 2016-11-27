@@ -1,11 +1,9 @@
 package spm.view.main
 
 import org.w3c.dom.Element
-import spm.view.cls
-import spm.view.div
+import spm.view.*
 import spm.view.group.Group
 import spm.view.group.GroupView
-import spm.view.with
 import kotlin.browser.document
 
 /**
@@ -25,25 +23,6 @@ object MainView {
         create(body)
     }
 
-    /*
-    <div class="row ">
-    <div class="col-md-3">
-        <div class="row ">
-            <div class="col-md-6"><h1>Groups</h1></div>
-            <div class="col-md-6">
-                <br/>
-                <button type="button" class="btn btn-default btn-sm" aria-label="Add">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                </button>
-            </div>
-        </div>
-        <GROUPS>
-      </div>
-      <div class="col-md-9">
-         <content>
-      </div>
-    </div>
-     */
     fun create(parent: Element) {
         val container = div()
 
@@ -51,16 +30,25 @@ object MainView {
 
         container.setAttribute("id", "id_groups")
 
-        val group = Group(1, "Group 1", null, true)
+        val group = Group(1, "Group 1", null)
 
         group.children = Array(2, { Group(0, "", null) })
-        group.children[0] = Group(2, "Child 1", null, true)
-        group.children[1] = Group(3, "Child 2", null, true)
+        group.children[0] = Group(2, "Child 1", null)
+        group.children[1] = Group(3, "Child 2", null)
 
-        container.with(GroupView.create(group))
+        group.children[0].children = Array(2, { Group(0, "", null) })
+        group.children[0].children[0] = Group(4, "Child 1 - 1", null)
+        group.children[0].children[1] = Group(5, "Child 1 - 2", null)
+
+        container.add {
+            GroupView.create(group)
+        }.add {
+            div().attr("id", "group_edit").cls("col-md-9").add {
+                createTag("h1").txt("Group 1")
+            }
+        }
 
         parent.appendChild(container)
-
-
     }
+
 }

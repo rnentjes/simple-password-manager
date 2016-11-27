@@ -41,14 +41,14 @@ object CommandDispatcher {
 
                 Persister.commit()
             } catch(e: Exception) {
-                Persister.rollback()
                 logger.warn(e.message, e)
+
+                Persister.rollback()
             }
 
             val time = (System.nanoTime() - start) / 1000000f
             logger.info(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
         }
-
     }
 
 }

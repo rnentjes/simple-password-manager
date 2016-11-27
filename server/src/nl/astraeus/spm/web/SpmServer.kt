@@ -3,15 +3,12 @@ package nl.astraeus.spm.web
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
 import nl.astraeus.spm.model.User
-import nl.astraeus.spm.util.DateFormatter
-import nl.astraeus.spm.ws.CommandDispatcher
 import nl.astraeus.spm.util.Tokenizer
-import org.h2.command.Command
+import nl.astraeus.spm.ws.CommandDispatcher
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
-import java.util.*
 
 /**
  * User: rnentjes
@@ -62,6 +59,8 @@ class SimpleWebSocketServer(port: Int): NanoWSD(port) {
                     }
                 }
             }
+        } catch(e: Exception) {
+            logger.warn(e.message, e)
         } finally {
             STATS.info("Uri ${session?.uri} took ${(System.nanoTime() - start) * 1000000f}ms")
             ACCESS.info("${session?.remoteIpAddress} ${result.status.requestStatus} ${session?.method?.name} ${session?.uri}")
@@ -88,7 +87,6 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
     }
 
     override fun onMessage(message: NanoWSD.WebSocketFrame?) {
-        logger.info("Websocket message")
         val text = message?.textPayload
 
         if (text != null && text.isNotEmpty()) {

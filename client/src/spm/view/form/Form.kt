@@ -40,6 +40,7 @@ object Input {
       labelWidth: Int,
       value: String = "",
       placeHolder: String = "",
+      helpText: String = "",
       change: (Event) -> Unit = {}) : Element {
         val result = div().cls("form-group")
 
@@ -59,7 +60,23 @@ object Input {
 
         input.on("change", true, change)
 
-        result.with(div().cls("col-md-${12-labelWidth}").with(input))
+        result.add {
+            val result = div().cls("col-md-${12 - labelWidth}")
+
+            result.add {
+                input
+            }
+
+            if (helpText.isNotBlank()) {
+                result.add {
+                    createTag("span").cls("help-block").txt(helpText)
+                }
+            }
+
+            result
+        }
+
+
 
         return result
     }

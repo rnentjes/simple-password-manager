@@ -28,11 +28,19 @@ object LoginView {
     fun create(): Element {
         val result = div()
 
-        result.attr("style", "margin-top: 150px;")
+        result.add {
+            div().cls("row").add {
+                div().cls("col-md-6 col-md-offset-3").add {
+                    createTag("h1").txt("Simple password manager").attr("style", "text-align: center;")
+                }
+            }
+        }
+
+        result.attr("style", "margin-top: 50px;")
         result.setAttribute("class", "container")
         result.setAttribute("id", "main")
 
-        val div = div().cls("col-md-6 col-md-offset-3")
+        val div = div().cls("col-md-6 col-md-offset-3").attr("style", "margin-top: 50px;")
 
         div.with(createTag("ul").cls("nav nav-tabs nav-justified").with(createLoginTab()).with(createRegisterTab()))
 
@@ -111,16 +119,14 @@ object LoginView {
                 val pwInput = Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4)
 
                 pwInput.on("keypress", true) { e ->
-                    if (e is KeyboardEvent) {
-                        if (e.keyCode === 13) {
-                            login()
-                        }
+                    if (e is KeyboardEvent && e.keyCode === 13) {
+                        login()
                     }
                 }
 
                 pwInput
             }.add {
-                FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
+                FormLinkButton.create("Login", buttonClass = "btn-success", labelWidth = 4, click = {
                     login()
                 })
             }
@@ -136,26 +142,27 @@ object LoginView {
             result.attr("style", "display: none;")
         }
 
-        result.with(div().cls("row").txt("&nbsp;"))
         result.add {
+            div().cls("row").txt("&nbsp;")
+        }.add {
             Form.create(FormType.HORIZONTAL).add {
                 Input.create("register_name", label = "Login name", labelWidth = 4)
             }.add {
                 Input.create("register_password", type = "password", label = "Passphrase", labelWidth = 4)
             }.add {
-                val pwInput = Input.create("register_password2", type = "password", label = "Confirm passphraseHash", labelWidth = 4)
+                val pwInput = Input.create("register_password2", type = "password", label = "Confirm passphrase", labelWidth = 4,
+                  helpText = "Please note that if you lose your password there is no way to restore it.\n" +
+                    "We don't know and we don't store your password, so make sure you don't forget it!")
 
                 pwInput.on("keypress", true) { e ->
-                    if (e is KeyboardEvent) {
-                        if (e.keyCode === 13) {
-                            register()
-                        }
+                    if (e is KeyboardEvent && e.keyCode === 13) {
+                        register()
                     }
                 }
 
                 pwInput
             }.add {
-                FormLinkButton.create("Register", buttonClass = "btn-primary btn-xl", labelWidth = 4, click = {
+                FormLinkButton.create("Register", buttonClass = "btn-warning btn-xl", labelWidth = 4, click = {
                     register()
                 })
             }
