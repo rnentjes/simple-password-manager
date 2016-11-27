@@ -33,14 +33,14 @@ object UserState {
     }
 
     /** return encrypted encryption key */
-    val chars = "0123456789abcdef"
+    val chars = "0123456789abcdefghijklmnopqrstuvwxyzABDEFGHIJKLMNOPQRSTUVWXYZ!@#$%*()-=_+[]{};:,./<>?~`\"´"
     fun createEncryptionKey(): String {
         val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
         val builder = StringBuilder()
 
         // TODO: better random, better encryption key
         for (index in 0..31) {
-            builder.append(chars[(Math.random() * 16).toInt()])
+            builder.append(chars[(Math.random() * chars.length).toInt()])
         }
 
         return Aes.encrypt(builder.toString(), pp).toString()

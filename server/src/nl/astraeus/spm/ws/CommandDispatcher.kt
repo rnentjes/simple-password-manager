@@ -1,5 +1,7 @@
 package nl.astraeus.spm.ws
 
+import nl.astraeus.database.Persister
+import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -9,11 +11,12 @@ import java.util.*
  */
 
 object CommandDispatcher {
-    val logger = LoggerFactory.getLogger("STATS")
+    val logger = LoggerFactory.getLogger("WS")
 
     val commands: MutableMap<String, (ws: SimpleWebSocket, tk: Tokenizer) -> Unit> = HashMap()
 
     init {
+        commands.put("OK", ::ok)
         commands.put("CREATEGROUP", ::createGroup)
         commands.put("LOGIN", ::login)
         commands.put("REGISTER", ::register)
@@ -24,16 +27,28 @@ object CommandDispatcher {
         val tk = Tokenizer(msg)
         val cmd = tk.next()
 
-        try {
-            val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
+        if (cmd == "OK") {
+            // skip
+            val time = (System.nanoTime() - start) / 1000000f
+            logger.debug(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
+        } else {
+            try {
+                val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
 
-            command.invoke(ws, tk)
-        } catch(e: Exception) {
-            logger.warn(e.message, e)
+                Persister.begin()
+
+                command.invoke(ws, tk)
+
+                Persister.commit()
+            } catch(e: Exception) {
+                Persister.rollback()
+                logger.warn(e.message, e)
+            }
+
+            val time = (System.nanoTime() - start) / 1000000f
+            logger.info(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
         }
 
-        val time = (System.nanoTime() - start) / 1000000f
-        logger.info("Command $cmd took ${time}ms")
     }
 
 }

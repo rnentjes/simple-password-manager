@@ -1,9 +1,9 @@
 package nl.astraeus.spm.ws
 
-import nl.astraeus.database.transaction
 import nl.astraeus.spm.crypt.Hash
 import nl.astraeus.spm.model.User
 import nl.astraeus.spm.model.UserDao
+import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
 
 /**
@@ -18,15 +18,13 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
 
     val password = Hash.sha256(passwordHash)
 
-    transaction {
-        val found = UserDao.findByName(loginName)
+    val found = UserDao.findByName(loginName)
 
-        if (found != null && found.password == password) {
-            ws.user = found
-            ws.send("LOGIN", found.encryptedKey)
-        } else {
-            ws.send("ALERT", "Unable to authenticate user $loginName!")
-        }
+    if (found != null && found.password == password) {
+        ws.user = found
+        ws.send("LOGIN", found.encryptedKey)
+    } else {
+        ws.send("ALERT", "Unable to authenticate user $loginName!")
     }
 }
 
@@ -37,19 +35,16 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
 
     val password = Hash.sha256(passwordHash)
 
-    transaction {
-        val found = UserDao.findByName(loginName)
+    val found = UserDao.findByName(loginName)
 
-        if (found != null) {
-            ws.send("ALERT", "Username already taken!")
-        } else {
-            val user = User(loginName, password, encryptedKey)
+    if (found != null) {
+        ws.send("ALERT", "Username already taken!")
+    } else {
+        val user = User(loginName, password, encryptedKey)
 
-            UserDao.insert(user)
+        UserDao.insert(user)
 
-            ws.user = user
-            ws.send("LOGIN", encryptedKey)
-        }
+        ws.user = user
+        ws.send("LOGIN", encryptedKey)
     }
-
 }

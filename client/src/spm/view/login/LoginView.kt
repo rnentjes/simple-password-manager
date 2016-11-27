@@ -2,6 +2,7 @@ package spm.view.login
 
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.KeyboardEvent
 import spm.crypt.Hash
 import spm.state.UserState
 import spm.view.*
@@ -10,8 +11,10 @@ import spm.view.form.FormLinkButton
 import spm.view.form.FormType
 import spm.view.form.Input
 import spm.ws.WebSocketConnection
+import spm.ws.login
 import kotlin.browser.window
 import kotlin.dom.addClass
+import kotlin.dom.on
 import kotlin.dom.onClick
 import kotlin.dom.removeClass
 
@@ -100,17 +103,28 @@ object LoginView {
             result.attr("style", "display: none;")
         }
 
-        result.with(div().cls("row").txt("&nbsp;"))
-        result.with(Form.create(FormType.HORIZONTAL).with(
-          Input.create("login_name", label = "Login name", labelWidth = 4)
-        ).with(
-          Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4)
-        ).with(
-          FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
-              login()
-          })
-        )
-        )
+        result.add { div().cls("row").txt("&nbsp;") }
+        result.add {
+            Form.create(FormType.HORIZONTAL).add {
+                Input.create("login_name", label = "Login name", labelWidth = 4)
+            }.add {
+                val pwInput = Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4)
+
+                pwInput.on("keypress", true) { e ->
+                    if (e is KeyboardEvent) {
+                        if (e.keyCode === 13) {
+                            login()
+                        }
+                    }
+                }
+
+                pwInput
+            }.add {
+                FormLinkButton.create("Login", buttonClass = "btn-primary", labelWidth = 4, click = {
+                    login()
+                })
+            }
+        }
 
         return result
     }
@@ -123,18 +137,29 @@ object LoginView {
         }
 
         result.with(div().cls("row").txt("&nbsp;"))
-        result.with(Form.create(FormType.HORIZONTAL).with(
-          Input.create("register_name", label = "Login name", labelWidth = 4)
-        ).with(
-          Input.create("register_password", type = "password", label = "Passphrase", labelWidth = 4)
-        ).with(
-          Input.create("register_password2", type = "password", label = "Confirm passphraseHash", labelWidth = 4)
-        ).with(
-          FormLinkButton.create("Register", buttonClass = "btn-primary btn-xl", labelWidth = 4, click = {
-              register()
-          })
-        )
-        )
+        result.add {
+            Form.create(FormType.HORIZONTAL).add {
+                Input.create("register_name", label = "Login name", labelWidth = 4)
+            }.add {
+                Input.create("register_password", type = "password", label = "Passphrase", labelWidth = 4)
+            }.add {
+                val pwInput = Input.create("register_password2", type = "password", label = "Confirm passphraseHash", labelWidth = 4)
+
+                pwInput.on("keypress", true) { e ->
+                    if (e is KeyboardEvent) {
+                        if (e.keyCode === 13) {
+                            register()
+                        }
+                    }
+                }
+
+                pwInput
+            }.add {
+                FormLinkButton.create("Register", buttonClass = "btn-primary btn-xl", labelWidth = 4, click = {
+                    register()
+                })
+            }
+        }
 
         return result
     }

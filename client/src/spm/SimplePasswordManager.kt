@@ -1,7 +1,5 @@
 package spm
 
-import spm.crypt.Aes
-import spm.crypt.Hash
 import spm.view.login.LoginView
 import spm.ws.WebSocketConnection
 import kotlin.browser.document
@@ -19,6 +17,7 @@ fun main(args: Array<String>) {
 
     WebSocketConnection.open()
 
+/*
     val sha1 = Hash.sha256("abc")
     val sha2 = Hash.sha256("cde")
 
@@ -38,5 +37,6 @@ fun main(args: Array<String>) {
     val decrypted = Aes.decrypt(encrypted, hashed.toString())
 
     println("Decrypted: $message -> $decrypted")
+*/
 
 }

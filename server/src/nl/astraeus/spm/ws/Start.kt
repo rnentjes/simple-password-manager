@@ -1,5 +1,6 @@
 package nl.astraeus.spm.ws
 
+import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
 
 /**

@@ -1,7 +1,7 @@
 package nl.astraeus.spm.ws
 
-import nl.astraeus.database.transaction
 import nl.astraeus.spm.model.GroupDao
+import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
 
 /**
@@ -15,10 +15,8 @@ fun createGroup(ws: SimpleWebSocket, tk: Tokenizer) {
 }
 
 fun sendGroups(ws: SimpleWebSocket, email: String) {
-    transaction {
-        for (group in GroupDao.findByUser(email)) {
+    for (group in GroupDao.findByUser(email)) {
 
-        }
     }
 
 }

@@ -35,6 +35,12 @@ fun Element.with(elem: Element): Element {
     return this
 }
 
+fun Element.add(func: () -> Element): Element {
+    this.appendChild(func())
+
+    return this
+}
+
 fun Element.cls(cls: String): Element {
     this.addClass(cls)
 

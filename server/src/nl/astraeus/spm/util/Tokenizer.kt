@@ -1,4 +1,4 @@
-package nl.astraeus.spm.ws
+package nl.astraeus.spm.util
 
 /**
  * User: rnentjes

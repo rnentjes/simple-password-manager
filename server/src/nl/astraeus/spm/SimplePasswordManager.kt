@@ -3,13 +3,10 @@ package nl.astraeus.spm
 import nl.astraeus.database.DdlMapping
 import nl.astraeus.database.setConnectionProvider
 import nl.astraeus.database.transaction
-import nl.astraeus.spm.model.User
-import nl.astraeus.spm.model.UserDao
 import nl.astraeus.spm.sql.DatabaseMigration
 import nl.astraeus.spm.web.SimpleWebSocketServer
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
-import java.util.*
 
 /**
  * User: rnentjes
@@ -43,7 +40,7 @@ fun checkAdminUser() {
 }
 
 fun main(args: Array<String>) {
-    val logger = LoggerFactory.getLogger("nl.astraeus.daw.Main")
+    val logger = LoggerFactory.getLogger("nl.astraeus.spm.main")
 
     val server = SimpleWebSocketServer(3456)
 
