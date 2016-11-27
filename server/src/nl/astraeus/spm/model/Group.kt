@@ -4,7 +4,6 @@ import nl.astraeus.database.Dao
 import nl.astraeus.database.annotations.*
 import nl.astraeus.spm.util.DateFormatter
 import nl.astraeus.spm.util.Tokenizer
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**

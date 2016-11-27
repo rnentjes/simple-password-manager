@@ -12,8 +12,6 @@ import spm.view.form.FormType
 import spm.view.form.Input
 import spm.view.modal.ModalView
 import spm.ws.WebSocketConnection
-import spm.ws.login
-import kotlin.browser.window
 import kotlin.dom.addClass
 import kotlin.dom.on
 import kotlin.dom.onClick

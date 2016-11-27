@@ -2,7 +2,6 @@ package nl.astraeus.spm.model
 
 import nl.astraeus.database.Dao
 import nl.astraeus.database.annotations.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**

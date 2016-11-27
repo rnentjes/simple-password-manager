@@ -7,14 +7,11 @@ import spm.view.form.Form
 import spm.view.form.FormLinkButton
 import spm.view.form.FormType
 import spm.view.form.Input
-import spm.view.login.LoginView
 import spm.view.modal.ModalView
 import spm.view.password.Password
-import spm.view.password.PasswordOverviewView
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
-import kotlin.browser.window
 import kotlin.dom.onClick
 
 /**

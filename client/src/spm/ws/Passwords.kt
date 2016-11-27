@@ -1,8 +1,6 @@
 package spm.ws
 
 import org.w3c.dom.WebSocket
-import spm.view.group.Group
-import spm.view.group.GroupView
 import spm.view.password.Password
 import spm.view.password.PasswordOverviewView
 import java.util.*

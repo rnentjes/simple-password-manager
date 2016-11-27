@@ -1,8 +1,6 @@
 package spm.view.password
 
-import org.w3c.dom.Element
 import spm.view.*
-import spm.view.group.Group
 import spm.ws.Tokenizer
 
 /**

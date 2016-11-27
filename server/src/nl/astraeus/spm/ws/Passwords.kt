@@ -1,6 +1,5 @@
 package nl.astraeus.spm.ws
 
-import nl.astraeus.spm.model.Group
 import nl.astraeus.spm.model.GroupDao
 import nl.astraeus.spm.model.PasswordDao
 import nl.astraeus.spm.util.Tokenizer

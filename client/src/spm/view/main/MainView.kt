@@ -2,12 +2,12 @@ package spm.view.main
 
 import org.w3c.dom.Element
 import spm.state.UserState
-import spm.view.*
-import spm.view.group.Group
+import spm.view.add
+import spm.view.attr
+import spm.view.cls
+import spm.view.div
 import spm.view.group.GroupView
 import spm.view.login.LoginView
-import spm.view.password.Password
-import java.util.*
 import kotlin.browser.document
 
 /**

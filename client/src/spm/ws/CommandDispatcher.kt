@@ -2,7 +2,6 @@ package spm.ws
 
 import org.w3c.dom.WebSocket
 import spm.view.modal.ModalView
-import kotlin.browser.window
 
 /**
  * Created by rnentjes on 7-6-16.
