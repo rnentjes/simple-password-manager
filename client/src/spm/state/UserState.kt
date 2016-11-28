@@ -1,6 +1,7 @@
 package spm.state
 
 import spm.crypt.Aes
+import spm.crypt.Hash
 
 /**
  * User: rnentjes
@@ -11,8 +12,16 @@ import spm.crypt.Aes
 object UserState {
     var loginname: String? = null
     var loginPasswordHash: String? = null
-    var decryptPassphraseHash: String? = null
     var encryptedEncryptionKey: String? = null
+
+    private var decryptPassphraseHash: String? = null
+
+    fun clear() {
+        loginname = null
+        loginPasswordHash = null
+        decryptPassphraseHash = null
+        encryptedEncryptionKey = null
+    }
 
     fun decryptPassword(password: String): String {
         val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
@@ -32,17 +41,34 @@ object UserState {
         return Aes.encrypt(password, decryptedEncryptionKey)
     }
 
-    /** return encrypted encryption key */
-    val chars = "0123456789abcdefghijklmnopqrstuvwxyzABDEFGHIJKLMNOPQRSTUVWXYZ!@#$%*()-=_+[]{};:,./<>?~`\"´"
+    fun setPassword(password: String) {
+        loginPasswordHash = Hash.sha256(password).toString()
+        decryptPassphraseHash = Hash.sha512(password).toString()
+
+        val crypto = js("CryptoJS")
+
+        val sha256 = crypto.SHA256(password)
+        val sha512 = crypto.SHA512(password)
+
+        println("sha256: $sha256")
+        println("sha512: $sha512")
+
+        loginPasswordHash = "${js("""CryptoJS.PBKDF2(sha256, sha512, {
+                                keySize: 256 / 32,
+                                iterations: 500
+                            });""")}"
+        decryptPassphraseHash = "${js("""CryptoJS.PBKDF2(sha256, sha512, {
+                                keySize: 256 / 32,
+                                iterations: 1000
+                            });""")}"
+    }
+
+    /** create encryption key and return encrypted encryption key */
     fun createEncryptionKey(): String {
         val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
-        val builder = StringBuilder()
 
-        // TODO: better random, better encryption key
-        for (index in 0..31) {
-            builder.append(chars[(Math.random() * chars.length).toInt()])
-        }
+        val base64String = "${js("CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(64));")}"
 
-        return Aes.encrypt(builder.toString(), pp).toString()
+        return Aes.encrypt(base64String, pp).toString()
     }
 }

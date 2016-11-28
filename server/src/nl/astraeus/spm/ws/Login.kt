@@ -48,5 +48,7 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
 
         ws.user = user
         ws.send("LOGIN", encryptedKey)
+
+        sendGroups(ws)
     }
 }

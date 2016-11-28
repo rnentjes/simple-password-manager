@@ -27,3 +27,9 @@ object Hash {
     fun sha512(plaintext: String) = js("CryptoJS.SHA512(plaintext);")
 
 }
+
+object PBKDF2 {
+
+    fun genKey(passphrase: String, salt: dynamic, keySize: Int) = js("CryptoJS.PBKDF2(passphrase, salt, { keySize: keySize });")
+
+}

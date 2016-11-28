@@ -180,8 +180,7 @@ object LoginView {
             ModalView.showAlert("Error", "Password must be filled in!")
         } else {
             UserState.loginname = username.value
-            UserState.loginPasswordHash = Hash.sha256(password.value).toString()
-            UserState.decryptPassphraseHash = Hash.sha512(password.value).toString()
+            UserState.setPassword(password.value)
 
             WebSocketConnection.send("LOGIN",
               UserState.loginname ?: throw IllegalStateException("Whut!"),
@@ -203,8 +202,7 @@ object LoginView {
             ModalView.showAlert("Error", "Passwords must match!")
         } else {
             UserState.loginname = username.value
-            UserState.loginPasswordHash = Hash.sha256(password.value).toString()
-            UserState.decryptPassphraseHash = Hash.sha512(password.value).toString()
+            UserState.setPassword(password.value)
 
             WebSocketConnection.send("REGISTER",
               UserState.loginname ?: throw IllegalStateException("Whut!"),

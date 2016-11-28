@@ -52,10 +52,7 @@ object MainView {
 
         // todo: move to a better place
         GroupView.currentGroup = null
-        UserState.loginname = null
-        UserState.loginPasswordHash = null
-        UserState.decryptPassphraseHash = null
-        UserState.encryptedEncryptionKey = null
+        UserState.clear()
 
         body.appendChild(LoginView.create())
     }
