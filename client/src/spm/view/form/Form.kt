@@ -4,6 +4,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.events.Event
 import spm.view.*
+import spm.view.password.PasswordOverviewView
 import kotlin.dom.on
 import kotlin.dom.onClick
 
@@ -38,6 +39,7 @@ object Input {
       type: String = "text",
       label: String = "",
       labelWidth: Int,
+      inputWidth: Int = (12 - labelWidth),
       value: String = "",
       placeHolder: String = "",
       helpText: String = "",
@@ -58,10 +60,10 @@ object Input {
             input.attr("placeholder", placeHolder)
         }
 
-        input.on("change", true, change)
+        input.on("keyup", true, change)
 
         result.add {
-            val result = div().cls("col-md-${12 - labelWidth}")
+            val result = div().cls("col-md-$inputWidth")
 
             result.add {
                 input
@@ -119,4 +121,52 @@ object FormLinkButton {
         )
     }
 
+}
+
+object IconButton {
+    fun create(
+      icon: String,
+      text: String = "",
+      buttonClass: String = "btn-default",
+      click: (Event) -> Unit = {}
+    ): Element {
+        val button = createTag("button")
+          .attr("type", "button")
+          .cls("btn btn-sm $buttonClass")
+          .attr("aria-label", "Show")
+
+        if (text.isNotBlank()) {
+            button.txt(text)
+        }
+
+        button.add {
+            createTag("span")
+              .cls("glyphicon glyphicon-$icon")
+              .attr("aria-hidden", "true")
+        }
+
+        button.onClick { e -> click(e) }
+
+        return button
+    }
+}
+
+object TextButton {
+    fun create(
+      text: String,
+      buttonClass: String = "btn-default",
+      click: (Event) -> Unit = {}
+    ): Element {
+        val button = createTag("button")
+          .attr("type", "button")
+          .cls("btn btn-sm $buttonClass")
+          .attr("aria-label", "Show")
+          .add {
+              createTag("span").attr("aria-hidden", "true").txt(text)
+          }
+
+        button.onClick { e -> click(e) }
+
+        return button
+    }
 }

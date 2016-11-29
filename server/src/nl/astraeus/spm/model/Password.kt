@@ -21,7 +21,7 @@ data class Password(
   var website: String,
   var username: String,
   var password: String,
-  @Blob var description: String,
+  @Serialized var description: String,
   var created: Date,
   var updated: Date
 ) {

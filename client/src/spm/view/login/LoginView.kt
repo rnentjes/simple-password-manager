@@ -180,7 +180,7 @@ object LoginView {
             ModalView.showAlert("Error", "Password must be filled in!")
         } else {
             UserState.loginname = username.value
-            WebSocketConnection.loading {
+            WebSocketConnection.loadingWork {
                 UserState.setPassword(password.value)
 
                 WebSocketConnection.send("LOGIN",
@@ -205,7 +205,7 @@ object LoginView {
         } else {
             UserState.loginname = username.value
 
-            WebSocketConnection.loading {
+            WebSocketConnection.loadingWork {
                 UserState.setPassword(password.value)
 
                 WebSocketConnection.send("REGISTER",

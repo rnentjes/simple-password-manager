@@ -1,6 +1,7 @@
 package spm.view.modal
 
 import org.w3c.dom.Element
+import org.w3c.dom.events.Event
 import spm.view.*
 import kotlin.browser.document
 import kotlin.dom.onClick
@@ -31,7 +32,14 @@ object ModalView {
         )
     }
 
-    fun showConfirm(title: String, body: Element, confirmText: String = "Yes", denyText: String = "No", confirm: () -> Unit = {}) {
+    fun showConfirm(
+      title: String,
+      body: Element,
+      confirmText: String = "Yes",
+      denyText: String = "No",
+      disabledConfirm: Boolean = false,
+      confirm: () -> Unit = {}
+    ) {
         showModal(
           div().cls("modal-content").add {
               div().cls("modal-header").add {
@@ -47,7 +55,11 @@ object ModalView {
               div().cls("modal-footer").add {
                   createTag("button").cls("btn btn-default").attr("data-dismiss", "modal").txt(denyText)
               }.add {
-                  val confirmButton = createTag("button").cls("btn btn-default").attr("data-dismiss", "modal").txt(confirmText)
+                  val confirmButton = createTag("button").attr("id", "modal_confirm_button").cls("btn btn-success").attr("data-dismiss", "modal").txt(confirmText)
+
+                  if (disabledConfirm) {
+                      confirmButton.attr("disabled", "disabled")
+                  }
 
                   confirmButton.onClick { confirm() }
 

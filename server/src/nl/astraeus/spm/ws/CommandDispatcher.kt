@@ -23,6 +23,7 @@ object CommandDispatcher {
         commands.put("UPDATEGROUPNAME", ::updateGroupName)
         commands.put("CREATEGROUP", ::createGroup)
         commands.put("GETPASSWORDS", ::getPasswords)
+        commands.put("NEWPASSWORD", ::newPassword)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {

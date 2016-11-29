@@ -171,6 +171,7 @@ object GroupView {
 object GroupPasswordsView {
 
     fun show(group: Group) {
+        GroupView.currentGroup = group
         val result: Element
 
         if (!hasElem("group_passwords_overview")) {
@@ -225,20 +226,24 @@ object GroupPasswordsView {
                     }
                 }
             }.add {
-                Input.create("group_name", label = "Group name", labelWidth = 4, value = group.name)
-            }.add {
-                FormLinkButton.create("Save", buttonClass = "btn-success btn-xl", labelWidth = 4, click = {
-                    val input = elem("group_name") as HTMLInputElement
+                Input.create("group_name", label = "Group name", labelWidth = 4, inputWidth = 7, value = group.name).add {
+                    val a = createTag("a").cls("btn btn-success btn-xl col-md-1").txt("Save")
 
-                    if (input.value.isBlank()) {
-                        ModalView.showAlert("Error", "Name can not be empty!")
-                    } else {
-                        group.name = input.value
+                    a.onClick {
+                        val input = elem("group_name") as HTMLInputElement
 
-                        WebSocketConnection.send("UPDATEGROUPNAME", "${group.id}", group.name)
-                        show(group)
+                        if (input.value.isBlank()) {
+                            ModalView.showAlert("Error", "Name can not be empty!")
+                        } else {
+                            group.name = input.value
+
+                            WebSocketConnection.send("UPDATEGROUPNAME", "${group.id}", group.name)
+                            show(group)
+                        }
                     }
-                })
+
+                    a
+                }
             }
         }
 

@@ -1,6 +1,7 @@
 package spm.view
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 import kotlin.dom.addClass
 
@@ -51,4 +52,17 @@ fun Element.txt(txt: String): Element {
     this.innerHTML = txt
 
     return this
+}
+
+fun copyToClipboard(text: String) {
+    val ta = createTag("textarea").txt(text)
+
+    if (ta is HTMLTextAreaElement) {
+        val body = document.body ?: throw IllegalStateException("The body was not found!")
+
+        body.append(ta)
+        ta.select()
+        document.execCommand("copy")
+        body.removeChild(ta)
+    }
 }

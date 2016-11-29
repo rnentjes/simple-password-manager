@@ -127,7 +127,7 @@ object WebSocketConnection {
         return result
     }
 
-    fun loading(callback: () -> Unit = {}) {
+    fun loadingWork(callback: () -> Unit = {}) {
         loadingCalls++
 
         if (loadingCalls >= 1) {
@@ -143,6 +143,21 @@ object WebSocketConnection {
                     doneLoading()
                 }
             }
+        }
+    }
+
+    fun loading(callback: () -> Unit = {}) {
+        loadingCalls++
+
+        if (loadingCalls >= 1) {
+            // hide interface
+            getLoadingDiv().attr("style", "display: block;")
+        }
+
+        try {
+            callback()
+        } finally {
+            doneLoading()
         }
     }
 

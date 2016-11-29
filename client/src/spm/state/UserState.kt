@@ -30,18 +30,18 @@ object UserState {
         val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
         val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
 
-        val decryptedEncryptionKey = Aes.decrypt(eek, pp)
+        val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
 
-        return Aes.decrypt(password, decryptedEncryptionKey)
+        return Aes.decrypt(password, decryptedEncryptionKey).toString()
     }
 
     fun encryptPassword(password: String): String {
         val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
         val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
 
-        val decryptedEncryptionKey = Aes.decrypt(eek, pp)
+        val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
 
-        return Aes.encrypt(password, decryptedEncryptionKey)
+        return Aes.encrypt(password, decryptedEncryptionKey).toString()
     }
 
     fun setPassword(password: String) {
