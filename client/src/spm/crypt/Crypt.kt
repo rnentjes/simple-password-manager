@@ -30,6 +30,6 @@ object Hash {
 
 object PBKDF2 {
 
-    fun genKey(passphrase: String, salt: dynamic, keySize: Int) = js("CryptoJS.PBKDF2(passphrase, salt, { keySize: keySize });")
+    fun genKey(passphrase: String, salt: dynamic, keySize: Int) = "${js("CryptoJS.PBKDF2(passphrase, salt, { keySize: keySize });")}"
 
 }

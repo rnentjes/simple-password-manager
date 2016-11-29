@@ -1,10 +1,13 @@
 package spm.ws
 
+import org.w3c.dom.Element
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
+import spm.view.*
 import spm.view.main.MainView
 import spm.view.modal.ModalView
+import kotlin.browser.document
 import kotlin.browser.window
 
 /**
@@ -109,11 +112,37 @@ object WebSocketConnection {
 
     }
 
-    fun loading() {
+    fun getLoadingDiv(): Element {
+        val result: Element
+
+        if (!hasElem("loading_div")) {
+            result = div().attr("id", "loading_div").cls("loading").txt("Loading&8230;")
+
+            val body = document.body ?: throw IllegalStateException("The body was not found!")
+            body.add { result }
+        } else {
+            result = elem("loading_div")
+        }
+
+        return result
+    }
+
+    fun loading(callback: () -> Unit = {}) {
         loadingCalls++
 
-        if (loadingCalls == 1) {
+        if (loadingCalls >= 1) {
             // hide interface
+            getLoadingDiv().attr("style", "display: block;")
+        }
+
+        window.requestAnimationFrame {
+            window.requestAnimationFrame {
+                try {
+                    callback()
+                } finally {
+                    doneLoading()
+                }
+            }
         }
     }
 
@@ -124,6 +153,7 @@ object WebSocketConnection {
 
         if (loadingCalls == 0) {
             // show interface
+            getLoadingDiv().attr("style", "display: none;")
         }
     }
 

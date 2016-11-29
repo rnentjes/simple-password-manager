@@ -180,12 +180,14 @@ object LoginView {
             ModalView.showAlert("Error", "Password must be filled in!")
         } else {
             UserState.loginname = username.value
-            UserState.setPassword(password.value)
+            WebSocketConnection.loading {
+                UserState.setPassword(password.value)
 
-            WebSocketConnection.send("LOGIN",
-              UserState.loginname ?: throw IllegalStateException("Whut!"),
-              UserState.loginPasswordHash ?: throw IllegalStateException("Whut!")
-            )
+                WebSocketConnection.send("LOGIN",
+                  UserState.loginname ?: throw IllegalStateException("Whut!"),
+                  UserState.loginPasswordHash ?: throw IllegalStateException("Whut!")
+                )
+            }
         }
     }
 
@@ -202,13 +204,16 @@ object LoginView {
             ModalView.showAlert("Error", "Passwords must match!")
         } else {
             UserState.loginname = username.value
-            UserState.setPassword(password.value)
 
-            WebSocketConnection.send("REGISTER",
-              UserState.loginname ?: throw IllegalStateException("Whut!"),
-              UserState.loginPasswordHash ?: throw IllegalStateException("Whut!"),
-              UserState.createEncryptionKey()
-            )
+            WebSocketConnection.loading {
+                UserState.setPassword(password.value)
+
+                WebSocketConnection.send("REGISTER",
+                  UserState.loginname ?: throw IllegalStateException("Whut!"),
+                  UserState.loginPasswordHash ?: throw IllegalStateException("Whut!"),
+                  UserState.createEncryptionKey()
+                )
+            }
         }
     }
 }

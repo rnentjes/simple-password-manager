@@ -2,6 +2,9 @@ package spm.state
 
 import spm.crypt.Aes
 import spm.crypt.Hash
+import spm.crypt.PBKDF2
+import spm.ws.WebSocketConnection
+import kotlin.browser.window
 
 /**
  * User: rnentjes
@@ -42,9 +45,6 @@ object UserState {
     }
 
     fun setPassword(password: String) {
-        loginPasswordHash = Hash.sha256(password).toString()
-        decryptPassphraseHash = Hash.sha512(password).toString()
-
         val crypto = js("CryptoJS")
 
         val sha256 = crypto.SHA256(password)
@@ -53,14 +53,8 @@ object UserState {
         println("sha256: $sha256")
         println("sha512: $sha512")
 
-        loginPasswordHash = "${js("""CryptoJS.PBKDF2(sha256, sha512, {
-                                keySize: 256 / 32,
-                                iterations: 500
-                            });""")}"
-        decryptPassphraseHash = "${js("""CryptoJS.PBKDF2(sha256, sha512, {
-                                keySize: 256 / 32,
-                                iterations: 1000
-                            });""")}"
+        loginPasswordHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}";
+        decryptPassphraseHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"
     }
 
     /** create encryption key and return encrypted encryption key */
