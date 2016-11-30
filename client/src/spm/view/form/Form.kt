@@ -86,6 +86,57 @@ object Input {
 
 }
 
+object TextArea {
+
+    fun create(
+      id: String = "",
+      name: String = id,
+      label: String = "",
+      labelWidth: Int,
+      inputWidth: Int = (12 - labelWidth),
+      value: String = "",
+      placeHolder: String = "",
+      helpText: String = "",
+      classes: String = "",
+      change: (Event) -> Unit = {}) : Element {
+        val result = div().cls("form-group")
+
+        if (label.isNotBlank()) {
+            result.with(createTag("label").attr("for", id).txt(label).cls("col-md-$labelWidth"))
+        }
+
+        val input = createTag("textarea")
+          .attr("id", id)
+          .cls("form-control $classes")
+          .txt(value)
+
+        if (placeHolder.isNotBlank()) {
+            input.attr("placeholder", placeHolder)
+        }
+
+        input.on("keyup", true, change)
+
+        result.add {
+            val result = div().cls("col-md-$inputWidth")
+
+            result.add {
+                input
+            }
+
+            if (helpText.isNotBlank()) {
+                result.add {
+                    createTag("span").cls("help-block").txt(helpText)
+                }
+            }
+
+            result
+        }
+
+        return result
+    }
+
+}
+
 object FormButton {
 
     fun create(

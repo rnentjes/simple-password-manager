@@ -48,8 +48,9 @@ fun newPassword(ws: SimpleWebSocket, tk: Tokenizer) {
     val url = tk.next()
     val username = tk.next()
     val encryptedPassword = tk.next()
+    val notes = tk.next()
 
-    val password = Password(0, user.name, groupId, title, url, username, encryptedPassword, "", Date(), Date())
+    val password = Password(0, user.name, groupId, title, url, username, encryptedPassword, notes, Date(), Date())
 
     PasswordDao.insert(password)
 

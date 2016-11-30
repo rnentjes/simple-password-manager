@@ -2,13 +2,11 @@ package spm.view.password
 
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.EventTarget
 import spm.state.UserState
 import spm.view.*
-import spm.view.form.Form
-import spm.view.form.FormType
-import spm.view.form.IconButton
-import spm.view.form.Input
+import spm.view.form.*
 import spm.view.group.GroupView
 import spm.view.modal.ModalView
 import spm.ws.Tokenizer
@@ -53,7 +51,8 @@ data class PasswordForm(
   var url: String = "",
   var username: String = "",
   var password: String = "",
-  var password2: String = ""
+  var password2: String = "",
+  var notes: String = ""
 ) {
 
     fun validate(): Boolean {
@@ -64,7 +63,7 @@ data class PasswordForm(
 
     fun save() {
         if (validate()) {
-            WebSocketConnection.send("NEWPASSWORD", title, url, username, UserState.encryptPassword(password))
+            WebSocketConnection.send("NEWPASSWORD", title, url, username, UserState.encryptPassword(password), notes)
         }
     }
 }
@@ -174,7 +173,7 @@ object PasswordOverviewView {
               "modal_password_username",
               label = "Username",
               labelWidth = 4,
-              inputWidth = 7,
+              inputWidth = 8,
               value = "",
               change = { e ->
                   passwordForm.username = (e.target as HTMLInputElement).value
@@ -205,9 +204,26 @@ object PasswordOverviewView {
               type = "password",
               label = "Confirm password",
               labelWidth = 4,
+              inputWidth = 7,
               value = "",
               change = { e ->
                   passwordForm.password2 = (e.target as HTMLInputElement).value
+                  checkForm()
+              }
+            ).add {
+                IconButton.create("cog") { e ->
+                    //switchPasswordView(e.target)
+                }
+            }
+        }.add {
+            TextArea.create(
+              "modal_password_notes",
+              label = "Notes",
+              labelWidth = 4,
+              inputWidth = 8,
+              value = "",
+              change = { e ->
+                  passwordForm.notes = (e.target as HTMLTextAreaElement).value
                   checkForm()
               }
             )
@@ -275,6 +291,9 @@ object PasswordOverviewView {
         val title = elem("modal_password_title") as HTMLInputElement
         val url = elem("modal_password_url") as HTMLInputElement
         val username = elem("modal_password_username") as HTMLInputElement
+        val notes = elem("modal_password_notes") as HTMLTextAreaElement
+
+        println("Notes: ${notes.value}")
 
         val password1 = elem("modal_password_password1") as HTMLInputElement
         val password2 = elem("modal_password_password2") as HTMLInputElement
@@ -284,7 +303,7 @@ object PasswordOverviewView {
             return true
         } else {
             if (checkForm()) {
-                WebSocketConnection.send("NEWPASSWORD", "$groupId", title.value, url.value, username.value, UserState.encryptPassword(password1.value))
+                WebSocketConnection.send("NEWPASSWORD", "$groupId", title.value, url.value, username.value, UserState.encryptPassword(password1.value), notes.value)
                 return true
             } else {
                 return false
