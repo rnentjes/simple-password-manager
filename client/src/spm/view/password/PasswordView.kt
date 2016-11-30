@@ -5,9 +5,11 @@ import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.EventTarget
 import spm.state.UserState
 import spm.view.*
-import spm.view.form.*
+import spm.view.form.Form
+import spm.view.form.FormType
+import spm.view.form.IconButton
+import spm.view.form.Input
 import spm.view.group.GroupView
-import spm.view.main.MainView
 import spm.view.modal.ModalView
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
@@ -274,7 +276,7 @@ object PasswordOverviewView {
     }
 
     private fun savePasswordForm() {
-        val groupId = GroupView.currentGroup?.id ?: throw IllegalStateException("No current group selected!?")
+        val groupId = UserState.currentGroup?.id ?: throw IllegalStateException("No current group selected!?")
 
         val title = elem("modal_password_title") as HTMLInputElement
         val url = elem("modal_password_url") as HTMLInputElement

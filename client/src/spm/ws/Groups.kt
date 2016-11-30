@@ -1,6 +1,7 @@
 package spm.ws
 
 import org.w3c.dom.WebSocket
+import spm.state.UserState
 import spm.view.group.Group
 import spm.view.group.GroupView
 import java.util.*
@@ -13,7 +14,8 @@ import java.util.*
 
 fun setGroups(ws: WebSocket, tk: Tokenizer) {
     val root = Group(tk)
-    val old = GroupView.currentGroup
+    val old = UserState.topGroup
+    val selected = UserState.currentGroup
     val opened = HashMap <Long, Boolean>()
 
     if (old != null) {
@@ -27,6 +29,10 @@ fun setGroups(ws: WebSocket, tk: Tokenizer) {
 
         if (found != null) {
             group.opened = found
+        }
+
+        if (group.id == selected?.id) {
+            UserState.currentGroup = selected
         }
     }
 

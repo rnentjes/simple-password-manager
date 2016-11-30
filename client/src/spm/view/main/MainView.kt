@@ -51,7 +51,6 @@ object MainView {
         }
 
         // todo: move to a better place
-        GroupView.currentGroup = null
         UserState.clear()
 
         body.appendChild(LoginView.create())

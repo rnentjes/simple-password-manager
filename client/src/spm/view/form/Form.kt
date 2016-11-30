@@ -43,6 +43,7 @@ object Input {
       value: String = "",
       placeHolder: String = "",
       helpText: String = "",
+      classes: String = "",
       change: (Event) -> Unit = {}) : Element {
         val result = div().cls("form-group")
 
@@ -54,7 +55,7 @@ object Input {
           .attr("id", id)
           .attr("type", type)
           .attr("value", value)
-          .cls("form-control")
+          .cls("form-control $classes")
 
         if (placeHolder.isNotBlank()) {
             input.attr("placeholder", placeHolder)

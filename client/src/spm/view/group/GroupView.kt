@@ -2,9 +2,9 @@ package spm.view.group
 
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
+import spm.state.UserState
 import spm.view.*
 import spm.view.form.Form
-import spm.view.form.FormLinkButton
 import spm.view.form.FormType
 import spm.view.form.Input
 import spm.view.modal.ModalView
@@ -26,6 +26,7 @@ data class Group(
   var name: String,
   var parent: Group?,
   var opened: Boolean = false,
+  var found: Boolean = false,
   val children: MutableList<Group> = ArrayList()
 ) {
     constructor(tk: Tokenizer) : this(parseInt(tk.next()).toLong(), tk.next(), null, false) {
@@ -34,6 +35,7 @@ data class Group(
         for (index in 0..numberOfChildren - 1) {
             val child = Group(tk)
 
+            child.parent = this
             children.add(child)
         }
     }
@@ -53,15 +55,44 @@ data class Group(
 
         return result
     }
+
+    fun search(value: String) {
+        if (name.toLowerCase().contains(value.toLowerCase())) {
+            opened = false
+            found = true
+
+            var parent = parent
+
+            while (parent != null) {
+                parent.opened = true
+                parent = parent.parent
+            }
+        } else {
+            opened = false
+            found = false
+        }
+
+        if (opened) {
+            var parent = parent
+
+            while (parent != null) {
+                parent.opened = true
+                parent = parent.parent
+            }
+        }
+
+        for (child in children) {
+            child.search(value)
+        }
+    }
 }
 
 object GroupView {
-    // todo: move to a better place
-    var currentGroup: Group? = null
 
     /* creates <ul><li> (if children)<ul>etc</ul>(/) </li></ul? */
     fun show(group: Group?): Element {
-        currentGroup = group
+        UserState.topGroup = group
+
         val result: Element
 
         if (!hasElem("group_overview")) {
@@ -90,25 +121,11 @@ object GroupView {
             }
         }
 
-        return result
-    }
-
-    fun createPassword(password: Password): Element {
-        return createTag("ul").cls("tree").add {
-            createTag("li").add {
-                createTag("span").attr("style", "margin-right: 5px;").cls("glyphicon glyphicon-lock")
-            }.add {
-                val link = createTag("a").txt(password.title)
-
-                link.setAttribute("href", "#")
-
-                link.onClick {
-                    clickPassword(password)
-                }
-
-                link
-            }
+        if (UserState.currentGroup != null) {
+            clickGroup(UserState.currentGroup!!)
         }
+
+        return result
     }
 
     fun createGroup(topGroup: Group, group: Group): Element {
@@ -131,7 +148,15 @@ object GroupView {
 
             icon
         }.add {
-            val link = createTag("a").txt(group.name)
+            val link = createTag("a")
+
+            if (group.found) {
+                link.add {
+                    createTag("strong").txt(group.name)
+                }
+            } else {
+                link.txt(group.name)
+            }
 
             link.setAttribute("href", "#")
             link.onClick {
@@ -156,12 +181,8 @@ object GroupView {
         WebSocketConnection.send("GETPASSWORDS", "${group.id}")
     }
 
-    fun clickPassword(password: Password) {
-        println("Clicked on Password: $password")
-    }
-
     fun clickExpandGroup(topGroup: Group, group: Group) {
-        println("Clicked on ExpandGroup: $group")
+        println("Clicked on ExpandGroup: ${group.name}")
         group.opened = !group.opened
 
         show(topGroup)
@@ -171,7 +192,7 @@ object GroupView {
 object GroupPasswordsView {
 
     fun show(group: Group) {
-        GroupView.currentGroup = group
+        UserState.currentGroup = group
         val result: Element
 
         if (!hasElem("group_passwords_overview")) {
@@ -184,14 +205,35 @@ object GroupPasswordsView {
 
         println("x1")
         result.add {
-            createTag("h1").txt(group.name)
-        }.add {
-            createTag("br")
-        }.add {
             Form.create(FormType.HORIZONTAL).add {
+                Input.create("group_name",
+                  label = "",
+                  labelWidth = 1,
+                  inputWidth = 7,
+                  classes = "input-lg",
+                  value = group.name).add {
+                    val a = createTag("a").cls("btn btn-success btn-sm col-md-2").txt("Save name")
+
+                    a.onClick {
+                        val input = elem("group_name") as HTMLInputElement
+
+                        if (input.value.isBlank()) {
+                            ModalView.showAlert("Error", "Name can not be empty!")
+                        } else {
+                            group.name = input.value
+
+                            WebSocketConnection.send("UPDATEGROUPNAME", "${group.id}", group.name)
+                            show(group)
+                        }
+                    }
+
+                    a
+                }
+    //            createTag("h1").txt(group.name)
+            }.add {
                 div().cls("form-group").add {
                     div().cls("col-sm-offset-4 col-sm-8").add {
-                        val a = createTag("a").cls("btn btn-primary btn-xl").txt("Create new subgroup")
+                        val a = createTag("a").cls("btn btn-primary").txt("Add subgroup")
 
                         a.onClick {
                             ModalView.showConfirm("New group",
@@ -214,7 +256,10 @@ object GroupPasswordsView {
 
                         a
                     }.add {
-                        val a = createTag("a").cls("btn btn-danger btn-xl").txt("Remove this group")
+                        val a = createTag("a")
+                          .cls("btn btn-danger btn-xl")
+                          .txt("Remove group")
+                          .attr("style", "margin-left:5px;")
 
                         if (group.children.isNotEmpty()) {
                             a.attr("disabled", "disabled")
@@ -225,7 +270,9 @@ object GroupPasswordsView {
                         a
                     }
                 }
-            }.add {
+            }
+/*
+              .add {
                 Input.create("group_name", label = "Group name", labelWidth = 4, inputWidth = 7, value = group.name).add {
                     val a = createTag("a").cls("btn btn-success btn-xl col-md-1").txt("Save")
 
@@ -245,6 +292,7 @@ object GroupPasswordsView {
                     a
                 }
             }
+*/
         }
 
         result.add {

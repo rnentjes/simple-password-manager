@@ -3,6 +3,7 @@ package spm.state
 import spm.crypt.Aes
 import spm.crypt.Hash
 import spm.crypt.PBKDF2
+import spm.view.group.Group
 import spm.ws.WebSocketConnection
 import kotlin.browser.window
 
@@ -17,6 +18,10 @@ object UserState {
     var loginPasswordHash: String? = null
     var encryptedEncryptionKey: String? = null
 
+    // groups
+    var currentGroup: Group? = null
+    var topGroup: Group? = null
+
     private var decryptPassphraseHash: String? = null
 
     fun clear() {
@@ -24,6 +29,8 @@ object UserState {
         loginPasswordHash = null
         decryptPassphraseHash = null
         encryptedEncryptionKey = null
+        topGroup = null
+        currentGroup = null
     }
 
     fun decryptPassword(password: String): String {
