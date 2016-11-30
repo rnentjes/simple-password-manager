@@ -24,7 +24,11 @@ object WebSocketConnection {
     fun open() {
         close()
 
-        websocket = WebSocket("ws://${window.location.hostname}:3456")
+        if (window.location.hostname.contains("localhost")) {
+            websocket = WebSocket("ws://${window.location.hostname}:3456")
+        } else {
+            websocket = WebSocket("wss://${window.location.hostname}")
+        }
 
         val ws = websocket
 
