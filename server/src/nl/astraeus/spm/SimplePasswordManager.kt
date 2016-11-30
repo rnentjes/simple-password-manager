@@ -44,7 +44,7 @@ fun main(args: Array<String>) {
 
     val server = SimpleWebSocketServer(3456)
 
-    val cs = "jdbc:stat:webServerPort=18100:jdbc:h2:file:/home/rnentjes/apps/spm/data/data"
+    val cs = "jdbc:stat:webServerPort=18200:jdbc:h2:file:/home/rnentjes/apps/spm/data/data"
 
     initDbConnection(cs)
     checkAdminUser()
