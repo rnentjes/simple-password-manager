@@ -38,7 +38,7 @@ object ModalView {
       confirmText: String = "Yes",
       denyText: String = "No",
       disabledConfirm: Boolean = false,
-      confirm: () -> Unit = {}
+      confirm: (Event) -> Unit = {}
     ) {
         showModal(
           div().cls("modal-content").add {
@@ -61,7 +61,7 @@ object ModalView {
                       confirmButton.attr("disabled", "disabled")
                   }
 
-                  confirmButton.onClick { confirm() }
+                  confirmButton.onClick { e -> confirm(e) }
 
                   confirmButton
               }

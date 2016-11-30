@@ -93,9 +93,11 @@ object PasswordOverviewView {
                           body = getPasswordForm(),
                           denyText = "Cancel",
                           confirmText = "Save",
-                          disabledConfirm = true,
-                          confirm = {
-                              savePasswordForm()
+                          disabledConfirm = false,
+                          confirm = { e ->
+                              if (!savePasswordForm()) {
+                                  e.preventDefault()
+                              }
                           })
                     }
 
@@ -252,39 +254,41 @@ object PasswordOverviewView {
 
     private fun checkForm(): Boolean {
         val username = elem("modal_password_username") as HTMLInputElement
-        val password1 = elem("modal_password_username") as HTMLInputElement
-        val password2 = elem("modal_password_username") as HTMLInputElement
+        val password1 = elem("modal_password_password1") as HTMLInputElement
+        val password2 = elem("modal_password_password2") as HTMLInputElement
 
         if (username.value.isEmpty()) {
             elem("modal_password_username_warning").cls("has-error")
 
         }
 
-        if (username.value == "1234") {
-            elem("modal_password_message").txt("")
-            elem("modal_password_username_warning").removeClass("has-error")
-            elem("modal_confirm_button").removeAttribute("disabled")
+        elem("modal_password_message").txt("")
+        elem("modal_password_username_warning").removeClass("has-error")
+        //elem("modal_confirm_button").removeAttribute("disabled")
 
-            return true
-        } else {
-            elem("modal_password_message").txt("Username should be 1234 for this test!")
-            elem("modal_password_username_warning").cls("has-error")
-            elem("modal_confirm_button").attr("disabled", "disabled")
-
-            return false
-        }
+        return true
     }
 
-    private fun savePasswordForm() {
+    private fun savePasswordForm(): Boolean {
         val groupId = UserState.currentGroup?.id ?: throw IllegalStateException("No current group selected!?")
 
         val title = elem("modal_password_title") as HTMLInputElement
         val url = elem("modal_password_url") as HTMLInputElement
         val username = elem("modal_password_username") as HTMLInputElement
-        val password = elem("modal_password_password1") as HTMLInputElement
 
-        if (checkForm()) {
-            WebSocketConnection.send("NEWPASSWORD", "$groupId", title.value, url.value, username.value, UserState.encryptPassword(password.value))
+        val password1 = elem("modal_password_password1") as HTMLInputElement
+        val password2 = elem("modal_password_password2") as HTMLInputElement
+
+        if (password1.value != password2.value) {
+            ModalView.showAlert("Error", "Passwords do not match!")
+            return true
+        } else {
+            if (checkForm()) {
+                WebSocketConnection.send("NEWPASSWORD", "$groupId", title.value, url.value, username.value, UserState.encryptPassword(password1.value))
+                return true
+            } else {
+                return false
+            }
         }
     }
 
