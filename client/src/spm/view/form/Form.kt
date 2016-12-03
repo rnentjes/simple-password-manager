@@ -44,8 +44,13 @@ object Input {
       placeHolder: String = "",
       helpText: String = "",
       classes: String = "",
+      messages: List<String>? = null,
       change: (Event) -> Unit = {}) : Element {
         val result = div().cls("form-group")
+
+        if (messages != null && messages.isNotEmpty()) {
+            result.cls("has-error")
+        }
 
         if (label.isNotBlank()) {
             result.with(createTag("label").attr("for", id).txt(label).cls("col-md-$labelWidth"))
@@ -64,22 +69,26 @@ object Input {
         input.on("keyup", true, change)
 
         result.add {
-            val result = div().cls("col-md-$inputWidth")
-
-            result.add {
+            div().cls("col-md-$inputWidth").add {
                 input
             }
+        }
 
-            if (helpText.isNotBlank()) {
-                result.add {
+        if (helpText.isNotBlank()) {
+            result.add {
+                createTag("div").cls("col-md-offset-$labelWidth col-md-$inputWidth").add {
                     createTag("span").cls("help-block").txt(helpText)
                 }
             }
-
-            result
         }
 
-
+        if (messages != null && messages.isNotEmpty()) {
+            result.add {
+                createTag("div").cls("col-md-offset-$labelWidth col-md-$inputWidth").add {
+                    createTag("span").cls("help-block").txt(messages.joinToString("<br/>"))
+                }
+            }
+        }
 
         return result
     }
@@ -98,6 +107,7 @@ object TextArea {
       placeHolder: String = "",
       helpText: String = "",
       classes: String = "",
+      messages: List<String>? = null,
       change: (Event) -> Unit = {}) : Element {
         val result = div().cls("form-group")
 
@@ -117,19 +127,25 @@ object TextArea {
         input.on("keyup", true, change)
 
         result.add {
-            val result = div().cls("col-md-$inputWidth")
-
-            result.add {
+            div().cls("col-md-$inputWidth").add {
                 input
             }
+        }
 
-            if (helpText.isNotBlank()) {
-                result.add {
+        if (helpText.isNotBlank()) {
+            result.add {
+                createTag("div").cls("col-md-offset-$labelWidth col-md-$inputWidth").add {
                     createTag("span").cls("help-block").txt(helpText)
                 }
             }
+        }
 
-            result
+        if (messages != null && messages.isNotEmpty()) {
+            result.add {
+                createTag("div").cls("col-md-offset-$labelWidth col-md-$inputWidth").add {
+                    createTag("span").cls("help-block").txt(messages.joinToString("<br/>"))
+                }
+            }
         }
 
         return result

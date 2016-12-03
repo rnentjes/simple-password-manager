@@ -24,6 +24,8 @@ object CommandDispatcher {
         commands.put("CREATEGROUP", ::createGroup)
         commands.put("GETPASSWORDS", ::getPasswords)
         commands.put("NEWPASSWORD", ::newPassword)
+        commands.put("SAVEPASSWORD", ::savePassword)
+        commands.put("DELETEPASSWORD", ::deletePassword)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
