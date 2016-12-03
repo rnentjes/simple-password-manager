@@ -166,7 +166,6 @@ object GroupView {
             link
         }
 
-        println("Opened: ${group.id} - ${group.opened} ")
         if (group.opened) {
             //group.passwords.forEach { result.with(createPassword(it)) }
             group.children.forEach { result.with(createGroup(topGroup, it)) }
@@ -182,7 +181,6 @@ object GroupView {
     }
 
     fun clickExpandGroup(topGroup: Group, group: Group) {
-        println("Clicked on ExpandGroup: ${group.name}")
         group.opened = !group.opened
 
         show(topGroup)

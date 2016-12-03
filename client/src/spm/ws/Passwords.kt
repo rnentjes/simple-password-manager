@@ -1,6 +1,7 @@
 package spm.ws
 
 import org.w3c.dom.WebSocket
+import spm.view.elem
 import spm.view.password.Password
 import spm.view.password.PasswordOverviewView
 import java.util.*
@@ -22,5 +23,5 @@ fun setPasswords(ws: WebSocket, tk: Tokenizer) {
         passwords.add(password)
     }
 
-    PasswordOverviewView.show(passwords)
+    PasswordOverviewView.show(elem("passwords_overview"), groupId.toLong(), passwords)
 }

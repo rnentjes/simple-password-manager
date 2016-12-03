@@ -57,8 +57,8 @@ object UserState {
         val sha256 = crypto.SHA256(password)
         val sha512 = crypto.SHA512(password)
 
-        println("sha256: $sha256")
-        println("sha512: $sha512")
+        //println("sha256: $sha256")
+        //println("sha512: $sha512")
 
         loginPasswordHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}";
         decryptPassphraseHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"

@@ -7,6 +7,7 @@ import org.w3c.dom.events.EventTarget
 import spm.state.UserState
 import spm.view.*
 import spm.view.form.*
+import spm.view.group.Group
 import spm.view.group.GroupView
 import spm.view.modal.ModalView
 import spm.ws.Tokenizer
@@ -29,9 +30,13 @@ data class Password(
   var website: String,
   var username: String,
   var encryptedPassword: String,
+  var password1: String = "",
+  var password2: String = "",
   var description: String
 ) {
-    constructor(): this(0, "", 0, "", "", "", "", "")
+    constructor(): this(0, "", 0, "", "", "", "", "", "", "")
+
+    constructor(group: Group): this(0, "", group.id, "", "", "", "", "", "", "")
 
     constructor(tk: Tokenizer): this(
       parseInt(tk.next()).toLong(),
@@ -41,42 +46,42 @@ data class Password(
       tk.next(),
       tk.next(),
       tk.next(),
-      tk.next())
+      tk.next(),
+      "",
+      "")
 
     fun tokenized(): String = Tokenizer.tokenize("$id", user, "$group", title, website, username, encryptedPassword, description)
-}
-
-data class PasswordForm(
-  var title: String = "",
-  var url: String = "",
-  var username: String = "",
-  var password: String = "",
-  var password2: String = "",
-  var notes: String = ""
-) {
 
     fun validate(): Boolean {
-        elem("modal_confirm_button").removeAttribute("disabled")
+        return password1 == password2
+    }
 
-        return true
+    fun descrypt() {
+        password1 = UserState.decryptPassword(encryptedPassword)
+        password2 = password1
     }
 
     fun save() {
         if (validate()) {
-            WebSocketConnection.send("NEWPASSWORD", title, url, username, UserState.encryptPassword(password), notes)
+            encryptedPassword = UserState.encryptPassword(password1)
+            if (id == 0L) {
+                WebSocketConnection.send("NEWPASSWORD", "$group", title, website, username, encryptedPassword, description)
+            } else {
+                WebSocketConnection.send("SAVEPASSWORD", "$group", "$id", title, website, username, encryptedPassword, description)
+            }
+            password1 = ""
+            password2 = ""
         }
     }
 }
 
 object PasswordOverviewView {
-    var passwordForm = PasswordForm()
 
-    fun show(passwords: List<Password>) {
+    fun show(parent: Element, group: Long, passwords: List<Password>) {
         // passwords_overview
-        clear("passwords_overview")
-        val element = elem("passwords_overview")
+        clear(parent)
 
-        element.add {
+        parent.add {
             div().cls("row").txt("&nbsp")
         }.add {
             div().cls("row").add {
@@ -88,16 +93,25 @@ object PasswordOverviewView {
                     val a = createTag("a").cls("btn btn-success btn-sm").txt("Add")
 
                     a.onClick {
-                        ModalView.showConfirm("New password",
-                          body = getPasswordForm(),
-                          denyText = "Cancel",
-                          confirmText = "Save",
-                          disabledConfirm = false,
-                          confirm = { e ->
-                              if (!savePasswordForm()) {
-                                  e.preventDefault()
-                              }
-                          })
+                        val form = Password()
+
+                        form.group = group
+
+                        fun save(pw: Password) {
+                            if (form.validate()) {
+                                form.save()
+
+                                show(parent, group, passwords)
+                            } else {
+                                PasswordView.create(parent, form, cancel = {
+                                    show(parent, group, passwords)
+                                }, save = { save(it) })
+                            }
+                        }
+
+                        PasswordView.create(parent, form, cancel = {
+                            show(parent, group, passwords)
+                        }, save = { save(it) })
                     }
 
                     a
@@ -136,104 +150,144 @@ object PasswordOverviewView {
                           }.attr("style", "margin-left: 5px;")
                       }.add {
                           IconButton.create("folder-open", buttonClass = "btn-xs btn-success") {
-                              window.alert("open password info!")
+                              PasswordView.create(parent, password, cancel = {
+                                  show(parent, group, passwords)
+                              }, save = {
+                                  if (password.validate()) {
+                                      password.save()
+
+                                      show(parent, group, passwords)
+                                  }
+                              })
                           }.attr("style", "margin-left: 5px;")
                       }
                   }
             }
         }
 
-        element.add {
+        parent.add {
             div().cls("row").add {
                 table
             }
         }
     }
+}
 
-    private fun getPasswordForm(): Element {
-        return Form.create(FormType.HORIZONTAL)
-          .add {
-            Input.create(
-              "modal_password_title",
-              label = "Title",
-              labelWidth = 4,
-              value = "") { e ->
-                passwordForm.username = (e.target as HTMLInputElement).value
-            }
-        }.add {
-            Input.create(
-              "modal_password_url",
-              label = "Url",
-              labelWidth = 4,
-              value = "") { e ->
-                passwordForm.url = (e.target as HTMLInputElement).value
-            }
-        }.add {
-            Input.create(
-              "modal_password_username",
-              label = "Username",
-              labelWidth = 4,
-              inputWidth = 8,
-              value = "",
-              change = { e ->
-                  passwordForm.username = (e.target as HTMLInputElement).value
-                  passwordForm.validate()
-              }
-            ).attr("id", "modal_password_username_warning")
-        }.add {
-            Input.create("modal_password_password1",
-              type = "password",
-              label = "Password",
-              labelWidth = 4,
-              inputWidth = 7,
-              value = "",
-              change = { e ->
-                  passwordForm.password = (e.target as HTMLInputElement).value
-                  checkForm()
-              }
-            ).attr("id", "modal_password_password1_warning")
-              .attr("data-show-password", "false")
+object PasswordView {
+
+    fun create(
+      parent: Element,
+      passwordForm: Password,
+      cancel: (Password) -> Unit = {},
+      save: (Password) -> Unit = {}
+    ) {
+        clear(parent)
+
+        parent.add {
+            Form.create(FormType.HORIZONTAL)
               .add {
-                  IconButton.create("eye-open") { e ->
-                      switchPasswordView(e.target)
+                  Input.create(
+                    "modal_password_title",
+                    label = "Title",
+                    labelWidth = 4,
+                    value = passwordForm.title) { e ->
+                      passwordForm.username = (e.target as HTMLInputElement).value
                   }
-              }
-        }.add {
-            Input.create(
-              "modal_password_password2",
-              type = "password",
-              label = "Confirm password",
-              labelWidth = 4,
-              inputWidth = 7,
-              value = "",
-              change = { e ->
-                  passwordForm.password2 = (e.target as HTMLInputElement).value
-                  checkForm()
-              }
-            ).add {
-                IconButton.create("cog") { e ->
-                    //switchPasswordView(e.target)
+              }.add {
+                Input.create(
+                  "modal_password_url",
+                  label = "Url",
+                  labelWidth = 4,
+                  value = passwordForm.website) { e ->
+                    passwordForm.website = (e.target as HTMLInputElement).value
                 }
-            }
-        }.add {
-            TextArea.create(
-              "modal_password_notes",
-              label = "Notes",
-              labelWidth = 4,
-              inputWidth = 8,
-              value = "",
-              change = { e ->
-                  passwordForm.notes = (e.target as HTMLTextAreaElement).value
-                  checkForm()
-              }
-            )
-        }.add {
-            div()
-              .cls("form-group")
-              .add {
+            }.add {
+                Input.create(
+                  "modal_password_username",
+                  label = "Username",
+                  labelWidth = 4,
+                  inputWidth = 8,
+                  value = passwordForm.username,
+                  change = { e ->
+                      passwordForm.username = (e.target as HTMLInputElement).value
+                      passwordForm.validate()
+                  }
+                ).attr("id", "modal_password_username_warning")
+            }.add {
+                Input.create("modal_password_password1",
+                  type = "password",
+                  label = "Password",
+                  labelWidth = 4,
+                  inputWidth = 7,
+                  value = passwordForm.password1,
+                  change = { e ->
+                      passwordForm.password1 = (e.target as HTMLInputElement).value
+                      //checkForm()
+                  }
+                ).attr("id", "modal_password_password1_warning")
+                  .attr("data-show-password", "false")
+                  .add {
+                      IconButton.create("eye-open") { e ->
+                          //switchPasswordView(e.target)
+                      }
+                  }
+            }.add {
+                Input.create(
+                  "modal_password_password2",
+                  type = "password",
+                  label = "Confirm password",
+                  labelWidth = 4,
+                  inputWidth = 7,
+                  value = passwordForm.password2,
+                  change = { e ->
+                      passwordForm.password2 = (e.target as HTMLInputElement).value
+                      //checkForm()
+                  }
+                ).add {
+                    IconButton.create("cog") { e ->
+                        //switchPasswordView(e.target)
+                    }
+                }
+            }.add {
+                TextArea.create(
+                  "modal_password_notes",
+                  label = "Notes",
+                  labelWidth = 4,
+                  inputWidth = 8,
+                  value = passwordForm.description,
+                  change = { e ->
+                      passwordForm.description = (e.target as HTMLTextAreaElement).value
+                      //checkForm()
+                  }
+                )
+            }.add {
                 div()
-                  .attr("id", "modal_password_message")
-                  .cls("col-sm-offset-4 col-sm-8 has-error")
+                  .cls("form-group")
+                  .add {
+                      div()
+                        .attr("id", "modal_password_message")
+                        .cls("col-sm-offset-4 col-sm-8 has-error")
+                  }
+            }.add {
+                div()
+                  .cls("form-group")
+                  .add {
+                      div().cls("col-sm-offset-4 col-sm-2").add {
+                          val saveButton = createTag("button").cls("btn btn-success").txt("Save")
+
+                          saveButton.onClick { save(passwordForm) }
+
+                          saveButton
+                      }
+                  }.add {
+                      div().cls("col-sm-2").add{
+                          val cancelButton = createTag("button").cls("btn btn-default").txt("Cancel")
+
+                          cancelButton.onClick { cancel(passwordForm) }
+
+                          cancelButton
+                      }
+                  }
             }
         }
     }
@@ -284,31 +338,4 @@ object PasswordOverviewView {
 
         return true
     }
-
-    private fun savePasswordForm(): Boolean {
-        val groupId = UserState.currentGroup?.id ?: throw IllegalStateException("No current group selected!?")
-
-        val title = elem("modal_password_title") as HTMLInputElement
-        val url = elem("modal_password_url") as HTMLInputElement
-        val username = elem("modal_password_username") as HTMLInputElement
-        val notes = elem("modal_password_notes") as HTMLTextAreaElement
-
-        println("Notes: ${notes.value}")
-
-        val password1 = elem("modal_password_password1") as HTMLInputElement
-        val password2 = elem("modal_password_password2") as HTMLInputElement
-
-        if (password1.value != password2.value) {
-            ModalView.showAlert("Error", "Passwords do not match!")
-            return true
-        } else {
-            if (checkForm()) {
-                WebSocketConnection.send("NEWPASSWORD", "$groupId", title.value, url.value, username.value, UserState.encryptPassword(password1.value), notes.value)
-                return true
-            } else {
-                return false
-            }
-        }
-    }
-
 }

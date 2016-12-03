@@ -112,7 +112,7 @@ fun deTokenize(str: String, indent: Int = 1, seperator: Char = '~', escape: Char
         for(count in 0..indent-1) {
             print("-")
         }
-        println(">$next")
+        //println(">$next")
 
         if (!t.done() || !first) {
             deTokenize(next, indent+1, seperator, escape)

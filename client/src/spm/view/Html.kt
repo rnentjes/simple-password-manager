@@ -4,6 +4,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 import kotlin.dom.addClass
+import kotlin.dom.get
 
 /**
  * Created by rnentjes on 20-11-16.
@@ -15,9 +16,15 @@ fun createTag(tag: String) = document.createElement(tag)
 fun clear(elemId: String) {
     val outerDiv = elem(elemId)
 
-    while(outerDiv.children.length > 0) {
-        outerDiv.removeChild(outerDiv.firstChild!!)
+    clear(outerDiv)
+}
+
+fun clear(elem: Element) {
+    while(elem.children.length > 0) {
+        elem.removeChild(elem.firstChild!!)
     }
+
+    elem.innerHTML = ""
 }
 
 fun hasElem(id: String) = document.getElementById(id) != null
