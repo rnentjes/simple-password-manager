@@ -7,8 +7,8 @@ import spm.view.*
 import spm.view.form.Form
 import spm.view.form.FormType
 import spm.view.form.Input
+import spm.view.form.InputDefinition
 import spm.view.modal.ModalView
-import spm.view.password.Password
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
@@ -200,6 +200,15 @@ object GroupPasswordsView {
 
             clear("group_passwords_overview")
         }
+
+        // test
+        val htmlFormElement = Form.create(group,
+          InputDefinition(
+            "some_input",
+            "label",
+            value = { bean -> (bean as Group).name },
+            save = { bean, element -> (bean as Group).name = (element as HTMLInputElement).value })
+        )
 
         println("x1")
         result.add {

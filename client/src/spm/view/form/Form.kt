@@ -2,9 +2,9 @@ package spm.view.form
 
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLFormElement
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.view.*
-import spm.view.password.PasswordOverviewView
 import kotlin.dom.on
 import kotlin.dom.onClick
 
@@ -18,6 +18,21 @@ enum class FormType(val cls: String) {
     HORIZONTAL("form-horizontal")
 }
 
+enum class InputType {
+    TEXT,
+    PASSWORD,
+    TEXTAREA
+}
+
+class InputDefinition(
+  val id: String,
+  val label: String,
+  val name: String = id,
+  val type: InputType = InputType.TEXT,
+  val value: (Any) -> String = { "" },
+  val save: (Any, Element) -> Unit = { a,b -> }
+)
+
 object Form {
 
     fun create(
@@ -26,6 +41,31 @@ object Form {
         val result = createTag("form") as HTMLFormElement
 
         result.cls(type.cls)
+
+        return result
+    }
+
+    fun create(
+      bean: Any,
+      vararg inputs: InputDefinition
+    ): HTMLFormElement {
+        val result = createTag("form") as HTMLFormElement
+
+        for (input in inputs) {
+            when(input.type) {
+                InputType.TEXT -> {
+                    result.add {
+                        Input.create(
+                          "modal_password_title",
+                          label = input.label,
+                          labelWidth = 4,
+                          value = input.value(bean)) { e ->
+                            input.save(bean, e.target as HTMLInputElement)
+                        }
+                    }
+                }
+            }
+        }
 
         return result
     }
