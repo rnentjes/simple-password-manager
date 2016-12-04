@@ -269,18 +269,28 @@ object PasswordView {
                     label = "Title",
                     labelWidth = 4,
                     messages = passwordForm.messages["title"],
-                    value = password.title) { e ->
-                      password.title = (e.target as HTMLInputElement).value
-                  }
+                    value = password.title,
+                    blur = { e ->
+                        password.title = (e.target as HTMLInputElement).value
+                    },
+                    change = { e ->
+                        password.title = (e.target as HTMLInputElement).value
+                    }
+                  )
               }.add {
                 Input.create(
                   "modal_password_url",
                   label = "Url",
                   labelWidth = 4,
                   messages = passwordForm.messages["website"],
-                  value = password.website) { e ->
-                    password.website = (e.target as HTMLInputElement).value
-                }
+                  value = password.website,
+                  blur = { e ->
+                      password.website = (e.target as HTMLInputElement).value
+                  },
+                  change = { e ->
+                      password.website = (e.target as HTMLInputElement).value
+                  }
+                )
             }.add {
                 Input.create(
                   "modal_password_username",
@@ -289,6 +299,9 @@ object PasswordView {
                   inputWidth = 8,
                   messages = passwordForm.messages["username"],
                   value = password.username,
+                  blur = { e ->
+                      password.username = (e.target as HTMLInputElement).value
+                  },
                   change = { e ->
                       password.username = (e.target as HTMLInputElement).value
                   }
@@ -301,6 +314,9 @@ object PasswordView {
                   inputWidth = 7,
                   value = password.password1,
                   messages = passwordForm.messages["password1"],
+                  blur = { e ->
+                      password.password1 = (e.target as HTMLInputElement).value
+                  },
                   change = { e ->
                       password.password1 = (e.target as HTMLInputElement).value
                   }
@@ -326,6 +342,9 @@ object PasswordView {
                   inputWidth = 7,
                   value = password.password2,
                   messages = passwordForm.messages["password2"],
+                  blur = { e ->
+                      password.password2 = (e.target as HTMLInputElement).value
+                  },
                   change = { e ->
                       password.password2 = (e.target as HTMLInputElement).value
                   }
@@ -348,6 +367,9 @@ object PasswordView {
                   inputWidth = 8,
                   messages = passwordForm.messages["description"],
                   value = password.description,
+                  blur = { e ->
+                      password.description = (e.target as HTMLTextAreaElement).value
+                  },
                   change = { e ->
                       password.description = (e.target as HTMLTextAreaElement).value
                   }
@@ -364,22 +386,21 @@ object PasswordView {
                 div()
                   .cls("form-group")
                   .add {
-                      div().cls("col-sm-offset-4 col-sm-2").add {
+                      div().cls("col-sm-offset-4 col-sm-8").add {
                           val saveButton = createTag("button").cls("btn btn-success").txt("Save")
 
                           saveButton.onClick { save(passwordForm) }
 
                           saveButton
+                      }.add {
+                          val cancelButton = createTag("button").cls("btn btn-default").txt("Cancel")
+
+                          cancelButton.attr("style", "margin-left: 5px;")
+                          cancelButton.onClick { cancel(passwordForm) }
+
+                          cancelButton
                       }
-                  }.add {
-                    div().cls("col-sm-2").add {
-                        val cancelButton = createTag("button").cls("btn btn-default").txt("Cancel")
-
-                        cancelButton.onClick { cancel(passwordForm) }
-
-                        cancelButton
-                    }
-                }
+                  }
             }
         }
     }

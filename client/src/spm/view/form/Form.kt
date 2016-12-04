@@ -173,6 +173,7 @@ object TextArea {
       helpText: String = "",
       classes: String = "",
       messages: List<String>? = null,
+      blur:  (Event) -> Unit = {},
       change: (Event) -> Unit = {}) : Element {
         val result = div().cls("form-group")
 
@@ -188,6 +189,8 @@ object TextArea {
         if (placeHolder.isNotBlank()) {
             input.attr("placeholder", placeHolder)
         }
+
+        input.on("blur", true, change)
 
         input.on("keyup", true, change)
 
