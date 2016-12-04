@@ -5,6 +5,8 @@ import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.view.*
+import spm.view.group.Group
+import spm.ws.Tokenizer
 import kotlin.dom.on
 import kotlin.dom.onClick
 
@@ -33,6 +35,25 @@ class InputDefinition(
   val save: (Any, Element) -> Unit = { a,b -> }
 )
 
+fun formTest() {
+
+    val group = Group(Tokenizer())
+    // test
+    val htmlFormElement = Form.create(group,
+      4,
+      InputDefinition(
+        "input_id",
+        "label",
+        value = { bean -> (bean as Group).name },
+        save = { bean, element -> (bean as Group).name = (element as HTMLInputElement).value }),
+      InputDefinition(
+        "input_id2",
+        "label",
+        value = { bean -> (bean as Group).name },
+        save = { bean, element -> (bean as Group).name = (element as HTMLInputElement).value })
+    )
+
+}
 object Form {
 
     fun create(
@@ -47,6 +68,7 @@ object Form {
 
     fun create(
       bean: Any,
+      labelWidth: Int,
       vararg inputs: InputDefinition
     ): HTMLFormElement {
         val result = createTag("form") as HTMLFormElement
@@ -56,7 +78,7 @@ object Form {
                 InputType.TEXT -> {
                     result.add {
                         Input.create(
-                          "modal_password_title",
+                          input.id,
                           label = input.label,
                           labelWidth = 4,
                           value = input.value(bean)) { e ->

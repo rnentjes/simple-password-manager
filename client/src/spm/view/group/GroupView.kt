@@ -201,16 +201,6 @@ object GroupPasswordsView {
             clear("group_passwords_overview")
         }
 
-        // test
-        val htmlFormElement = Form.create(group,
-          InputDefinition(
-            "some_input",
-            "label",
-            value = { bean -> (bean as Group).name },
-            save = { bean, element -> (bean as Group).name = (element as HTMLInputElement).value })
-        )
-
-        println("x1")
         result.add {
             Form.create(FormType.HORIZONTAL).add {
                 Input.create("group_name",

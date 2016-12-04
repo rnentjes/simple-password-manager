@@ -12,6 +12,7 @@ import java.util.*
  */
 
 class FuncWrap(
+  val description: String,
   val func: () -> Unit
 )
 
@@ -39,7 +40,7 @@ object DatabaseMigration {
                 } else if (task is FuncWrap) {
                     task.func()
 
-                    VersionDao.insert(Version(index.toLong(), "FUNC", Date()))
+                    VersionDao.insert(Version(index.toLong(), task.description, Date()))
                 }
             }
         }

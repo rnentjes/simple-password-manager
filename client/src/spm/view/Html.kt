@@ -4,7 +4,6 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
 import kotlin.dom.addClass
-import kotlin.dom.get
 
 /**
  * Created by rnentjes on 20-11-16.
