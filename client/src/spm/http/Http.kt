@@ -21,7 +21,7 @@ object Http {
             }
         }
 
-        xmlHttp.open("GET", url, false)
+        xmlHttp.open("GET", url)
         xmlHttp.send()
     }
 }

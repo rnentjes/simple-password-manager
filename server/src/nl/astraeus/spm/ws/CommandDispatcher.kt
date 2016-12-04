@@ -22,6 +22,7 @@ object CommandDispatcher {
         commands.put("REGISTER", ::register)
         commands.put("UPDATEGROUPNAME", ::updateGroupName)
         commands.put("CREATEGROUP", ::createGroup)
+        commands.put("GROUPOPENED", ::openedGroup)
         commands.put("GETPASSWORDS", ::getPasswords)
         commands.put("NEWPASSWORD", ::newPassword)
         commands.put("SAVEPASSWORD", ::savePassword)
@@ -36,7 +37,7 @@ object CommandDispatcher {
         if (cmd == "OK") {
             // skip
             val time = (System.nanoTime() - start) / 1000000f
-            commandLogger.debug(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
+            commandLogger.debug(String.format("[%16s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
         } else {
             try {
                 val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
@@ -55,7 +56,7 @@ object CommandDispatcher {
             }
 
             val time = (System.nanoTime() - start) / 1000000f
-            commandLogger.info(String.format("[%12s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
+            commandLogger.info(String.format("[%16s] %15s %12sms", cmd, ws.handshakeRequest.remoteIpAddress, time))
         }
     }
 

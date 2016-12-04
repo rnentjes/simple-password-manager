@@ -14,15 +14,8 @@ import java.util.*
 
 fun setGroups(ws: WebSocket, tk: Tokenizer) {
     val root = Group(tk)
-    val old = UserState.topGroup
     val selected = UserState.currentGroup
     val opened = HashMap <Long, Boolean>()
-
-    if (old != null) {
-        for (group in old.all()) {
-            opened.put(group.id, group.opened)
-        }
-    }
 
     for (group in root.all()) {
         val found = opened[group.id]

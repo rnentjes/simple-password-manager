@@ -7,8 +7,8 @@ import spm.view.*
 import spm.view.form.Form
 import spm.view.form.FormType
 import spm.view.form.Input
-import spm.view.form.InputDefinition
 import spm.view.modal.ModalView
+import spm.view.modal.Notify
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
@@ -24,12 +24,12 @@ import kotlin.dom.onClick
 data class Group(
   var id: Long,
   var name: String,
-  var parent: Group?,
   var opened: Boolean = false,
+  var parent: Group?,
   var found: Boolean = false,
   val children: MutableList<Group> = ArrayList()
 ) {
-    constructor(tk: Tokenizer) : this(parseInt(tk.next()).toLong(), tk.next(), null, false) {
+    constructor(tk: Tokenizer) : this(parseInt(tk.next()).toLong(), tk.next(), tk.next() == "true", null) {
         val numberOfChildren = parseInt(tk.next())
 
         for (index in 0..numberOfChildren - 1) {
@@ -129,6 +129,7 @@ object GroupView {
     }
 
     fun createGroup(topGroup: Group, group: Group): Element {
+        println("CREATE GROUP ${group.name} - ${group.opened}")
         val result = createTag("li").add {
             val icon = createTag("span").attr("style", "margin-right: 5px;")
 
@@ -167,7 +168,6 @@ object GroupView {
         }
 
         if (group.opened) {
-            //group.passwords.forEach { result.with(createPassword(it)) }
             group.children.forEach { result.with(createGroup(topGroup, it)) }
         }
 
@@ -182,6 +182,7 @@ object GroupView {
 
     fun clickExpandGroup(topGroup: Group, group: Group) {
         group.opened = !group.opened
+        WebSocketConnection.send("GROUPOPENED", "${group.id}", "${group.opened}")
 
         show(topGroup)
     }
@@ -215,6 +216,7 @@ object GroupPasswordsView {
                         val input = elem("group_name") as HTMLInputElement
 
                         if (input.value.isBlank()) {
+                            //Notify.show("Name can not be empty!", "error")
                             ModalView.showAlert("Error", "Name can not be empty!")
                         } else {
                             group.name = input.value
@@ -243,7 +245,8 @@ object GroupPasswordsView {
                                   val input = elem("modal_group_name") as HTMLInputElement
 
                                   if (input.value.isBlank()) {
-                                      ModalView.showAlert("Error", "Group name can not be blank!", "Ok")
+                                      //Notify.show("Group name can not be blank!", "error")
+                                      ModalView.showAlert("Error", "Group name can not be blank")
                                   } else {
                                       WebSocketConnection.loading()
                                       WebSocketConnection.send("CREATEGROUP", "${group.id}", input.value)

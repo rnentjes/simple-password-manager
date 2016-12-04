@@ -10,6 +10,21 @@ import kotlin.dom.onClick
  * Created by rnentjes on 27-11-16.
  */
 
+object Notify {
+
+    /**
+     * type:
+     * - success
+     * - info
+     * - warning
+     * - error
+     */
+    fun show(message: String, type: String = "") {
+        js("$.notify(message, type)")
+    }
+
+}
+
 object ModalView {
 
     fun showAlert(title: String, message: String, buttonText: String = "Close") {

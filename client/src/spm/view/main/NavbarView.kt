@@ -18,35 +18,44 @@ import kotlin.dom.onClick
  */
 
 object NavbarView {
-    var html: String = "Html not loaded!"
-
-    init {
-        Http.readAsString("html/navbar.html", { data -> html = data })
-    }
+    var html: String = ""
 
     fun create(parent: Element) {
         val div = div()
 
-        div.innerHTML = html
-
         parent.appendChild(div)
 
-        elem("navbar_search").onClick {
-            val searchBox = elem("navbar_search_input") as HTMLInputElement
-            val root = UserState.topGroup
+        loadContent(div)
+    }
 
-            if (root != null) {
-                WebSocketConnection.loadingWork {
-                    root.search(searchBox.value)
-                    GroupView.show(root)
+    private fun loadContent(parent: Element) {
+        if (html.isBlank()) {
+            Http.readAsString("html/navbar.html", { data ->
+                html = data
+
+                loadContent(parent)
+            })
+        } else {
+            parent.innerHTML = html
+
+            elem("navbar_search").onClick {
+                val searchBox = elem("navbar_search_input") as HTMLInputElement
+                val root = UserState.topGroup
+
+                if (root != null) {
+                    WebSocketConnection.loadingWork {
+                        root.search(searchBox.value)
+                        GroupView.show(root)
+                    }
                 }
             }
-        }
 
-        elem("logout_action").onClick {
-            MainView.logout()
+            elem("logout_action").onClick {
+                MainView.logout()
+            }
         }
-
     }
+
+
 
 }

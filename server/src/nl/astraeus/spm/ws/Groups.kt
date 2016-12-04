@@ -28,6 +28,10 @@ fun createGroup(ws: SimpleWebSocket, tk: Tokenizer) {
 
         GroupDao.insert(child)
 
+        parent.opened = true
+
+        GroupDao.update(parent)
+
         sendGroups(ws)
     }
 }
@@ -65,4 +69,23 @@ fun sendGroups(ws: SimpleWebSocket) {
     }
 
     ws.send("SETGROUPS~${root.tokenizeForClient()}")
+}
+
+fun openedGroup(ws: SimpleWebSocket, tk: Tokenizer) {
+    val groupId = tk.next().toLong()
+    val opened = tk.next() == "true"
+
+    val group = GroupDao.find(groupId)
+
+    if (group != null) {
+        val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
+
+        if (group.user != user.name) {
+            throw IllegalAccessException("You are not allowed to edit this group!")
+        }
+
+        group.opened = opened
+
+        GroupDao.update(group)
+    }
 }

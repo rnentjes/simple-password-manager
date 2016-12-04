@@ -10,6 +10,7 @@ import spm.view.form.*
 import spm.view.group.Group
 import spm.view.group.GroupView
 import spm.view.modal.ModalView
+import spm.view.modal.Notify
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
@@ -180,13 +181,15 @@ object PasswordOverviewView {
                           IconButton.create("copy", text = "Username&nbsp;&nbsp;", buttonClass = "btn-xs btn-default") {
                               copyToClipboard(password.username)
 
-                              ModalView.showAlert("Success!", "Copied username to clipboard!")
+                              Notify.show("Copied username to clipboard.", "success")
+                              //ModalView.showAlert("Success!", "Copied username to clipboard!")
                           }
                       }.add {
                           IconButton.create("copy", text = "Password&nbsp;&nbsp;", buttonClass = "btn-xs btn-warning") {
                               copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
 
-                              ModalView.showAlert("Success!", "Copied password to clipboard!")
+                              Notify.show("Copied password to clipboard.", "success")
+                              //ModalView.showAlert("Success!", "Copied password to clipboard!")
                           }.attr("style", "margin-left: 5px;")
                       }.add {
                           IconButton.create("folder-open", buttonClass = "btn-xs btn-success") {
