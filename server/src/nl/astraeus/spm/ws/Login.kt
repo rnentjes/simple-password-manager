@@ -1,6 +1,7 @@
 package nl.astraeus.spm.ws
 
 import nl.astraeus.spm.crypt.Hash
+import nl.astraeus.spm.crypt.PasswordHash
 import nl.astraeus.spm.model.User
 import nl.astraeus.spm.model.UserDao
 import nl.astraeus.spm.util.Tokenizer
@@ -16,11 +17,9 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
     val loginName = tk.next()
     val passwordHash = tk.next()
 
-    val password = Hash.sha256(passwordHash)
-
     val found = UserDao.findByName(loginName)
 
-    if (found != null && found.password == password) {
+    if (found != null && PasswordHash.validatePassword(passwordHash, found.password)) {
         ws.user = found
         ws.send("LOGIN", found.encryptedKey)
 
@@ -35,7 +34,7 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
     val passwordHash = tk.next()
     val encryptedKey = tk.next()
 
-    val password = Hash.sha256(passwordHash)
+    val password = PasswordHash.createHash(passwordHash)
 
     val found = UserDao.findByName(loginName)
 

@@ -90,7 +90,6 @@ class PasswordForm(
         check(password.title.isNotBlank(), "title", "Please enter a title for this password.")
         check(password.id > 0 || password.password1.isNotBlank(), "password1", "Password field can not be empty for a new entry.")
         check(password.password1 == password.password2, "password1", "Passwords don't match.")
-        //check(password.password1.length >= 12, "password1", "Password is to short (at least 12 characters!)")
 
         println("validate: $valid -> $messages")
         return valid
@@ -144,6 +143,7 @@ object PasswordOverviewView {
 
                         password.group = group
 
+                        passwordForm.password.decrypt()
                         createPasswordEditor(parent, group, passwords, passwordForm)
                     }
 
@@ -190,6 +190,7 @@ object PasswordOverviewView {
                           }.attr("style", "margin-left: 5px;")
                       }.add {
                           IconButton.create("folder-open", buttonClass = "btn-xs btn-success") {
+                              passwordForm.password.decrypt()
                               createPasswordEditor(parent, group, passwords, passwordForm)
                           }.attr("style", "margin-left: 5px;")
                       }.add {
@@ -246,7 +247,6 @@ object PasswordView {
         clear(parent)
 
         val password = passwordForm.password
-        password.decrypt()
         var passwordType = "password"
 
         if (passwordForm.showPassword) {
@@ -286,6 +286,7 @@ object PasswordView {
                   }
                 ).attr("id", "modal_password_username_warning")
             }.add {
+                println("Getting pasword: ${password.password1}")
                 Input.create("modal_password_password1",
                   type = passwordType,
                   label = "Password",
@@ -295,6 +296,7 @@ object PasswordView {
                   messages = passwordForm.messages["password1"],
                   change = { e ->
                       password.password1 = (e.target as HTMLInputElement).value
+                      println("Setting pasword: ${password.password1}")
                   }
                 ).add {
                     if (passwordForm.showPassword) {
