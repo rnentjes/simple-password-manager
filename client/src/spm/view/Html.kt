@@ -48,6 +48,16 @@ fun Element.add(func: () -> Element): Element {
     return this
 }
 
+fun Element.addFirst(func: () -> Element): Element {
+    if (this.childElementCount > 0) {
+        this.insertBefore(func(), this.firstChild)
+    } else {
+        this.append(func())
+    }
+
+    return this
+}
+
 fun Element.cls(cls: String): Element {
     this.addClass(cls)
 

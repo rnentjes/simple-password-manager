@@ -118,8 +118,13 @@ class PasswordForm(
             ModalView.showAlert("Error", "Couldn't validate form?")
         }
     }
-
 }
+
+class PasswordSettings(
+  var length: Int = 32,
+  var numbers: Boolean = true,
+  var special: Boolean = true
+)
 
 object PasswordOverviewView {
 
@@ -289,7 +294,6 @@ object PasswordView {
                   }
                 ).attr("id", "modal_password_username_warning")
             }.add {
-                println("Getting pasword: ${password.password1}")
                 Input.create("modal_password_password1",
                   type = passwordType,
                   label = "Password",
@@ -299,7 +303,6 @@ object PasswordView {
                   messages = passwordForm.messages["password1"],
                   change = { e ->
                       password.password1 = (e.target as HTMLInputElement).value
-                      println("Setting pasword: ${password.password1}")
                   }
                 ).add {
                     if (passwordForm.showPassword) {
@@ -328,7 +331,13 @@ object PasswordView {
                   }
                 ).add {
                     IconButton.create("cog") { e ->
-                        //generate password options
+                        ModalView.showConfirm("Generate password",
+                          GeneratePasswordView.create(password, PasswordSettings()),
+                          "Save",
+                          "Cancel",
+                          confirm = {
+                              create(parent, passwordForm, cancel, save)
+                          })
                     }
                 }
             }.add {

@@ -107,6 +107,7 @@ object Input {
       helpText: String = "",
       classes: String = "",
       messages: List<String>? = null,
+      blur: (Event) -> Unit = {},
       change: (Event) -> Unit = {}) : Element {
         val result = div().cls("form-group")
 
@@ -127,6 +128,8 @@ object Input {
         if (placeHolder.isNotBlank()) {
             input.attr("placeholder", placeHolder)
         }
+
+        input.on("blur", true, blur)
 
         input.on("keyup", true, change)
 
@@ -298,5 +301,44 @@ object TextButton {
         button.onClick { e -> click(e) }
 
         return button
+    }
+}
+
+object Checkbox {
+    fun create(
+      id: String,
+      label: String,
+      labelWidth: Int,
+      inputWidth: Int,
+      checked: Boolean = false,
+      click: (HTMLInputElement) -> Unit = {}
+    ): Element {
+        return div().cls("form-group").add {
+            div().cls("col-sm-offset-$labelWidth col-sm-$inputWidth").add {
+                div().cls("checkbox").add {
+                    val labelElem = createTag("label").addFirst {
+                        val input = createTag("input")
+                          .attr("type", "checkbox")
+
+                        if (checked) {
+                            input.attr("checked", "checked")
+                        }
+
+                        input.onClick { it ->
+                            val target = it.target
+                            if (target is HTMLInputElement) {
+                                click(target)
+                            }
+                        }
+
+                        input
+                    }.add {
+                        createTag("span").txt(label)
+                    }
+
+                    labelElem
+                }
+            }
+        }
     }
 }

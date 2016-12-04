@@ -129,7 +129,6 @@ object GroupView {
     }
 
     fun createGroup(topGroup: Group, group: Group): Element {
-        println("CREATE GROUP ${group.name} - ${group.opened}")
         val result = createTag("li").add {
             val icon = createTag("span").attr("style", "margin-right: 5px;")
 
