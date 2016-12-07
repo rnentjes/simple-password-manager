@@ -8,6 +8,7 @@ import spm.state.UserState
 import spm.view.div
 import spm.view.elem
 import spm.view.group.GroupView
+import spm.view.modal.Notify
 import spm.ws.WebSocketConnection
 import kotlin.dom.onClick
 
@@ -44,8 +45,14 @@ object NavbarView {
 
                 if (root != null) {
                     WebSocketConnection.loadingWork {
-                        root.search(searchBox.value)
+                        val first = root.search(searchBox.value)
                         GroupView.show(root)
+
+                        if (first != null) {
+                            GroupView.clickGroup(first)
+                        } else {
+                            Notify.show("Nothing found.", "info")
+                        }
                     }
                 }
             }

@@ -56,11 +56,14 @@ data class Group(
         return result
     }
 
-    fun search(value: String) {
+    fun search(value: String): Group? {
+        var result: Group? = null
+
         if (name.toLowerCase().contains(value.toLowerCase())) {
             opened = false
             found = true
 
+            result = this
             var parent = parent
 
             while (parent != null) {
@@ -82,8 +85,14 @@ data class Group(
         }
 
         for (child in children) {
-            child.search(value)
+            val firstFound = child.search(value)
+
+            if (result == null) {
+                result = firstFound
+            }
         }
+
+        return result
     }
 }
 
