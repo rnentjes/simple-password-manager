@@ -9,6 +9,8 @@ dependencies {
   testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
 
   compile "org.slf4j:slf4j-api:1.+"
+  configurations.compile.exclude module: 'slf4j-simple'
+
   compile "ch.qos.logback:logback-classic:1.+"
 
   compile "org.nanohttpd:nanohttpd:2.3.1"
