@@ -13,6 +13,7 @@ import spm.view.main.MainView
 
 fun login(ws: WebSocket, tk: Tokenizer) {
     UserState.encryptedEncryptionKey = tk.next()
+    UserState.loggedIn = true
 
     MainView.show()
 }

@@ -4,6 +4,7 @@ import org.w3c.dom.Element
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
+import spm.state.UserState
 import spm.view.*
 import spm.view.main.MainView
 import spm.view.modal.ModalView
@@ -47,6 +48,13 @@ object WebSocketConnection {
     fun onOpen(ws: WebSocket, event: Event) {
         WebSocketConnection.doneLoading()
 
+        if (UserState.loginname != null && UserState.loginPasswordHash != null) {
+            send("LOGIN",
+              UserState.loginname ?: throw IllegalStateException("Whut!"),
+              UserState.loginPasswordHash ?: throw IllegalStateException("Whut!")
+            )
+        }
+
         interval = window.setInterval({
             val actualWs = websocket
 
@@ -54,7 +62,7 @@ object WebSocketConnection {
                 ws.send("OK")
             } else {
                 window.clearInterval(interval)
-                MainView.logout()
+                //MainView.logout()
 
                 ModalView.showAlert("Error", "Connection to the server was lost!\nPlease try again later.")
                 WebSocketConnection.loading()
@@ -107,6 +115,9 @@ object WebSocketConnection {
         websocket?.send(message)
 
         if(websocket == null) {
+            if (!UserState.loggedIn) {
+                UserState.clear()
+            }
             ModalView.showAlert("Error", "Cannot connect to the server!")
         }
     }

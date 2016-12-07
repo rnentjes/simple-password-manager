@@ -17,6 +17,7 @@ object UserState {
     var loginname: String? = null
     var loginPasswordHash: String? = null
     var encryptedEncryptionKey: String? = null
+    var loggedIn = false
 
     // groups
     var currentGroup: Group? = null
@@ -31,6 +32,7 @@ object UserState {
         encryptedEncryptionKey = null
         topGroup = null
         currentGroup = null
+        loggedIn = false
     }
 
     fun decryptPassword(password: String): String {
