@@ -158,6 +158,10 @@ object GroupView {
             icon
         }.add {
             val link = createTag("a")
+/*
+            if (group == UserState.currentGroup) {
+                link.attr("style", "background-color: yellow;")
+            }*/
 
             if (group.found) {
                 link.add {

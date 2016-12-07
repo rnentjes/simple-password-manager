@@ -50,7 +50,6 @@ object NavbarView {
                         if (first != null) {
                             UserState.currentGroup = first
                         } else {
-                            UserState.currentGroup = null
                             Notify.show("Nothing found.", "info")
                         }
 
