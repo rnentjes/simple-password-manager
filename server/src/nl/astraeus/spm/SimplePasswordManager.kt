@@ -1,5 +1,6 @@
 package nl.astraeus.spm
 
+import ch.qos.logback.core.joran.util.ConfigurationWatchListUtil
 import nl.astraeus.database.DdlMapping
 import nl.astraeus.database.setConnectionProvider
 import nl.astraeus.database.transaction
@@ -7,6 +8,7 @@ import nl.astraeus.spm.sql.DatabaseMigration
 import nl.astraeus.spm.web.SimpleWebSocketServer
 import org.slf4j.LoggerFactory
 import java.sql.DriverManager
+
 
 /**
  * User: rnentjes
@@ -49,6 +51,10 @@ fun main(args: Array<String>) {
     initDbConnection(cs)
     checkAdminUser()
     DatabaseMigration.check()
+
+    val loggerContext = (logger as ch.qos.logback.classic.Logger).loggerContext
+    val mainURL = ConfigurationWatchListUtil.getMainWatchURL(loggerContext)
+    println("LOGBACK: $mainURL")
 
     server.start(30000, false)
 
