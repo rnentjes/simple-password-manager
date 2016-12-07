@@ -46,13 +46,15 @@ object NavbarView {
                 if (root != null) {
                     WebSocketConnection.loadingWork {
                         val first = root.search(searchBox.value)
-                        GroupView.show(root)
 
                         if (first != null) {
-                            GroupView.clickGroup(first)
+                            UserState.currentGroup = first
                         } else {
+                            UserState.currentGroup = null
                             Notify.show("Nothing found.", "info")
                         }
+
+                        GroupView.show(root)
                     }
                 }
             }
