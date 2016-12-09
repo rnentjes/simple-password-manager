@@ -1,11 +1,7 @@
 package spm.state
 
 import spm.crypt.Aes
-import spm.crypt.Hash
-import spm.crypt.PBKDF2
 import spm.view.group.Group
-import spm.ws.WebSocketConnection
-import kotlin.browser.window
 
 /**
  * User: rnentjes

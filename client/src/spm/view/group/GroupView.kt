@@ -8,7 +8,6 @@ import spm.view.form.Form
 import spm.view.form.FormType
 import spm.view.form.Input
 import spm.view.modal.ModalView
-import spm.view.modal.Notify
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*

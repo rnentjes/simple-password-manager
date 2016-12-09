@@ -54,7 +54,7 @@ fun main(args: Array<String>) {
 
     val loggerContext = (logger as ch.qos.logback.classic.Logger).loggerContext
     val mainURL = ConfigurationWatchListUtil.getMainWatchURL(loggerContext)
-    println("LOGBACK: $mainURL")
+    //println("LOGBACK: $mainURL")
 
     server.start(30000, false)
 
