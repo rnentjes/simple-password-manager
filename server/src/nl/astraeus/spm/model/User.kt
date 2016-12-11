@@ -1,6 +1,6 @@
 package nl.astraeus.spm.model
 
-import nl.astraeus.database.Dao
+import nl.astraeus.database.SimpleDao
 import nl.astraeus.database.annotations.*
 import java.util.*
 
@@ -27,7 +27,7 @@ data class User(
     fun checkPassword(password: String) = (password == this.password)
 }
 
-object UserDao: Dao<User>(User::class.java) {
+object UserDao: SimpleDao<User>(User::class.java) {
 
     fun findByName(name: String) = find("name = ?", name)
 

@@ -1,6 +1,6 @@
 package nl.astraeus.spm.model
 
-import nl.astraeus.database.Dao
+import nl.astraeus.database.SimpleDao
 import nl.astraeus.database.annotations.*
 import nl.astraeus.spm.util.Tokenizer
 import java.util.*
@@ -32,7 +32,7 @@ data class Password(
     }
 }
 
-object PasswordDao: Dao<Password>(Password::class.java) {
+object PasswordDao: SimpleDao<Password>(Password::class.java) {
 
     fun findByUser(email: String) = where("user = ?", email)
 

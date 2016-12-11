@@ -1,12 +1,12 @@
 package nl.astraeus.spm
 
-import ch.qos.logback.core.joran.util.ConfigurationWatchListUtil
-import nl.astraeus.database.DdlMapping
-import nl.astraeus.database.setConnectionProvider
-import nl.astraeus.database.transaction
+import nl.astraeus.database.SimpleDatabase
+import nl.astraeus.database.jdbc.ConnectionPool
+import nl.astraeus.database.jdbc.ConnectionProvider
 import nl.astraeus.spm.sql.DatabaseMigration
 import nl.astraeus.spm.web.SimpleWebSocketServer
 import org.slf4j.LoggerFactory
+import java.sql.Connection
 import java.sql.DriverManager
 
 
@@ -17,28 +17,20 @@ import java.sql.DriverManager
  */
 
 fun initDbConnection(connectionString: String) {
-    DdlMapping.get().setExecuteDDLUpdates(true)
+    val db = SimpleDatabase.define(ConnectionPool(object : ConnectionProvider() {
+        override fun getConnection(): Connection {
+            Class.forName("org.h2.Driver")
+            Class.forName("nl.astraeus.jdbc.Driver")
 
-    setConnectionProvider {
-        Class.forName("org.h2.Driver")
-        Class.forName("nl.astraeus.jdbc.Driver")
+            val connection = DriverManager.getConnection(connectionString, "sa", "")
+            connection.autoCommit = false
 
-        val connection = DriverManager.getConnection(connectionString, "sa", "")
-        connection.autoCommit = false
+            return connection
+        }
 
-        // result
-        connection
-    }
-}
+    }))
 
-fun checkAdminUser() {
-    transaction {
-//        if (UserDao.findByEmail("admin@astraeus.nl") == null) {
-//            val user = User("admin", 0, "admin@astraeus.nl", "admin", "", "Rien", Date(), Date())
-//
-//            UserDao.insert(user)
-//        }
-    }
+    db.setExecuteDDLUpdates(true)
 }
 
 fun main(args: Array<String>) {
@@ -49,12 +41,7 @@ fun main(args: Array<String>) {
     val cs = "jdbc:stat:webServerPort=18200:jdbc:h2:file:/home/rnentjes/apps/spm/data/data"
 
     initDbConnection(cs)
-    checkAdminUser()
     DatabaseMigration.check()
-
-    val loggerContext = (logger as ch.qos.logback.classic.Logger).loggerContext
-    val mainURL = ConfigurationWatchListUtil.getMainWatchURL(loggerContext)
-    //println("LOGBACK: $mainURL")
 
     server.start(30000, false)
 

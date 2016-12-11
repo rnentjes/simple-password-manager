@@ -1,6 +1,6 @@
 package nl.astraeus.spm.model
 
-import nl.astraeus.database.Dao
+import nl.astraeus.database.SimpleDao
 import nl.astraeus.database.annotations.*
 import nl.astraeus.spm.util.DateFormatter
 import nl.astraeus.spm.util.Tokenizer
@@ -52,7 +52,7 @@ data class Group(
     }
 }
 
-object GroupDao: Dao<Group>(Group::class.java) {
+object GroupDao: SimpleDao<Group>(Group::class.java) {
 
     fun findRootGroupOfUser(name: String) = find("user = ? and parentGroup = 0", name)
 

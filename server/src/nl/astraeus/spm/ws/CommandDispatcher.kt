@@ -1,6 +1,6 @@
 package nl.astraeus.spm.ws
 
-import nl.astraeus.database.Persister
+import nl.astraeus.database.transaction
 import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
 import org.slf4j.LoggerFactory
@@ -42,15 +42,11 @@ object CommandDispatcher {
             try {
                 val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
 
-                Persister.begin()
-
-                command.invoke(ws, tk)
-
-                Persister.commit()
+                transaction {
+                    command.invoke(ws, tk)
+                }
             } catch(e: Exception) {
                 logger.warn(e.message, e)
-
-                Persister.rollback()
 
                 ws.sendAlert("Error", "${e.message}")
             }

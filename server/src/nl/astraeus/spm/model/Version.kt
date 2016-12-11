@@ -1,6 +1,6 @@
 package nl.astraeus.spm.model
 
-import nl.astraeus.database.Dao
+import nl.astraeus.database.SimpleDao
 import nl.astraeus.database.annotations.Cache
 import nl.astraeus.database.annotations.Id
 import nl.astraeus.database.annotations.IdType
@@ -25,16 +25,16 @@ data class Version(
     constructor(): this(0, "", Date())
 }
 
-object VersionDao: Dao<Version>(Version::class.java) {
+object VersionDao: SimpleDao<Version>(Version::class.java) {
 
     fun executeUpdate(number:Long, query: String) {
-        execute(query)
+        execute(query = query)
 
         insert(Version(number, query, Date()))
     }
 
     fun findCurrentVersion(): Long {
-        val rs = query("SELECT MAX(number) FROM version")
+        val rs = query(query = "SELECT MAX(number) FROM version")
         var result = -1L
 
         if (rs.next()) {
