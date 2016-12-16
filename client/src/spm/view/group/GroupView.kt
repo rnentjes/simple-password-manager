@@ -8,6 +8,8 @@ import spm.view.form.Form
 import spm.view.form.FormType
 import spm.view.form.Input
 import spm.view.modal.ModalView
+import spm.view.password.Password
+import spm.view.password.PasswordOverviewView
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
@@ -26,9 +28,17 @@ data class Group(
   var opened: Boolean = false,
   var parent: Group?,
   var found: Boolean = false,
-  val children: MutableList<Group> = ArrayList()
+  val children: MutableList<Group> = ArrayList(),
+  val passwords: MutableList<Password> = ArrayList()
 ) {
     constructor(tk: Tokenizer) : this(parseInt(tk.next()).toLong(), tk.next(), tk.next() == "true", null) {
+        val numberOfPasswords = parseInt(tk.next())
+        for (index in 0..numberOfPasswords - 1) {
+            val password = Password(tk)
+
+            passwords.add(password)
+        }
+
         val numberOfChildren = parseInt(tk.next())
 
         for (index in 0..numberOfChildren - 1) {
@@ -53,6 +63,22 @@ data class Group(
         }
 
         return result
+    }
+
+    fun findById(id: Long): Group? {
+        if (this.id == id) {
+            return this
+        } else {
+            for (child in children) {
+                val found = child.findById(id)
+
+                if (found != null) {
+                    return found
+                }
+            }
+        }
+
+        return null
     }
 
     fun search(value: String): Group? {
@@ -92,6 +118,35 @@ data class Group(
         }
 
         return result
+    }
+
+    fun savePassword(password: Password) {
+        var found = false
+
+        for(pwd in passwords) {
+            if (pwd.id == password.id) {
+                println("Replacing password ${password.id}")
+                passwords.remove(pwd)
+                passwords.add(password)
+
+                found = true
+                break
+            }
+        }
+
+        if (!found) {
+            println("Adding password ${password.id}")
+            passwords.add(password)
+        }
+    }
+
+    fun deletePassword(passwordId: Long) {
+        for(pwd in passwords) {
+            if (pwd.id == passwordId) {
+                passwords.remove(pwd)
+                break
+            }
+        }
     }
 }
 
@@ -187,8 +242,7 @@ object GroupView {
 
     fun clickGroup(group: Group) {
         GroupPasswordsView.show(group)
-
-        WebSocketConnection.send("GETPASSWORDS", "${group.id}")
+        PasswordOverviewView.show(elem("passwords_overview"), group, group.passwords)
     }
 
     fun clickExpandGroup(topGroup: Group, group: Group) {

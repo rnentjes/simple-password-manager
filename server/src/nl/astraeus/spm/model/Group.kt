@@ -39,6 +39,14 @@ data class Group(
 
         result.append("$id~${Tokenizer.escape(name)}~$opened")
 
+        val passwords = PasswordDao.findByGroup(id)
+
+        result.append("~${passwords.size}")
+
+        for (password in passwords) {
+            result.append("~${password.tokenize()}")
+        }
+
         val children = GroupDao.findChildren(this)
 
         result.append("~${children.size}")

@@ -8,13 +8,11 @@ import spm.state.UserState
 import spm.view.*
 import spm.view.form.*
 import spm.view.group.Group
-import spm.view.group.GroupView
 import spm.view.modal.ModalView
 import spm.view.modal.Notify
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
-import kotlin.browser.window
 import kotlin.dom.onClick
 import kotlin.dom.removeClass
 
@@ -128,7 +126,7 @@ class PasswordSettings(
 
 object PasswordOverviewView {
 
-    fun show(parent: Element, group: Long, passwords: List<Password>) {
+    fun show(parent: Element, group: Group, passwords: List<Password>) {
         // passwords_overview
         clear(parent)
 
@@ -147,7 +145,7 @@ object PasswordOverviewView {
                         val password = Password()
                         val passwordForm = PasswordForm(password)
 
-                        password.group = group
+                        password.group = group.id
 
                         passwordForm.password.decrypt()
                         createPasswordEditor(parent, group, passwords, passwordForm)
@@ -173,7 +171,18 @@ object PasswordOverviewView {
         }
 
         for (password in passwords) {
-            val passwordForm = PasswordForm(password)
+            val passwordCopy = Password(
+              password.id,
+              password.user,
+              password.group,
+              password.title,
+              password.website,
+              password.username,
+              password.encryptedPassword,
+              password.password1,
+              password.password2,
+              password.description)
+            val passwordForm = PasswordForm(passwordCopy)
 
             table.add {
                 createTag("tr")
@@ -225,7 +234,7 @@ object PasswordOverviewView {
 
     fun createPasswordEditor(
       parent: Element,
-      group: Long,
+      group: Group,
       passwords: List<Password>,
       passwordForm: PasswordForm) {
 

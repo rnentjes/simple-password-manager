@@ -11,33 +11,6 @@ import java.util.*
  * Time: 11:32
  */
 
-fun getPasswords(ws: SimpleWebSocket, tk: Tokenizer) {
-    val groupId = tk.next().toLong()
-
-    val group = GroupDao.find(groupId) ?: throw IllegalAccessException("Group not found!")
-
-    val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
-
-    sendPasswords(ws, group, user)
-}
-
-private fun sendPasswords(ws: SimpleWebSocket, group: Group, user: User) {
-    if (group.user != user.name) {
-        throw IllegalAccessException("You are not allowed to edit this group!")
-    }
-
-    val passwords = PasswordDao.findByGroup(group.id)
-    val message = StringBuilder()
-
-    message.append("SETPASSWORDS~${group.id}~${passwords.size}")
-
-    for (password in passwords) {
-        message.append("~${password.tokenize()}")
-    }
-
-    ws.send(message.toString())
-}
-
 fun newPassword(ws: SimpleWebSocket, tk: Tokenizer) {
     val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
     val groupId = tk.next().toLong()
@@ -54,7 +27,7 @@ fun newPassword(ws: SimpleWebSocket, tk: Tokenizer) {
 
     PasswordDao.insert(password)
 
-    sendPasswords(ws, group, user)
+    ws.send("SAVEDPASSWORD~$groupId~${password.tokenize()}")
 }
 
 fun savePassword(ws: SimpleWebSocket, tk: Tokenizer) {
@@ -78,9 +51,9 @@ fun savePassword(ws: SimpleWebSocket, tk: Tokenizer) {
         val password = Password(id, user.name, groupId, title, url, username, encryptedPassword, notes, oldPassword.created, Date())
 
         PasswordDao.update(password)
-    }
 
-    sendPasswords(ws, group, user)
+        ws.send("SAVEDPASSWORD~$groupId~${password.tokenize()}")
+    }
 }
 
 fun deletePassword(ws: SimpleWebSocket, tk: Tokenizer) {
@@ -97,7 +70,7 @@ fun deletePassword(ws: SimpleWebSocket, tk: Tokenizer) {
         ws.sendAlert("Forbidden", "You are not allowed to delete this password!")
     } else {
         PasswordDao.delete(password)
-    }
 
-    sendPasswords(ws, group, user)
+        ws.send("DELETEDPASSWORD~$groupId~${password.id}")
+    }
 }

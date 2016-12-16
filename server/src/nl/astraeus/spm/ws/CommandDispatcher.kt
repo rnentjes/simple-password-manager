@@ -23,7 +23,6 @@ object CommandDispatcher {
         commands.put("UPDATEGROUPNAME", ::updateGroupName)
         commands.put("CREATEGROUP", ::createGroup)
         commands.put("GROUPOPENED", ::openedGroup)
-        commands.put("GETPASSWORDS", ::getPasswords)
         commands.put("NEWPASSWORD", ::newPassword)
         commands.put("SAVEPASSWORD", ::savePassword)
         commands.put("DELETEPASSWORD", ::deletePassword)

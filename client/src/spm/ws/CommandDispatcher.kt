@@ -15,7 +15,8 @@ object CommandDispatcher {
         commands.put("ALERT", { ws, tk -> ModalView.showAlert(tk.next(), tk.next()) })
         commands.put("SETGROUPS", ::setGroups)
         commands.put("CREATEDGROUP", ::createdGroup)
-        commands.put("SETPASSWORDS", ::setPasswords)
+        commands.put("SAVEDPASSWORD", ::savedPassword)
+        commands.put("DELETEDPASSWORD", ::deletedPassword)
     }
 
     fun handle(ws: WebSocket, msg: String) {
