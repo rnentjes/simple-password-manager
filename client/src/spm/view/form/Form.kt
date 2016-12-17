@@ -58,8 +58,8 @@ object Form {
 
     fun create(
       type: FormType = FormType.DEFAULT
-    ): HTMLFormElement {
-        val result = createTag("form") as HTMLFormElement
+    ): Element {
+        val result = createTag("div")
 
         result.cls(type.cls)
 

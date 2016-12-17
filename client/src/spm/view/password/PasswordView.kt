@@ -131,28 +131,26 @@ object PasswordOverviewView {
         clear(parent)
 
         parent.add {
-            div().cls("row").txt("&nbsp")
-        }.add {
-            div().cls("row").add {
-                div().cls("col-md-4").add {
-                    createTag("h4").txt("Passwords")
+            div().cls("page-header").add {
+                div().cls("btn-toolbar pull-right").add {
+                    div().cls("button-group").add {
+                        val a = createTag("a").cls("btn btn-success btn-sm").txt("Add")
+
+                        a.onClick {
+                            val password = Password()
+                            val passwordForm = PasswordForm(password)
+
+                            password.group = group.id
+
+                            passwordForm.password.decrypt()
+                            createPasswordEditor(parent, group, passwords, passwordForm)
+                        }
+
+                        a
+                    }
                 }
             }.add {
-                div().cls("col-sm-8").add {
-                    val a = createTag("a").cls("btn btn-success btn-sm").txt("Add")
-
-                    a.onClick {
-                        val password = Password()
-                        val passwordForm = PasswordForm(password)
-
-                        password.group = group.id
-
-                        passwordForm.password.decrypt()
-                        createPasswordEditor(parent, group, passwords, passwordForm)
-                    }
-
-                    a
-                }
+                createTag("h4").txt("Passwords")
             }
         }
 
@@ -163,7 +161,6 @@ object PasswordOverviewView {
               .add { createTag("th").txt("Title") }
               .add { createTag("th").txt("Url") }
               .add { createTag("th").txt("Username") }
-              .add { createTag("th").txt("Notes") }
               .add { createTag("th").txt("") }
               .add { createTag("th").txt("") }
               .add { createTag("th").txt("") }
@@ -189,7 +186,6 @@ object PasswordOverviewView {
                   .add { createTag("td").txt(password.title) }
                   .add { createTag("td").txt(password.website) }
                   .add { createTag("td").txt(password.username) }
-                  .add { createTag("td").txt(password.description) }
                   .add {
                       createTag("td").cls("col-md-5").add {
                           IconButton.create("copy", text = "Username&nbsp;&nbsp;", buttonClass = "btn-xs btn-default") {
@@ -271,6 +267,12 @@ object PasswordView {
         }
 
         parent.add {
+            if (passwordForm.password.id > 0) {
+                header("Edit password")
+            } else {
+                header("New password")
+            }
+        }.add {
             Form.create(FormType.HORIZONTAL)
               .add {
                   Input.create(

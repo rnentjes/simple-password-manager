@@ -39,7 +39,7 @@ object NavbarView {
         } else {
             parent.innerHTML = html
 
-            elem("navbar_search").onClick {
+            elem("navbar_search").onClick { event ->
                 val searchBox = elem("navbar_search_input") as HTMLInputElement
                 val root = UserState.topGroup
 
@@ -55,7 +55,11 @@ object NavbarView {
 
                         GroupView.show(root)
                     }
+                } else {
+                    println("Topgroup not found!?")
                 }
+
+                event.preventDefault()
             }
 
             elem("logout_action").onClick {

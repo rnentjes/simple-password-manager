@@ -270,9 +270,9 @@ object GroupPasswordsView {
         result.add {
             Form.create(FormType.HORIZONTAL).add {
                 Input.create("group_name",
-                  label = "",
+                  label = "Name",
                   labelWidth = 1,
-                  inputWidth = 7,
+                  inputWidth = 4,
                   classes = "input-lg",
                   value = group.name).add {
                     val a = createTag("a").cls("btn btn-success btn-sm col-md-2").txt("Save name")
@@ -292,72 +292,48 @@ object GroupPasswordsView {
                     }
 
                     a
-                }
-    //            createTag("h1").txt(group.name)
-            }.add {
-                div().cls("form-group").add {
-                    div().cls("col-sm-offset-4 col-sm-8").add {
-                        val a = createTag("a").cls("btn btn-primary").txt("Add subgroup")
-
-                        a.onClick {
-                            ModalView.showConfirm("New group",
-                              body = Form.create(FormType.HORIZONTAL).add {
-                                  Input.create("modal_group_name", label = "Group name", labelWidth = 4, value = "")
-                              },
-                              denyText = "Close",
-                              confirmText = "Save",
-                              confirm = {
-                                  val input = elem("modal_group_name") as HTMLInputElement
-
-                                  if (input.value.isBlank()) {
-                                      //Notify.show("Group name can not be blank!", "error")
-                                      ModalView.showAlert("Error", "Group name can not be blank")
-                                  } else {
-                                      WebSocketConnection.loading()
-                                      WebSocketConnection.send("CREATEGROUP", "${group.id}", input.value)
-                                  }
-                              })
-                        }
-
-                        a
-                    }.add {
-                        val a = createTag("a")
-                          .cls("btn btn-danger btn-xl")
-                          .txt("Remove group")
-                          .attr("style", "margin-left:5px;")
-
-                        if (group.children.isNotEmpty()) {
-                            a.attr("disabled", "disabled")
-                        }
-
-                        a.onClick { }
-
-                        a
-                    }
-                }
-            }
-/*
-              .add {
-                Input.create("group_name", label = "Group name", labelWidth = 4, inputWidth = 7, value = group.name).add {
-                    val a = createTag("a").cls("btn btn-success btn-xl col-md-1").txt("Save")
+                }.add {
+                    val a = createTag("a")
+                      .cls("btn btn-primary btn-sm col-md-2")
+                      .attr("style", "margin-left:5px;")
+                      .txt("Add subgroup")
 
                     a.onClick {
-                        val input = elem("group_name") as HTMLInputElement
+                        ModalView.showConfirm("New group",
+                          body = Form.create(FormType.HORIZONTAL).add {
+                              Input.create("modal_group_name", label = "Group name", labelWidth = 4, value = "")
+                          },
+                          denyText = "Close",
+                          confirmText = "Save",
+                          confirm = {
+                              val input = elem("modal_group_name") as HTMLInputElement
 
-                        if (input.value.isBlank()) {
-                            ModalView.showAlert("Error", "Name can not be empty!")
-                        } else {
-                            group.name = input.value
-
-                            WebSocketConnection.send("UPDATEGROUPNAME", "${group.id}", group.name)
-                            show(group)
-                        }
+                              if (input.value.isBlank()) {
+                                  //Notify.show("Group name can not be blank!", "error")
+                                  ModalView.showAlert("Error", "Group name can not be blank")
+                              } else {
+                                  WebSocketConnection.loading()
+                                  WebSocketConnection.send("CREATEGROUP", "${group.id}", input.value)
+                              }
+                          })
                     }
+
+                    a
+                }.add {
+                    val a = createTag("a")
+                      .cls("btn btn-danger btn-sm col-md-2")
+                      .txt("Remove group")
+                      .attr("style", "margin-left:5px;")
+
+                    if (group.children.isNotEmpty()) {
+                        a.attr("disabled", "disabled")
+                    }
+
+                    a.onClick { }
 
                     a
                 }
             }
-*/
         }
 
         result.add {

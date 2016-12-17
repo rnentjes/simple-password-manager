@@ -82,3 +82,9 @@ fun copyToClipboard(text: String) {
         body.removeChild(ta)
     }
 }
+
+fun header(txt: String): Element {
+    return createTag("div").cls("page-header").add {
+        createTag("h4").txt(txt)
+    }
+}

@@ -16,7 +16,7 @@
     <orderEntry type="library" name="Gradle: org.nanohttpd:nanohttpd:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: org.nanohttpd:nanohttpd-websocket:2.3.1" level="project" />
     <orderEntry type="library" name="Gradle: nl.astraeus:simple-database-kotlin:2.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.4" level="project" />
+    <orderEntry type="library" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.6" level="project" />
     <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.193" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test-junit:1.0.5-2" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.1.8" level="project" />
