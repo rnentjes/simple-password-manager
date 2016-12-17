@@ -5,3 +5,4 @@ gradle.properties
 build
 .gradle
 logs
+.idea/workspace.xml
