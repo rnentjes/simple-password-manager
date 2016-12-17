@@ -1,20 +1,14 @@
 # Todo
 
-## Login
+## Layout
 
-* At start check login status
-** Login when needed
+- Fix group layout
+- Fix title on login screen
 
-## Security 
+## Security
 
-* Only allow wss connection
+- Encrypt all field before sending them to the server
 
-## Company's?
+## Functionality
 
-* User can be member of a (or multiple) company
-
-## Users & groups
-
-* User has personal passwords
-* Passwords can be stored in groups
-
+- Fix 'remove group' button
