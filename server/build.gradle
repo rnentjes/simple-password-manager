@@ -23,10 +23,10 @@ dependencies {
 }
 
 sourceSets {
-  main.java.srcDirs += 'src'
-  main.resources.srcDirs += 'src'
+  main.java.srcDirs = ['src']
+  main.resources.srcDirs = ['resources']
 
-  main.kotlin.srcDirs += 'src'
+  main.kotlin.srcDirs = ['src']
 }
 
 jar {

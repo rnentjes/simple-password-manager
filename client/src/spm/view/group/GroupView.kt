@@ -13,7 +13,9 @@ import spm.view.password.PasswordOverviewView
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
 import java.util.*
+import kotlin.dom.addClass
 import kotlin.dom.onClick
+import kotlin.dom.removeClass
 
 /**
  * User: rnentjes
@@ -168,12 +170,8 @@ object GroupView {
 
         result.add {
             div().cls("row").add {
-                div().cls("col-md-6").add {
-                    createTag("h1").txt("Groups ")
-                }
-            }.add {
-                div().cls("col-md-6").add {
-                    createTag("br")
+                div().cls("col-md-12").add {
+                    createTag("h4").txt("Password groups")
                 }
             }
         }
@@ -193,13 +191,13 @@ object GroupView {
 
     fun createGroup(topGroup: Group, group: Group): Element {
         val result = createTag("li").add {
-            val icon = createTag("span").attr("style", "margin-right: 5px;")
+            val icon = createTag("span").attr("style", "margin-right: 10px;")
 
             if (group.children.isNotEmpty()) {
                 if (group.opened) {
-                    icon.cls("glyphicon glyphicon-minus")
+                    icon.cls("glyphicon glyphicon-folder-open")
                 } else {
-                    icon.cls("glyphicon glyphicon-plus")
+                    icon.cls("glyphicon glyphicon-folder-close")
                 }
             } else {
                 icon.cls("glyphicon glyphicon-none")
@@ -211,26 +209,33 @@ object GroupView {
 
             icon
         }.add {
-            val link = createTag("a")
-/*
-            if (group == UserState.currentGroup) {
-                link.attr("style", "background-color: yellow;")
-            }*/
+            val link = createTag("a").attr("id", "group_link_${group.id}")
+
+             var name = group.name
+
+            if (name.length > 14) {
+                name = name.slice(0..11) + "..."
+            }
+
+            link.txt(name)
 
             if (group.found) {
-                link.add {
-                    createTag("strong").txt(group.name)
-                }
-            } else {
-                link.txt(group.name)
+                link.addClass("found")
             }
 
             link.setAttribute("href", "#")
             link.onClick {
+                val currentGroup = UserState.currentGroup
+
+                if (currentGroup != null) {
+                    elem("group_link_${currentGroup.id}").removeClass("selected")
+                }
                 clickGroup(group)
             }
 
             link
+        }.add {
+            createTag("span").cls("badge").txt("${group.passwords.size}")
         }
 
         if (group.opened) {
@@ -241,6 +246,9 @@ object GroupView {
     }
 
     fun clickGroup(group: Group) {
+        if (hasElem("group_link_${group.id}")) {
+            elem("group_link_${group.id}").addClass("selected")
+        }
         GroupPasswordsView.show(group)
         PasswordOverviewView.show(elem("passwords_overview"), group, group.passwords)
     }
@@ -268,6 +276,16 @@ object GroupPasswordsView {
         }
 
         result.add {
+            div().cls("row").add {
+                div().cls("col-md-12").add {
+                    createTag("h4").txt("Group ${group.name}")
+                }
+            }
+        }.add {
+            div().cls("row").add {
+                createTag("hr")
+            }
+        }.add {
             Form.create(FormType.HORIZONTAL).add {
                 Input.create("group_name",
                   label = "Name",

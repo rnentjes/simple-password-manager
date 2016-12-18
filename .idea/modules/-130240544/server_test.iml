@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module external.linked.project.id=":server:test" external.linked.project.path="$MODULE_DIR$/../../../server" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="nl.astraeus.spm" external.system.module.type="sourceSet" external.system.module.version="1.0.0-SNAPSHOT" type="JAVA_MODULE" version="4">
+<module external.linked.project.id=":server:test" external.linked.project.path="$MODULE_DIR$/../../../server" external.root.project.path="$MODULE_DIR$/../../../client" external.system.id="GRADLE" external.system.module.group="nl.astraeus.spm" external.system.module.type="sourceSet" external.system.module.version="1.0.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output-test url="file://$MODULE_DIR$/../../../server/build/classes/test" />
     <exclude-output />
@@ -12,20 +12,21 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="server_main" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.22" level="project" />
-    <orderEntry type="library" name="Gradle: ch.qos.logback:logback-classic:1.1.8" level="project" />
     <orderEntry type="library" name="Gradle: org.nanohttpd:nanohttpd:2.3.1" level="project" />
-    <orderEntry type="library" name="Gradle: org.nanohttpd:nanohttpd-websocket:2.3.1" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:simple-database-kotlin:2.0.2" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.6" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: ch.qos.logback:logback-classic:1.1.8" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.nanohttpd:nanohttpd-websocket:2.3.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:simple-database-kotlin:2.0.2" level="project" />
     <orderEntry type="library" name="Gradle: com.h2database:h2:1.4.193" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test-junit:1.0.5-2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.6" level="project" />
     <orderEntry type="library" name="Gradle: ch.qos.logback:logback-core:1.1.8" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:simple-database:2.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-test-junit:1.0.5-2" level="project" />
     <orderEntry type="library" name="Gradle: nl.astraeus.template:very-simple-templates:1.3" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus.web:simple-web:0.3" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-test:1.0.5-2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:simple-database:2.0.0" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus.web:simple-web:0.3" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.6-eap-112" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.6-eap-112" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-test:1.0.5-2" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.6-eap-112" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="server_main" />
 </module>

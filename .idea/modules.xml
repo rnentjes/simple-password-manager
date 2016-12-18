@@ -2,13 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client.iml" group="client" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client_main.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client_main.iml" group="client" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client/client_test.iml" filepath="$PROJECT_DIR$/.idea/modules/client/client_test.iml" group="client" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server.iml" group="server" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server_main.iml" group="server" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/server/server_test.iml" group="server" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/spm.iml" filepath="$PROJECT_DIR$/.idea/modules/spm.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client.iml" filepath="$PROJECT_DIR$/.idea/modules/client.iml" group="client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client_main.iml" filepath="$PROJECT_DIR$/.idea/modules/client_main.iml" group="client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/client_test.iml" filepath="$PROJECT_DIR$/.idea/modules/client_test.iml" group="client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-130240544/server.iml" filepath="$PROJECT_DIR$/.idea/modules/-130240544/server.iml" group="server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-130240544/server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/-130240544/server_main.iml" group="server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-130240544/server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/-130240544/server_test.iml" group="server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/351701010/spm.iml" filepath="$PROJECT_DIR$/.idea/modules/351701010/spm.iml" />
     </modules>
   </component>
 </project>

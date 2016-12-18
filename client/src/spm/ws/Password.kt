@@ -3,6 +3,7 @@ package spm.ws
 import org.w3c.dom.WebSocket
 import spm.state.UserState
 import spm.view.elem
+import spm.view.group.GroupView
 import spm.view.password.Password
 import spm.view.password.PasswordOverviewView
 
@@ -19,6 +20,7 @@ fun savedPassword(ws: WebSocket, tk: Tokenizer) {
 
     group.savePassword(password)
 
+    GroupView.show(topGroup)
     PasswordOverviewView.show(elem("passwords_overview"), group, group.passwords)
 }
 

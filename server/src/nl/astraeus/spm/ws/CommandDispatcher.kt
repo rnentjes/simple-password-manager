@@ -41,6 +41,7 @@ object CommandDispatcher {
             try {
                 val command = commands[cmd] ?: throw IllegalStateException("Don't know how to handle command [$cmd]")
 
+                commandLogger.debug("Handling $cmd")
                 transaction {
                     command.invoke(ws, tk)
                 }

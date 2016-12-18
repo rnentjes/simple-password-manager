@@ -1,5 +1,12 @@
 @import "spinner.scss";
 
+/*
+#group_passwords_overview {
+  border-left: 2px solid #ccc;
+  padding-left: 5px;
+}
+*/
+
 ul.tree, ul.tree ul {
   list-style-type: none;
   font-size: 16px;
@@ -9,7 +16,47 @@ ul { padding-left: 5px; }
 
 ul ul { padding-left: 20px; }
 
-.glyphicon-none:before {
+li a {
+  padding: 2px 5px;
+  color: #444444;
+}
+
+li a.selected {
+  color: #444444;
+  background-color: #faf066;
+  border: 1px dotted #444444;
+}
+
+li a.found {
+  background-color: #faf066;
+}
+
+li a:hover, li a:focus {
+  //color: #439a46;
+}
+
+li > .badge {
+  float: right;
+}
+
+/*
+li.badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    background-color: #777;
+    border-radius: 10px;
+}
+*/
+
+.glyphicon-none :before {
   content: "\2122";
   color: transparent !important;
 }
