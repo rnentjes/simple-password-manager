@@ -12,9 +12,13 @@ ul.tree, ul.tree ul {
   font-size: 16px;
 }
 
-ul { padding-left: 5px; }
+ul {
+  padding-left: 5px;
+}
 
-ul ul { padding-left: 20px; }
+ul ul {
+  padding-left: 20px;
+}
 
 li a {
   padding: 2px 5px;
@@ -37,24 +41,20 @@ li a:hover, li a:focus {
 
 li > .badge {
   float: right;
-}
+  margin-right: 12px;
 
-/*
-li.badge {
-    display: inline-block;
-    min-width: 10px;
-    padding: 3px 7px;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 1;
-    color: #fff;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    background-color: #777;
-    border-radius: 10px;
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: baseline;
+  background-color: #777;
 }
-*/
 
 .glyphicon-none :before {
   content: "\2122";

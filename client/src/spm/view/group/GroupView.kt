@@ -150,6 +150,16 @@ data class Group(
             }
         }
     }
+
+    fun getPasswordsCountInGroup(): Int {
+        var result = passwords.size
+
+        for (child in children) {
+            result += child.getPasswordsCountInGroup()
+        }
+
+        return result
+    }
 }
 
 object GroupView {
@@ -235,7 +245,7 @@ object GroupView {
 
             link
         }.add {
-            createTag("span").cls("badge").txt("${group.passwords.size}")
+            createTag("span").cls("badge").txt("${group.passwords.size}/${group.getPasswordsCountInGroup()}")
         }
 
         if (group.opened) {
