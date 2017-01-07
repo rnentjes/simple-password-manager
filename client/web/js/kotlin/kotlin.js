@@ -22150,19 +22150,26 @@ module.exports = function(Kotlin) {
     o["preferLowPowerToHighPerformance"] = preferLowPowerToHighPerformance;
     o["failIfMajorPerformanceCaveat"] = failIfMajorPerformanceCaveat;
     return o;
-  }), WebGLContextEventInit_o0ij6q$:Kotlin.defineInlineFunction("kotlin.org.khronos.webgl.WebGLContextEventInit_o0ij6q$", function(statusMessage, bubbles, cancelable) {
+  }), WebGLContextEventInit_56duqf$:Kotlin.defineInlineFunction("kotlin.org.khronos.webgl.WebGLContextEventInit_56duqf$", function(statusMessage, bubbles, cancelable, composed) {
+    if (statusMessage === void 0) {
+      statusMessage = "";
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["statusMessage"] = statusMessage;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  })})}), w3c:Kotlin.definePackage(null, {dom:Kotlin.definePackage(null, {events:Kotlin.definePackage(null, {UIEventInit_vz9i9r$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.UIEventInit_vz9i9r$", function(view, detail, bubbles, cancelable) {
+  })})}), w3c:Kotlin.definePackage(null, {dom:Kotlin.definePackage(null, {events:Kotlin.definePackage(null, {UIEventInit_a43u3e$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.UIEventInit_a43u3e$", function(view, detail, bubbles, cancelable, composed) {
     if (view === void 0) {
       view = null;
     }
@@ -22175,13 +22182,17 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["view"] = view;
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), FocusEventInit_n9ip3s$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.FocusEventInit_n9ip3s$", function(relatedTarget, view, detail, bubbles, cancelable) {
+  }), FocusEventInit_wlntb5$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.FocusEventInit_wlntb5$", function(relatedTarget, view, detail, bubbles, cancelable, composed) {
     if (relatedTarget === void 0) {
       relatedTarget = null;
     }
@@ -22197,14 +22208,18 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["relatedTarget"] = relatedTarget;
     o["view"] = view;
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), MouseEventInit_h05so9$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.MouseEventInit_h05so9$", function(screenX, screenY, clientX, clientY, button, buttons, relatedTarget, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierOS, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable) {
+  }), MouseEventInit_38kg7z$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.MouseEventInit_38kg7z$", function(screenX, screenY, clientX, clientY, button, buttons, relatedTarget, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable, composed) {
     if (screenX === void 0) {
       screenX = 0;
     }
@@ -22256,9 +22271,6 @@ module.exports = function(Kotlin) {
     if (modifierNumLock === void 0) {
       modifierNumLock = false;
     }
-    if (modifierOS === void 0) {
-      modifierOS = false;
-    }
     if (modifierScrollLock === void 0) {
       modifierScrollLock = false;
     }
@@ -22283,6 +22295,9 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["screenX"] = screenX;
     o["screenY"] = screenY;
@@ -22301,7 +22316,6 @@ module.exports = function(Kotlin) {
     o["modifierFnLock"] = modifierFnLock;
     o["modifierHyper"] = modifierHyper;
     o["modifierNumLock"] = modifierNumLock;
-    o["modifierOS"] = modifierOS;
     o["modifierScrollLock"] = modifierScrollLock;
     o["modifierSuper"] = modifierSuper;
     o["modifierSymbol"] = modifierSymbol;
@@ -22310,8 +22324,9 @@ module.exports = function(Kotlin) {
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), EventModifierInit_wnf6pc$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.EventModifierInit_wnf6pc$", function(ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierOS, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable) {
+  }), EventModifierInit_om3iti$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.EventModifierInit_om3iti$", function(ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable, composed) {
     if (ctrlKey === void 0) {
       ctrlKey = false;
     }
@@ -22342,9 +22357,6 @@ module.exports = function(Kotlin) {
     if (modifierNumLock === void 0) {
       modifierNumLock = false;
     }
-    if (modifierOS === void 0) {
-      modifierOS = false;
-    }
     if (modifierScrollLock === void 0) {
       modifierScrollLock = false;
     }
@@ -22369,6 +22381,9 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["ctrlKey"] = ctrlKey;
     o["shiftKey"] = shiftKey;
@@ -22380,7 +22395,6 @@ module.exports = function(Kotlin) {
     o["modifierFnLock"] = modifierFnLock;
     o["modifierHyper"] = modifierHyper;
     o["modifierNumLock"] = modifierNumLock;
-    o["modifierOS"] = modifierOS;
     o["modifierScrollLock"] = modifierScrollLock;
     o["modifierSuper"] = modifierSuper;
     o["modifierSymbol"] = modifierSymbol;
@@ -22389,8 +22403,9 @@ module.exports = function(Kotlin) {
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), WheelEventInit_2knbe1$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.WheelEventInit_2knbe1$", function(deltaX, deltaY, deltaZ, deltaMode, screenX, screenY, clientX, clientY, button, buttons, relatedTarget, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierOS, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable) {
+  }), WheelEventInit_b6y129$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.WheelEventInit_b6y129$", function(deltaX, deltaY, deltaZ, deltaMode, screenX, screenY, clientX, clientY, button, buttons, relatedTarget, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable, composed) {
     if (deltaX === void 0) {
       deltaX = 0;
     }
@@ -22454,9 +22469,6 @@ module.exports = function(Kotlin) {
     if (modifierNumLock === void 0) {
       modifierNumLock = false;
     }
-    if (modifierOS === void 0) {
-      modifierOS = false;
-    }
     if (modifierScrollLock === void 0) {
       modifierScrollLock = false;
     }
@@ -22481,6 +22493,9 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["deltaX"] = deltaX;
     o["deltaY"] = deltaY;
@@ -22503,7 +22518,6 @@ module.exports = function(Kotlin) {
     o["modifierFnLock"] = modifierFnLock;
     o["modifierHyper"] = modifierHyper;
     o["modifierNumLock"] = modifierNumLock;
-    o["modifierOS"] = modifierOS;
     o["modifierScrollLock"] = modifierScrollLock;
     o["modifierSuper"] = modifierSuper;
     o["modifierSymbol"] = modifierSymbol;
@@ -22512,8 +22526,40 @@ module.exports = function(Kotlin) {
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), KeyboardEventInit_f73pgi$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.KeyboardEventInit_f73pgi$", function(key, code, location, repeat, isComposing, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierOS, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable) {
+  }), InputEventInit_o655xz$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.InputEventInit_o655xz$", function(data, isComposing, view, detail, bubbles, cancelable, composed) {
+    if (data === void 0) {
+      data = "";
+    }
+    if (isComposing === void 0) {
+      isComposing = false;
+    }
+    if (view === void 0) {
+      view = null;
+    }
+    if (detail === void 0) {
+      detail = 0;
+    }
+    if (bubbles === void 0) {
+      bubbles = false;
+    }
+    if (cancelable === void 0) {
+      cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
+    }
+    var o = {};
+    o["data"] = data;
+    o["isComposing"] = isComposing;
+    o["view"] = view;
+    o["detail"] = detail;
+    o["bubbles"] = bubbles;
+    o["cancelable"] = cancelable;
+    o["composed"] = composed;
+    return o;
+  }), KeyboardEventInit_syp1ws$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.KeyboardEventInit_syp1ws$", function(key, code, location, repeat, isComposing, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable, composed) {
     if (key === void 0) {
       key = "";
     }
@@ -22559,9 +22605,6 @@ module.exports = function(Kotlin) {
     if (modifierNumLock === void 0) {
       modifierNumLock = false;
     }
-    if (modifierOS === void 0) {
-      modifierOS = false;
-    }
     if (modifierScrollLock === void 0) {
       modifierScrollLock = false;
     }
@@ -22586,6 +22629,9 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["key"] = key;
     o["code"] = code;
@@ -22602,7 +22648,6 @@ module.exports = function(Kotlin) {
     o["modifierFnLock"] = modifierFnLock;
     o["modifierHyper"] = modifierHyper;
     o["modifierNumLock"] = modifierNumLock;
-    o["modifierOS"] = modifierOS;
     o["modifierScrollLock"] = modifierScrollLock;
     o["modifierSuper"] = modifierSuper;
     o["modifierSymbol"] = modifierSymbol;
@@ -22611,8 +22656,9 @@ module.exports = function(Kotlin) {
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), CompositionEventInit_v3o02b$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.CompositionEventInit_v3o02b$", function(data, view, detail, bubbles, cancelable) {
+  }), CompositionEventInit_wynjvw$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.events.CompositionEventInit_wynjvw$", function(data, view, detail, bubbles, cancelable, composed) {
     if (data === void 0) {
       data = "";
     }
@@ -22628,48 +22674,61 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["data"] = data;
     o["view"] = view;
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  })}), TrackEventInit_u7e3y1$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.TrackEventInit_u7e3y1$", function(track, bubbles, cancelable) {
+  })}), TrackEventInit_m0ktls$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.TrackEventInit_m0ktls$", function(track, bubbles, cancelable, composed) {
+    if (track === void 0) {
+      track = null;
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["track"] = track;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), AutocompleteErrorEventInit_o0ij6q$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.AutocompleteErrorEventInit_o0ij6q$", function(reason, bubbles, cancelable) {
+  }), RelatedEventInit_p6fmwk$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.RelatedEventInit_p6fmwk$", function(relatedTarget, bubbles, cancelable, composed) {
+    if (relatedTarget === void 0) {
+      relatedTarget = null;
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
     }
-    var o = {};
-    o["reason"] = reason;
-    o["bubbles"] = bubbles;
-    o["cancelable"] = cancelable;
-    return o;
-  }), RelatedEventInit_w30gy5$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.RelatedEventInit_w30gy5$", function(relatedTarget, bubbles, cancelable) {
-    if (bubbles === void 0) {
-      bubbles = false;
-    }
-    if (cancelable === void 0) {
-      cancelable = false;
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["relatedTarget"] = relatedTarget;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
+    return o;
+  }), AssignedNodesOptions_6taknv$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.AssignedNodesOptions_6taknv$", function(flatten) {
+    if (flatten === void 0) {
+      flatten = false;
+    }
+    var o = {};
+    o["flatten"] = flatten;
     return o;
   }), CanvasRenderingContext2DSettings_6taknv$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.CanvasRenderingContext2DSettings_6taknv$", function(alpha) {
     if (alpha === void 0) {
@@ -22713,7 +22772,21 @@ module.exports = function(Kotlin) {
     o["label"] = label;
     o["role"] = role;
     return o;
-  }), DragEventInit_mm3m7l$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.DragEventInit_mm3m7l$", function(dataTransfer, screenX, screenY, clientX, clientY, button, buttons, relatedTarget, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierOS, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable) {
+  }), ImageBitmapRenderingContextSettings_6taknv$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ImageBitmapRenderingContextSettings_6taknv$", function(alpha) {
+    if (alpha === void 0) {
+      alpha = true;
+    }
+    var o = {};
+    o["alpha"] = alpha;
+    return o;
+  }), ElementDefinitionOptions_61zpoe$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ElementDefinitionOptions_61zpoe$", function(extends_0) {
+    var o = {};
+    o["extends"] = extends_0;
+    return o;
+  }), DragEventInit_ynf3b9$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.DragEventInit_ynf3b9$", function(dataTransfer, screenX, screenY, clientX, clientY, button, buttons, relatedTarget, ctrlKey, shiftKey, altKey, metaKey, modifierAltGraph, modifierCapsLock, modifierFn, modifierFnLock, modifierHyper, modifierNumLock, modifierScrollLock, modifierSuper, modifierSymbol, modifierSymbolLock, view, detail, bubbles, cancelable, composed) {
+    if (dataTransfer === void 0) {
+      dataTransfer = null;
+    }
     if (screenX === void 0) {
       screenX = 0;
     }
@@ -22765,9 +22838,6 @@ module.exports = function(Kotlin) {
     if (modifierNumLock === void 0) {
       modifierNumLock = false;
     }
-    if (modifierOS === void 0) {
-      modifierOS = false;
-    }
     if (modifierScrollLock === void 0) {
       modifierScrollLock = false;
     }
@@ -22792,6 +22862,9 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["dataTransfer"] = dataTransfer;
     o["screenX"] = screenX;
@@ -22811,7 +22884,6 @@ module.exports = function(Kotlin) {
     o["modifierFnLock"] = modifierFnLock;
     o["modifierHyper"] = modifierHyper;
     o["modifierNumLock"] = modifierNumLock;
-    o["modifierOS"] = modifierOS;
     o["modifierScrollLock"] = modifierScrollLock;
     o["modifierSuper"] = modifierSuper;
     o["modifierSymbol"] = modifierSymbol;
@@ -22820,50 +22892,93 @@ module.exports = function(Kotlin) {
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), PopStateEventInit_xro667$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.PopStateEventInit_xro667$", function(state, bubbles, cancelable) {
+  }), PopStateEventInit_mopxd4$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.PopStateEventInit_mopxd4$", function(state, bubbles, cancelable, composed) {
+    if (state === void 0) {
+      state = null;
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["state"] = state;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), HashChangeEventInit_9djc0g$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.HashChangeEventInit_9djc0g$", function(oldURL, newURL, bubbles, cancelable) {
+  }), HashChangeEventInit_jrquvr$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.HashChangeEventInit_jrquvr$", function(oldURL, newURL, bubbles, cancelable, composed) {
+    if (oldURL === void 0) {
+      oldURL = "";
+    }
+    if (newURL === void 0) {
+      newURL = "";
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["oldURL"] = oldURL;
     o["newURL"] = newURL;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), PageTransitionEventInit_ws0pad$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.PageTransitionEventInit_ws0pad$", function(persisted, bubbles, cancelable) {
+  }), PageTransitionEventInit_nyyhg$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.PageTransitionEventInit_nyyhg$", function(persisted, bubbles, cancelable, composed) {
+    if (persisted === void 0) {
+      persisted = false;
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["persisted"] = persisted;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), ErrorEventInit_os3ye3$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ErrorEventInit_os3ye3$", function(message, filename, lineno, colno, error, bubbles, cancelable) {
+  }), ErrorEventInit_ieinsk$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ErrorEventInit_ieinsk$", function(message, filename, lineno, colno, error, bubbles, cancelable, composed) {
+    if (message === void 0) {
+      message = "";
+    }
+    if (filename === void 0) {
+      filename = "";
+    }
+    if (lineno === void 0) {
+      lineno = 0;
+    }
+    if (colno === void 0) {
+      colno = 0;
+    }
+    if (error === void 0) {
+      error = null;
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["message"] = message;
@@ -22873,13 +22988,70 @@ module.exports = function(Kotlin) {
     o["error"] = error;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), MessageEventInit_b4x2sp$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.MessageEventInit_b4x2sp$", function(data, origin, lastEventId, source, ports, bubbles, cancelable) {
+  }), PromiseRejectionEventInit_e8qggr$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.PromiseRejectionEventInit_e8qggr$", function(promise, reason, bubbles, cancelable, composed) {
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
+    }
+    var o = {};
+    o["promise"] = promise;
+    o["reason"] = reason;
+    o["bubbles"] = bubbles;
+    o["cancelable"] = cancelable;
+    o["composed"] = composed;
+    return o;
+  }), ImageBitmapOptions_xuucvo$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ImageBitmapOptions_xuucvo$", function(imageOrientation, premultiplyAlpha, colorSpaceConversion, resizeWidth, resizeHeight, resizeQuality) {
+    if (imageOrientation === void 0) {
+      imageOrientation = "none";
+    }
+    if (premultiplyAlpha === void 0) {
+      premultiplyAlpha = "default";
+    }
+    if (colorSpaceConversion === void 0) {
+      colorSpaceConversion = "default";
+    }
+    if (resizeQuality === void 0) {
+      resizeQuality = "low";
+    }
+    var o = {};
+    o["imageOrientation"] = imageOrientation;
+    o["premultiplyAlpha"] = premultiplyAlpha;
+    o["colorSpaceConversion"] = colorSpaceConversion;
+    o["resizeWidth"] = resizeWidth;
+    o["resizeHeight"] = resizeHeight;
+    o["resizeQuality"] = resizeQuality;
+    return o;
+  }), MessageEventInit_djz3jy$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.MessageEventInit_djz3jy$", function(data, origin, lastEventId, source, ports, bubbles, cancelable, composed) {
+    if (data === void 0) {
+      data = null;
+    }
+    if (origin === void 0) {
+      origin = "";
+    }
+    if (lastEventId === void 0) {
+      lastEventId = "";
+    }
+    if (source === void 0) {
+      source = null;
+    }
+    if (ports === void 0) {
+      ports = [];
+    }
+    if (bubbles === void 0) {
+      bubbles = false;
+    }
+    if (cancelable === void 0) {
+      cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["data"] = data;
@@ -22889,6 +23061,7 @@ module.exports = function(Kotlin) {
     o["ports"] = ports;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
   }), EventSourceInit_6taknv$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.EventSourceInit_6taknv$", function(withCredentials) {
     if (withCredentials === void 0) {
@@ -22897,12 +23070,24 @@ module.exports = function(Kotlin) {
     var o = {};
     o["withCredentials"] = withCredentials;
     return o;
-  }), CloseEventInit_kz92y6$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.CloseEventInit_kz92y6$", function(wasClean, code, reason, bubbles, cancelable) {
+  }), CloseEventInit_lxfx9x$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.CloseEventInit_lxfx9x$", function(wasClean, code, reason, bubbles, cancelable, composed) {
+    if (wasClean === void 0) {
+      wasClean = false;
+    }
+    if (code === void 0) {
+      code = 0;
+    }
+    if (reason === void 0) {
+      reason = "";
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["wasClean"] = wasClean;
@@ -22910,13 +23095,43 @@ module.exports = function(Kotlin) {
     o["reason"] = reason;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), StorageEventInit_hhd9ie$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.StorageEventInit_hhd9ie$", function(key, oldValue, newValue, url, storageArea, bubbles, cancelable) {
+  }), WorkerOptions_puj7f4$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.WorkerOptions_puj7f4$", function(type, credentials) {
+    if (type === void 0) {
+      type = "classic";
+    }
+    if (credentials === void 0) {
+      credentials = "omit";
+    }
+    var o = {};
+    o["type"] = type;
+    o["credentials"] = credentials;
+    return o;
+  }), StorageEventInit_vq0en5$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.StorageEventInit_vq0en5$", function(key, oldValue, newValue, url, storageArea, bubbles, cancelable, composed) {
+    if (key === void 0) {
+      key = null;
+    }
+    if (oldValue === void 0) {
+      oldValue = null;
+    }
+    if (newValue === void 0) {
+      newValue = null;
+    }
+    if (url === void 0) {
+      url = "";
+    }
+    if (storageArea === void 0) {
+      storageArea = null;
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["key"] = key;
@@ -22926,19 +23141,24 @@ module.exports = function(Kotlin) {
     o["storageArea"] = storageArea;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), EventInit_dqye30$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.EventInit_dqye30$", function(bubbles, cancelable) {
+  }), EventInit_ws0pad$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.EventInit_ws0pad$", function(bubbles, cancelable, composed) {
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), CustomEventInit_xro667$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.CustomEventInit_xro667$", function(detail, bubbles, cancelable) {
+  }), CustomEventInit_mopxd4$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.CustomEventInit_mopxd4$", function(detail, bubbles, cancelable, composed) {
     if (detail === void 0) {
       detail = null;
     }
@@ -22948,10 +23168,36 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["detail"] = detail;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
+    return o;
+  }), EventListenerOptions_6taknv$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.EventListenerOptions_6taknv$", function(capture) {
+    if (capture === void 0) {
+      capture = false;
+    }
+    var o = {};
+    o["capture"] = capture;
+    return o;
+  }), AddEventListenerOptions_ws0pad$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.AddEventListenerOptions_ws0pad$", function(passive, once, capture) {
+    if (passive === void 0) {
+      passive = false;
+    }
+    if (once === void 0) {
+      once = false;
+    }
+    if (capture === void 0) {
+      capture = false;
+    }
+    var o = {};
+    o["passive"] = passive;
+    o["once"] = once;
+    o["capture"] = capture;
     return o;
   }), MutationObserverInit_aj2h80$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.MutationObserverInit_aj2h80$", function(childList, attributes, characterData, subtree, attributeOldValue, characterDataOldValue, attributeFilter) {
     if (childList === void 0) {
@@ -22969,31 +23215,20 @@ module.exports = function(Kotlin) {
     o["characterDataOldValue"] = characterDataOldValue;
     o["attributeFilter"] = attributeFilter;
     return o;
-  }), EditingBeforeInputEventInit_9djc0g$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.EditingBeforeInputEventInit_9djc0g$", function(command, value, bubbles, cancelable) {
-    if (bubbles === void 0) {
-      bubbles = false;
-    }
-    if (cancelable === void 0) {
-      cancelable = false;
+  }), GetRootNodeOptions_6taknv$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.GetRootNodeOptions_6taknv$", function(composed) {
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
-    o["command"] = command;
-    o["value"] = value;
-    o["bubbles"] = bubbles;
-    o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), EditingInputEventInit_9djc0g$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.EditingInputEventInit_9djc0g$", function(command, value, bubbles, cancelable) {
-    if (bubbles === void 0) {
-      bubbles = false;
-    }
-    if (cancelable === void 0) {
-      cancelable = false;
-    }
+  }), ElementCreationOptions_61zpoe$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ElementCreationOptions_61zpoe$", function(is_) {
     var o = {};
-    o["command"] = command;
-    o["value"] = value;
-    o["bubbles"] = bubbles;
-    o["cancelable"] = cancelable;
+    o["is"] = is_;
+    return o;
+  }), ShadowRootInit_61zpoe$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ShadowRootInit_61zpoe$", function(mode) {
+    var o = {};
+    o["mode"] = mode;
     return o;
   }), DOMPointInit_6y0v78$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.DOMPointInit_6y0v78$", function(x, y, z, w) {
     if (x === void 0) {
@@ -23040,23 +23275,54 @@ module.exports = function(Kotlin) {
     var o = {};
     o["behavior"] = behavior;
     return o;
-  }), ScrollOptionsHorizontal_t0es5s$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ScrollOptionsHorizontal_t0es5s$", function(x, behavior) {
+  }), ScrollToOptions_rpaqe6$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ScrollToOptions_rpaqe6$", function(left, top, behavior) {
     if (behavior === void 0) {
       behavior = "auto";
     }
     var o = {};
-    o["x"] = x;
+    o["left"] = left;
+    o["top"] = top;
     o["behavior"] = behavior;
     return o;
-  }), ScrollOptionsVertical_t0es5s$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ScrollOptionsVertical_t0es5s$", function(y, behavior) {
+  }), MediaQueryListEventInit_8m5i4i$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.MediaQueryListEventInit_8m5i4i$", function(media, matches, bubbles, cancelable, composed) {
+    if (media === void 0) {
+      media = "";
+    }
+    if (matches === void 0) {
+      matches = false;
+    }
+    if (bubbles === void 0) {
+      bubbles = false;
+    }
+    if (cancelable === void 0) {
+      cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
+    }
+    var o = {};
+    o["media"] = media;
+    o["matches"] = matches;
+    o["bubbles"] = bubbles;
+    o["cancelable"] = cancelable;
+    o["composed"] = composed;
+    return o;
+  }), ScrollIntoViewOptions_6hosri$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.ScrollIntoViewOptions_6hosri$", function(block, inline, behavior) {
+    if (block === void 0) {
+      block = "center";
+    }
+    if (inline === void 0) {
+      inline = "center";
+    }
     if (behavior === void 0) {
       behavior = "auto";
     }
     var o = {};
-    o["y"] = y;
+    o["block"] = block;
+    o["inline"] = inline;
     o["behavior"] = behavior;
     return o;
-  }), BoxQuadOptions_axdi75$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.BoxQuadOptions_axdi75$", function(box, relativeTo) {
+  }), BoxQuadOptions_bm4g0d$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.BoxQuadOptions_bm4g0d$", function(box, relativeTo) {
     if (box === void 0) {
       box = "border";
     }
@@ -23075,15 +23341,39 @@ module.exports = function(Kotlin) {
     o["fromBox"] = fromBox;
     o["toBox"] = toBox;
     return o;
-  })}), fetch:Kotlin.definePackage(null, {RequestInit_rz7b8m$:Kotlin.defineInlineFunction("kotlin.org.w3c.fetch.RequestInit_rz7b8m$", function(method, headers, body, mode, credentials, cache, redirect) {
+  }), svg:Kotlin.definePackage(null, {SVGBoundingBoxOptions_nyyhg$:Kotlin.defineInlineFunction("kotlin.org.w3c.dom.svg.SVGBoundingBoxOptions_nyyhg$", function(fill, stroke, markers, clipped) {
+    if (fill === void 0) {
+      fill = true;
+    }
+    if (stroke === void 0) {
+      stroke = false;
+    }
+    if (markers === void 0) {
+      markers = false;
+    }
+    if (clipped === void 0) {
+      clipped = false;
+    }
+    var o = {};
+    o["fill"] = fill;
+    o["stroke"] = stroke;
+    o["markers"] = markers;
+    o["clipped"] = clipped;
+    return o;
+  })})}), fetch:Kotlin.definePackage(null, {RequestInit_ytsmzd$:Kotlin.defineInlineFunction("kotlin.org.w3c.fetch.RequestInit_ytsmzd$", function(method, headers, body, referrer, referrerPolicy, mode, credentials, cache, redirect, integrity, keepalive, window) {
     var o = {};
     o["method"] = method;
     o["headers"] = headers;
     o["body"] = body;
+    o["referrer"] = referrer;
+    o["referrerPolicy"] = referrerPolicy;
     o["mode"] = mode;
     o["credentials"] = credentials;
     o["cache"] = cache;
     o["redirect"] = redirect;
+    o["integrity"] = integrity;
+    o["keepalive"] = keepalive;
+    o["window"] = window;
     return o;
   }), ResponseInit_v2gkk6$:Kotlin.defineInlineFunction("kotlin.org.w3c.fetch.ResponseInit_v2gkk6$", function(status, statusText, headers) {
     if (status === void 0) {
@@ -23104,15 +23394,15 @@ module.exports = function(Kotlin) {
     var o = {};
     o["type"] = type;
     return o;
-  }), FilePropertyBag_bm4lxs$:Kotlin.defineInlineFunction("kotlin.org.w3c.files.FilePropertyBag_bm4lxs$", function(type, lastModified) {
+  }), FilePropertyBag_19mbxw$:Kotlin.defineInlineFunction("kotlin.org.w3c.files.FilePropertyBag_19mbxw$", function(lastModified, type) {
     if (type === void 0) {
       type = "";
     }
     var o = {};
-    o["type"] = type;
     o["lastModified"] = lastModified;
+    o["type"] = type;
     return o;
-  })}), notifications:Kotlin.definePackage(null, {NotificationOptions_kav9qg$:Kotlin.defineInlineFunction("kotlin.org.w3c.notifications.NotificationOptions_kav9qg$", function(dir, lang_0, body, tag, icon, sound, vibrate, renotify, silent, noscreen, sticky, data) {
+  })}), notifications:Kotlin.definePackage(null, {NotificationOptions_en9ap1$:Kotlin.defineInlineFunction("kotlin.org.w3c.notifications.NotificationOptions_en9ap1$", function(dir, lang_0, body, tag, image, icon, badge, sound, vibrate, timestamp, renotify, silent, noscreen, requireInteraction, sticky, data, actions) {
     if (dir === void 0) {
       dir = "auto";
     }
@@ -23134,25 +23424,42 @@ module.exports = function(Kotlin) {
     if (noscreen === void 0) {
       noscreen = false;
     }
+    if (requireInteraction === void 0) {
+      requireInteraction = false;
+    }
     if (sticky === void 0) {
       sticky = false;
     }
     if (data === void 0) {
       data = null;
     }
+    if (actions === void 0) {
+      actions = [];
+    }
     var o = {};
     o["dir"] = dir;
     o["lang"] = lang_0;
     o["body"] = body;
     o["tag"] = tag;
+    o["image"] = image;
     o["icon"] = icon;
+    o["badge"] = badge;
     o["sound"] = sound;
     o["vibrate"] = vibrate;
+    o["timestamp"] = timestamp;
     o["renotify"] = renotify;
     o["silent"] = silent;
     o["noscreen"] = noscreen;
+    o["requireInteraction"] = requireInteraction;
     o["sticky"] = sticky;
     o["data"] = data;
+    o["actions"] = actions;
+    return o;
+  }), NotificationAction_6hosri$:Kotlin.defineInlineFunction("kotlin.org.w3c.notifications.NotificationAction_6hosri$", function(action, title, icon) {
+    var o = {};
+    o["action"] = action;
+    o["title"] = title;
+    o["icon"] = icon;
     return o;
   }), GetNotificationOptions_61zpoe$:Kotlin.defineInlineFunction("kotlin.org.w3c.notifications.GetNotificationOptions_61zpoe$", function(tag) {
     if (tag === void 0) {
@@ -23161,28 +23468,43 @@ module.exports = function(Kotlin) {
     var o = {};
     o["tag"] = tag;
     return o;
-  }), NotificationEventInit_feq8qm$:Kotlin.defineInlineFunction("kotlin.org.w3c.notifications.NotificationEventInit_feq8qm$", function(notification, bubbles, cancelable) {
+  }), NotificationEventInit_5x9enn$:Kotlin.defineInlineFunction("kotlin.org.w3c.notifications.NotificationEventInit_5x9enn$", function(notification, action, bubbles, cancelable, composed) {
+    if (action === void 0) {
+      action = "";
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["notification"] = notification;
+    o["action"] = action;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  })}), workers:Kotlin.definePackage(null, {RegistrationOptions_61zpoe$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.RegistrationOptions_61zpoe$", function(scope) {
+  })}), workers:Kotlin.definePackage(null, {RegistrationOptions_puj7f4$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.RegistrationOptions_puj7f4$", function(scope, type) {
+    if (type === void 0) {
+      type = "classic";
+    }
     var o = {};
     o["scope"] = scope;
+    o["type"] = type;
     return o;
-  }), ServiceWorkerMessageEventInit_sy6pe0$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ServiceWorkerMessageEventInit_sy6pe0$", function(data, origin, lastEventId, source, ports, bubbles, cancelable) {
+  }), ServiceWorkerMessageEventInit_rwa8n3$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ServiceWorkerMessageEventInit_rwa8n3$", function(data, origin, lastEventId, source, ports, bubbles, cancelable, composed) {
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["data"] = data;
@@ -23192,6 +23514,7 @@ module.exports = function(Kotlin) {
     o["ports"] = ports;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
   }), ClientQueryOptions_8kj6y5$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ClientQueryOptions_8kj6y5$", function(includeUncontrolled, type) {
     if (includeUncontrolled === void 0) {
@@ -23204,18 +23527,30 @@ module.exports = function(Kotlin) {
     o["includeUncontrolled"] = includeUncontrolled;
     o["type"] = type;
     return o;
-  }), ExtendableEventInit_dqye30$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ExtendableEventInit_dqye30$", function(bubbles, cancelable) {
+  }), ExtendableEventInit_ws0pad$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ExtendableEventInit_ws0pad$", function(bubbles, cancelable, composed) {
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), FetchEventInit_b3bcq8$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.FetchEventInit_b3bcq8$", function(request, client, isReload, bubbles, cancelable) {
+  }), ForeignFetchOptions_7xf64s$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ForeignFetchOptions_7xf64s$", function(scopes, origins) {
+    var o = {};
+    o["scopes"] = scopes;
+    o["origins"] = origins;
+    return o;
+  }), FetchEventInit_lzwl5o$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.FetchEventInit_lzwl5o$", function(request, clientId, isReload, bubbles, cancelable, composed) {
+    if (clientId === void 0) {
+      clientId = null;
+    }
     if (isReload === void 0) {
       isReload = false;
     }
@@ -23225,19 +23560,52 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["request"] = request;
-    o["client"] = client;
+    o["clientId"] = clientId;
     o["isReload"] = isReload;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
-  }), ExtendableMessageEventInit_9wcmnd$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ExtendableMessageEventInit_9wcmnd$", function(data, origin, lastEventId, source, ports, bubbles, cancelable) {
+  }), ForeignFetchEventInit_9claut$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ForeignFetchEventInit_9claut$", function(request, origin, bubbles, cancelable, composed) {
+    if (origin === void 0) {
+      origin = "null";
+    }
     if (bubbles === void 0) {
       bubbles = false;
     }
     if (cancelable === void 0) {
       cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
+    }
+    var o = {};
+    o["request"] = request;
+    o["origin"] = origin;
+    o["bubbles"] = bubbles;
+    o["cancelable"] = cancelable;
+    o["composed"] = composed;
+    return o;
+  }), ForeignFetchResponse_nqu2t8$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ForeignFetchResponse_nqu2t8$", function(response, origin, headers) {
+    var o = {};
+    o["response"] = response;
+    o["origin"] = origin;
+    o["headers"] = headers;
+    return o;
+  }), ExtendableMessageEventInit_f3cf3y$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.ExtendableMessageEventInit_f3cf3y$", function(data, origin, lastEventId, source, ports, bubbles, cancelable, composed) {
+    if (bubbles === void 0) {
+      bubbles = false;
+    }
+    if (cancelable === void 0) {
+      cancelable = false;
+    }
+    if (composed === void 0) {
+      composed = false;
     }
     var o = {};
     o["data"] = data;
@@ -23247,6 +23615,7 @@ module.exports = function(Kotlin) {
     o["ports"] = ports;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
   }), CacheQueryOptions_qfoyx9$:Kotlin.defineInlineFunction("kotlin.org.w3c.workers.CacheQueryOptions_qfoyx9$", function(ignoreSearch, ignoreMethod, ignoreVary, cacheName) {
     if (ignoreSearch === void 0) {
@@ -23271,7 +23640,7 @@ module.exports = function(Kotlin) {
     o["response"] = response;
     o["options"] = options;
     return o;
-  })}), xhr:Kotlin.definePackage(null, {ProgressEventInit_vo5a85$:Kotlin.defineInlineFunction("kotlin.org.w3c.xhr.ProgressEventInit_vo5a85$", function(lengthComputable, loaded, total, bubbles, cancelable) {
+  })}), xhr:Kotlin.definePackage(null, {ProgressEventInit_pdjkrw$:Kotlin.defineInlineFunction("kotlin.org.w3c.xhr.ProgressEventInit_pdjkrw$", function(lengthComputable, loaded, total, bubbles, cancelable, composed) {
     if (lengthComputable === void 0) {
       lengthComputable = false;
     }
@@ -23287,12 +23656,16 @@ module.exports = function(Kotlin) {
     if (cancelable === void 0) {
       cancelable = false;
     }
+    if (composed === void 0) {
+      composed = false;
+    }
     var o = {};
     o["lengthComputable"] = lengthComputable;
     o["loaded"] = loaded;
     o["total"] = total;
     o["bubbles"] = bubbles;
     o["cancelable"] = cancelable;
+    o["composed"] = composed;
     return o;
   })})})}), getKClass:function(jClass) {
     return _.getOrCreateKClass_0(jClass);

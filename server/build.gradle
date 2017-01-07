@@ -16,7 +16,7 @@ dependencies {
   compile "org.nanohttpd:nanohttpd:2.3.1"
   compile "org.nanohttpd:nanohttpd-websocket:2.3.1"
 
-  compile "nl.astraeus:simple-database-kotlin:2.0.2"
+  compile "nl.astraeus:simple-database-kotlin:2.0.3"
   compile "nl.astraeus:simple-jdbc-stats:1.5.6"
   compile "com.h2database:h2:1.4.193"
   configurations.compile.exclude module: 'javax.servlet-api'

@@ -1,6 +1,5 @@
 package nl.astraeus.spm.ws
 
-import nl.astraeus.spm.crypt.Hash
 import nl.astraeus.spm.crypt.PasswordHash
 import nl.astraeus.spm.model.User
 import nl.astraeus.spm.model.UserDao

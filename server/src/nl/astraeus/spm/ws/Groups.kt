@@ -89,3 +89,7 @@ fun openedGroup(ws: SimpleWebSocket, tk: Tokenizer) {
         GroupDao.update(group)
     }
 }
+
+fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
+
+}

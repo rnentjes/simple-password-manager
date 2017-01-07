@@ -25,18 +25,18 @@ class SimpleWebSocketServer(port: Int): NanoWSD(port) {
         val ACCESS: Logger = LoggerFactory.getLogger("ACCESS")
     }
 
-    override fun openWebSocket(handshake: IHTTPSession?) = SimpleWebSocket(this, handshake)
+    override fun openWebSocket(handshake: NanoHTTPD.IHTTPSession?) = SimpleWebSocket(this, handshake)
 
-    override fun serveHttp(session: IHTTPSession?): Response {
+    override fun serveHttp(session: NanoHTTPD.IHTTPSession?): NanoHTTPD.Response {
         val start = System.nanoTime()
-        var result = NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "404 Not Found")
+        var result = NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_FOUND, NanoHTTPD.MIME_PLAINTEXT, "404 Not Found")
 
         try {
             if (session != null) {
                 val uri = session.uri
 
                 if (uri.contains("../")) {
-                    result = NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_ACCEPTABLE, NanoHTTPD.MIME_PLAINTEXT, "406 Not Acceptable")
+                    result = NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.NOT_ACCEPTABLE, NanoHTTPD.MIME_PLAINTEXT, "406 Not Acceptable")
                 } else {
                     val handler = handlers[uri]
 
@@ -54,7 +54,7 @@ class SimpleWebSocketServer(port: Int): NanoWSD(port) {
                         if (file.exists()) {
                             val mimeType = mimeTypes[file.extension] ?: "plain/txt"
 
-                            result = NanoHTTPD.newChunkedResponse(Response.Status.OK, mimeType, file.inputStream())
+                            result = NanoHTTPD.newChunkedResponse(NanoHTTPD.Response.Status.OK, mimeType, file.inputStream())
                         }
                     }
                 }

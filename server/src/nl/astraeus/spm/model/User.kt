@@ -17,12 +17,13 @@ data class User(
   var password: String,
   var encryptedKey: String,
   @Index var name: String,
+  @Blob  var data: String,
   var created: Date,
   var updated: Date
 ) {
-    constructor(name: String, password: String, encryptedKey: String): this(0, password, encryptedKey, name, Date(), Date())
+    constructor(name: String, password: String, encryptedKey: String): this(0, password, encryptedKey, name, "", Date(), Date())
 
-    constructor(): this(0, "", "", "", Date(), Date())
+    constructor(): this(0, "", "", "", "", Date(), Date())
 
     fun checkPassword(password: String) = (password == this.password)
 }

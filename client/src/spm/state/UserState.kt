@@ -2,6 +2,7 @@ package spm.state
 
 import spm.crypt.Aes
 import spm.view.group.Group
+import spm.ws.WebSocketConnection
 
 /**
  * User: rnentjes
@@ -69,5 +70,15 @@ object UserState {
         val base64String = "${js("CryptoJS.enc.Base64.stringify(CryptoJS.lib.WordArray.random(64));")}"
 
         return Aes.encrypt(base64String, pp).toString()
+    }
+
+    fun saveData() {
+        val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
+        val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
+
+        val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
+        //val data = Aes.encrypt(topGroup.export(), decryptedEncryptionKey).toString()
+
+        //WebSocketConnection.send("SAVEDATA", data)
     }
 }

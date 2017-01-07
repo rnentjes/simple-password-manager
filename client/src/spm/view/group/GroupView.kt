@@ -67,6 +67,11 @@ data class Group(
         return result
     }
 
+    fun export(): String {
+        // todo: implement
+        return ""
+    }
+
     fun findById(id: Long): Group? {
         if (this.id == id) {
             return this
@@ -237,9 +242,10 @@ object GroupView {
             link.onClick {
                 val currentGroup = UserState.currentGroup
 
-                if (currentGroup != null) {
+                if (currentGroup != null && hasElem("group_link_${currentGroup.id}")) {
                     elem("group_link_${currentGroup.id}").removeClass("selected")
                 }
+
                 clickGroup(group)
             }
 

@@ -1,6 +1,6 @@
 buildscript {
   ext {
-    kotlin_version = '1.0.5-2'
+    kotlin_version = '1.0.6'
   }
   repositories {
     mavenCentral()
@@ -20,7 +20,7 @@ allprojects {
   version = '1.0.0-SNAPSHOT'
 
   ext {
-    kotlin_version = '1.0.5-2'
+    kotlin_version = '1.0.6'
   }
 
   repositories {

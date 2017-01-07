@@ -124,7 +124,6 @@ object WebSocketConnection {
 
     fun send(vararg args: String) {
         send(Tokenizer.tokenize(*args))
-
     }
 
     fun getLoadingDiv(): Element {

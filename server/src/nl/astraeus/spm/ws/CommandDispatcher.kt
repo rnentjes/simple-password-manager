@@ -26,6 +26,7 @@ object CommandDispatcher {
         commands.put("NEWPASSWORD", ::newPassword)
         commands.put("SAVEPASSWORD", ::savePassword)
         commands.put("DELETEPASSWORD", ::deletePassword)
+        commands.put("SAVEDATA", ::saveData)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
