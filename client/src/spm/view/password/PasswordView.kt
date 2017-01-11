@@ -59,6 +59,7 @@ class PasswordForm(
     fun save() {
         if (validate()) {
             if (originalPassword == null) {
+                password.encryptedPassword = UserState.encryptPassword(password.password1)
                 password.group.passwords.add(password)
             } else {
                 originalPassword.title = password.title
@@ -101,7 +102,7 @@ object PasswordOverviewView {
                             val passwordForm = PasswordForm(null, password)
 
                             passwordForm.password.decrypt()
-                            createPasswordEditor(parent, group, passwords, passwordForm, true)
+                            createPasswordEditor(parent, group, passwords, passwordForm)
                         }
 
                         a
@@ -200,8 +201,7 @@ object PasswordOverviewView {
       parent: Element,
       group: Group,
       passwords: List<Password>,
-      passwordForm: PasswordForm,
-      newPassword: Boolean = false) {
+      passwordForm: PasswordForm) {
 
         PasswordView.create(parent, passwordForm, cancel = {
             show(parent, group, passwords)
@@ -211,7 +211,7 @@ object PasswordOverviewView {
 
                 show(parent, group, passwords)
             } else {
-                createPasswordEditor(parent, group, passwords, passwordForm, newPassword)
+                createPasswordEditor(parent, group, passwords, passwordForm)
             }
         })
     }
@@ -236,7 +236,7 @@ object PasswordView {
         }
 
         parent.add {
-            if (passwordForm.password.id > 0) {
+            if (passwordForm.originalPassword != null) {
                 header("Edit password")
             } else {
                 header("New password")
