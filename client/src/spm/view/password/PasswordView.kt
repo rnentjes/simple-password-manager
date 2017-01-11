@@ -22,18 +22,19 @@ import kotlin.dom.removeClass
  */
 
 class PasswordForm(
+  val originalPassword: Password?,
   val password: Password,
   var showPassword: Boolean = false,
   val messages: MutableMap<String, MutableList<String>> = HashMap(),
   var valid: Boolean = false
 ) {
 
-    fun validate(newPassword: Boolean): Boolean {
+    fun validate(): Boolean {
         valid = true
         messages.clear()
 
         check(password.title.isNotBlank(), "title", "Please enter a title for this password.")
-        check(!newPassword || password.password1.isNotBlank(), "password1", "Password field can not be empty for a new entry.")
+        check(originalPassword != null || password.password1.isNotBlank(), "password1", "Password field can not be empty for a new entry.")
         check(password.password1 == password.password2, "password1", "Passwords don't match.")
 
         println("validate: $valid -> $messages")
@@ -55,10 +56,19 @@ class PasswordForm(
         messages[param] = list
     }
 
-    fun save(newPassword: Boolean) {
-        if (validate(newPassword)) {
-            if (newPassword) {
+    fun save() {
+        if (validate()) {
+            if (originalPassword == null) {
                 password.group.passwords.add(password)
+            } else {
+                originalPassword.title = password.title
+                originalPassword.website = password.website
+                originalPassword.username = password.username
+                originalPassword.description = password.description
+
+                if (password.password1.isNotBlank()) {
+                    originalPassword.encryptedPassword = UserState.encryptPassword(password.password1)
+                }
             }
 
             UserState.saveData()
@@ -88,7 +98,7 @@ object PasswordOverviewView {
 
                         a.onClick {
                             val password = Password(group)
-                            val passwordForm = PasswordForm(password)
+                            val passwordForm = PasswordForm(null, password)
 
                             passwordForm.password.decrypt()
                             createPasswordEditor(parent, group, passwords, passwordForm, true)
@@ -127,7 +137,7 @@ object PasswordOverviewView {
               password.password1,
               password.password2,
               password.description)
-            val passwordForm = PasswordForm(passwordCopy)
+            val passwordForm = PasswordForm(password, passwordCopy)
 
             table.add {
                 createTag("tr")
@@ -188,8 +198,8 @@ object PasswordOverviewView {
         PasswordView.create(parent, passwordForm, cancel = {
             show(parent, group, passwords)
         }, save = {
-            if (passwordForm.validate(newPassword)) {
-                passwordForm.save(newPassword)
+            if (passwordForm.validate()) {
+                passwordForm.save()
 
                 show(parent, group, passwords)
             } else {
