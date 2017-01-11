@@ -12,6 +12,7 @@ import spm.view.form.*
 import spm.view.modal.ModalView
 import spm.view.modal.Notify
 import java.util.*
+import kotlin.browser.window
 import kotlin.dom.onClick
 import kotlin.dom.removeClass
 
@@ -37,7 +38,6 @@ class PasswordForm(
         check(originalPassword != null || password.password1.isNotBlank(), "password1", "Password field can not be empty for a new entry.")
         check(password.password1 == password.password2, "password1", "Passwords don't match.")
 
-        println("validate: $valid -> $messages")
         return valid
     }
 
@@ -145,19 +145,27 @@ object PasswordOverviewView {
                   .add { createTag("td").txt(password.website) }
                   .add { createTag("td").txt(password.username) }
                   .add {
-                      createTag("td").cls("col-md-5").add {
-                          IconButton.create("copy", text = "Username&nbsp;&nbsp;", buttonClass = "btn-xs btn-default") {
+                      createTag("td").cls("col-md-4").add {
+                          IconButton.create("copy", text = "U&nbsp;", buttonClass = "btn-xs btn-default") {
                               copyToClipboard(password.username)
 
                               Notify.show("Copied username to clipboard.", "success")
-                              //ModalView.showAlert("Success!", "Copied username to clipboard!")
                           }
                       }.add {
-                          IconButton.create("copy", text = "Password&nbsp;&nbsp;", buttonClass = "btn-xs btn-warning") {
+                          IconButton.create("copy", text = "P&nbsp;", buttonClass = "btn-xs btn-warning") {
                               copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
 
                               Notify.show("Copied password to clipboard.", "success")
-                              //ModalView.showAlert("Success!", "Copied password to clipboard!")
+                          }.attr("style", "margin-left: 5px;")
+                      }.add {
+                          IconButton.create("copy", text = "U&nbsp;", buttonClass = "btn-xs btn-default") {
+                              copyToClipboard(password.website)
+
+                              Notify.show("Copied url to clipboard.", "success")
+                          }.attr("style", "margin-left: 5px;")
+                      }.add {
+                          IconButton.create("new-window", text = "U&nbsp;", buttonClass = "btn-xs btn-default") {
+                              window.open(password.website, "_blank")
                           }.attr("style", "margin-left: 5px;")
                       }.add {
                           IconButton.create("folder-open", buttonClass = "btn-xs btn-success") {

@@ -83,15 +83,11 @@ object UserState {
         val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
         val decryptedData = Aes.decrypt(data, decryptedEncryptionKey).toString()
 
-        console.log("decrypted: ["+decryptedData+", "+decryptedData.length+"]")
-
         if (decryptedData.isBlank()) {
             topGroup = Group(0, "Root", false, null, false, ArrayList(), ArrayList())
         } else {
             topGroup = Group(Tokenizer(decryptedData))
         }
-
-        console.log("topGroup: ["+topGroup?.name+"]")
     }
 
     fun saveData() {

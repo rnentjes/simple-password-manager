@@ -2,7 +2,6 @@ package spm.model
 
 import spm.state.UserState
 import spm.ws.Tokenizer
-import spm.ws.WebSocketConnection
 
 /**
  * User: rnentjes
@@ -22,7 +21,7 @@ data class Password(
   var password2: String = "",
   var description: String
 ) {
-    constructor(group: Group) : this(0, "", group, "", "", "", "", "", "", "")
+    constructor(group: Group) : this(nextId(), "", group, "", "", "", "", "", "", "")
 
     constructor(tk: Tokenizer, group: Group) : this(
       parseInt(tk.next()).toLong(),
@@ -34,7 +33,9 @@ data class Password(
       tk.next(),
       "",
       "",
-      tk.next())
+      tk.next()) {
+        if (id > lastId) { lastId = id }
+    }
 
     fun tokenized(): String = Tokenizer.tokenize("$id", user, title, website, username, encryptedPassword, description)
 
@@ -45,5 +46,13 @@ data class Password(
 
     fun delete() {
         group.passwords.remove(this)
+    }
+
+    companion object {
+        private var lastId = 0L
+
+        fun nextId(): Long {
+            return ++lastId
+        }
     }
 }

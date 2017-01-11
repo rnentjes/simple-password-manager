@@ -9,6 +9,7 @@ import java.util.*
  * Time: 11:28
  */
 
+
 data class Group(
   var id: Long,
   var name: String,
@@ -18,9 +19,10 @@ data class Group(
   val children: MutableList<Group> = ArrayList(),
   val passwords: MutableList<Password> = ArrayList()
 ) {
-    constructor(name: String, parent: Group) : this(0, name, false, parent)
+    constructor(name: String, parent: Group) : this(nextId(), name, false, parent)
 
     constructor(tk: Tokenizer) : this(parseInt(tk.next()).toLong(), tk.next(), tk.next() == "true", null) {
+        if (id > lastId) { lastId = id }
         val numberOfPasswords = parseInt(tk.next())
         for (index in 0..numberOfPasswords - 1) {
             val password = Password(tk, this)
@@ -132,35 +134,6 @@ data class Group(
         return result
     }
 
-    fun savePassword(password: Password) {
-        var found = false
-
-        for(pwd in passwords) {
-            if (pwd.id == password.id) {
-                println("Replacing password ${password.id}")
-                passwords.remove(pwd)
-                passwords.add(password)
-
-                found = true
-                break
-            }
-        }
-
-        if (!found) {
-            println("Adding password ${password.id}")
-            passwords.add(password)
-        }
-    }
-
-    fun deletePassword(passwordId: Long) {
-        for(pwd in passwords) {
-            if (pwd.id == passwordId) {
-                passwords.remove(pwd)
-                break
-            }
-        }
-    }
-
     fun getPasswordsCountInGroup(): Int {
         var result = passwords.size
 
@@ -169,5 +142,13 @@ data class Group(
         }
 
         return result
+    }
+
+    companion object {
+        private var lastId = 0L
+
+        fun nextId(): Long {
+            return ++lastId
+        }
     }
 }

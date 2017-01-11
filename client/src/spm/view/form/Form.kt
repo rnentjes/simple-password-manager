@@ -268,7 +268,7 @@ object IconButton {
     ): Element {
         val button = createTag("button")
           .attr("type", "button")
-          .cls("btn btn-sm $buttonClass")
+          .cls("btn $buttonClass")
           .attr("aria-label", "Show")
 
         if (text.isNotBlank()) {

@@ -96,8 +96,6 @@ object WebSocketConnection {
     }
 
     fun onClose(ws: WebSocket, event: Event): dynamic {
-        println("Closed websocket! $ws")
-
         websocket = null
 
         return "dynamic"

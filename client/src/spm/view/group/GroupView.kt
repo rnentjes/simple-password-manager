@@ -24,7 +24,6 @@ object GroupView {
 
     /* creates <ul><li> (if children)<ul>etc</ul>(/) </li></ul? */
     fun show(group: Group?): Element {
-        println("SHOW: ${group?.name}")
         UserState.topGroup = group
 
         val result: Element
