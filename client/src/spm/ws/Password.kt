@@ -1,15 +1,9 @@
 package spm.ws
 
-import org.w3c.dom.WebSocket
-import spm.state.UserState
-import spm.view.elem
-import spm.view.group.GroupView
-import spm.view.password.Password
-import spm.view.password.PasswordOverviewView
-
 /**
  * Created by rnentjes on 16-12-16.
  */
+/*
 
 fun savedPassword(ws: WebSocket, tk: Tokenizer) {
     val groupId = parseInt(tk.next()).toLong()
@@ -34,4 +28,4 @@ fun deletedPassword(ws: WebSocket, tk: Tokenizer) {
     group.deletePassword(passwordId)
 
     PasswordOverviewView.show(elem("passwords_overview"), group, group.passwords)
-}
+}*/

@@ -1,7 +1,9 @@
 package nl.astraeus.spm.ws
 
+import nl.astraeus.database.transaction
 import nl.astraeus.spm.model.Group
 import nl.astraeus.spm.model.GroupDao
+import nl.astraeus.spm.model.UserDao
 import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
 
@@ -91,5 +93,11 @@ fun openedGroup(ws: SimpleWebSocket, tk: Tokenizer) {
 }
 
 fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
+    val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
+    val data = tk.next()
 
+    transaction {
+        user.setData(data)
+        UserDao.update(user)
+    }
 }

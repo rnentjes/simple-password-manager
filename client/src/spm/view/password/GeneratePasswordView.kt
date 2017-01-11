@@ -2,6 +2,7 @@ package spm.view.password
 
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
+import spm.model.Password
 import spm.view.add
 import spm.view.elem
 import spm.view.form.*

@@ -2,6 +2,7 @@ package spm.ws
 
 import org.w3c.dom.WebSocket
 import spm.state.UserState
+import spm.view.group.GroupView
 import spm.view.main.MainView
 
 /**
@@ -10,10 +11,12 @@ import spm.view.main.MainView
  * Time: 15:20
  */
 
-
 fun login(ws: WebSocket, tk: Tokenizer) {
     UserState.encryptedEncryptionKey = tk.next()
     UserState.loggedIn = true
 
     MainView.show()
+
+    UserState.loadData(tk.next())
+    GroupView.show(UserState.topGroup)
 }

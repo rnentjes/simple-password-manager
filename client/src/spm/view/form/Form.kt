@@ -4,8 +4,8 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLFormElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
+import spm.model.Group
 import spm.view.*
-import spm.view.group.Group
 import spm.ws.Tokenizer
 import kotlin.dom.on
 import kotlin.dom.onClick

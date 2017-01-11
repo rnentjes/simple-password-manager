@@ -1,8 +1,10 @@
 package spm.state
 
 import spm.crypt.Aes
-import spm.view.group.Group
+import spm.model.Group
+import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
+import java.util.*
 
 /**
  * User: rnentjes
@@ -12,6 +14,11 @@ import spm.ws.WebSocketConnection
 
 object UserState {
     var loginname: String? = null
+    set(value) {
+        val crypto = js("CryptoJS")
+
+        field = crypto.SHA256(value).toString()
+    }
     var loginPasswordHash: String? = null
     var encryptedEncryptionKey: String? = null
     var loggedIn = false
@@ -56,9 +63,6 @@ object UserState {
         val sha256 = crypto.SHA256(password)
         val sha512 = crypto.SHA512(password)
 
-        //println("sha256: $sha256")
-        //println("sha512: $sha512")
-
         loginPasswordHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}";
         decryptPassphraseHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"
     }
@@ -72,13 +76,38 @@ object UserState {
         return Aes.encrypt(base64String, pp).toString()
     }
 
+    fun loadData(data: String) {
+        val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
+        val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("encryptedEncryptionKey is not set")
+
+        val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
+        val decryptedData = Aes.decrypt(data, decryptedEncryptionKey).toString()
+
+        console.log("decrypted: ["+decryptedData+", "+decryptedData.length+"]")
+
+        if (decryptedData.isBlank()) {
+            topGroup = Group(0, "Root", false, null, false, ArrayList(), ArrayList())
+        } else {
+            topGroup = Group(Tokenizer(decryptedData))
+        }
+
+        console.log("topGroup: ["+topGroup?.name+"]")
+    }
+
     fun saveData() {
         val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
         val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
 
         val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
-        //val data = Aes.encrypt(topGroup.export(), decryptedEncryptionKey).toString()
+        val tg = topGroup
 
-        //WebSocketConnection.send("SAVEDATA", data)
+        if (tg != null) {
+            val export = tg.export()
+
+            console.log("export: ["+export+"]")
+            val data = Aes.encrypt(export, decryptedEncryptionKey).toString()
+
+            WebSocketConnection.send("SAVEDATA", data)
+        }
     }
 }

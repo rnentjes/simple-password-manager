@@ -1,16 +1,11 @@
 package spm.ws
 
-import org.w3c.dom.WebSocket
-import spm.state.UserState
-import spm.view.group.Group
-import spm.view.group.GroupView
-import java.util.*
-
 /**
  * User: rnentjes
  * Date: 23-11-16
  * Time: 11:32
  */
+/*
 
 fun setGroups(ws: WebSocket, tk: Tokenizer) {
     val root = Group(tk)
@@ -36,4 +31,4 @@ fun createdGroup(ws: WebSocket, tk: Tokenizer) {
 
 
     WebSocketConnection.doneLoading()
-}
+}*/

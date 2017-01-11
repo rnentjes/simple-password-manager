@@ -25,6 +25,7 @@ object LoginView {
     var showLogin: Boolean = true
 
     fun create(): Element {
+        showLogin = true
         val result = div()
 
         result.add {
@@ -180,6 +181,7 @@ object LoginView {
             ModalView.showAlert("Error", "Password must be filled in!")
         } else {
             UserState.loginname = username.value
+
             WebSocketConnection.loadingWork {
                 UserState.setPassword(password.value)
 

@@ -20,11 +20,9 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
 
     if (found != null && PasswordHash.validatePassword(passwordHash, found.password)) {
         ws.user = found
-        ws.send("LOGIN", found.encryptedKey)
-
-        sendGroups(ws)
+        ws.send("LOGIN", found.encryptedKey, found.getData())
     } else {
-        ws.sendAlert("Error", "Unable to authenticate user $loginName!")
+        ws.sendAlert("Error", "Unable to authenticate user!")
     }
 }
 
@@ -45,8 +43,6 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
         UserDao.insert(user)
 
         ws.user = user
-        ws.send("LOGIN", encryptedKey)
-
-        sendGroups(ws)
+        ws.send("LOGIN", encryptedKey, user.getData())
     }
 }

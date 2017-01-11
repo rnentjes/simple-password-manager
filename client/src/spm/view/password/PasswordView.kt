@@ -4,14 +4,13 @@ import org.w3c.dom.Element
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.EventTarget
+import spm.model.Group
+import spm.model.Password
 import spm.state.UserState
 import spm.view.*
 import spm.view.form.*
-import spm.view.group.Group
 import spm.view.modal.ModalView
 import spm.view.modal.Notify
-import spm.ws.Tokenizer
-import spm.ws.WebSocketConnection
 import java.util.*
 import kotlin.dom.onClick
 import kotlin.dom.removeClass
@@ -22,59 +21,6 @@ import kotlin.dom.removeClass
  * Time: 16:20
  */
 
-data class Password(
-  var id: Long,
-  var user: String,
-  var group: Long,
-  var title: String,
-  var website: String,
-  var username: String,
-  var encryptedPassword: String,
-  var password1: String = "",
-  var password2: String = "",
-  var description: String
-) {
-    constructor() : this(0, "", 0, "", "", "", "", "", "", "")
-
-    constructor(group: Group) : this(0, "", group.id, "", "", "", "", "", "", "")
-
-    constructor(tk: Tokenizer) : this(
-      parseInt(tk.next()).toLong(),
-      tk.next(),
-      parseInt(tk.next()).toLong(),
-      tk.next(),
-      tk.next(),
-      tk.next(),
-      tk.next(),
-      "",
-      "",
-      tk.next())
-
-    fun tokenized(): String = Tokenizer.tokenize("$id", user, "$group", title, website, username, encryptedPassword, description)
-
-    fun decrypt() {
-        password1 = UserState.decryptPassword(encryptedPassword)
-        password2 = password1
-    }
-
-    fun send() {
-        if (password1.isNotBlank()) {
-            encryptedPassword = UserState.encryptPassword(password1)
-        }
-        if (id == 0L) {
-            WebSocketConnection.send("NEWPASSWORD", "$group", title, website, username, encryptedPassword, description)
-        } else {
-            WebSocketConnection.send("SAVEPASSWORD", "$group", "$id", title, website, username, encryptedPassword, description)
-        }
-        password1 = ""
-        password2 = ""
-    }
-
-    fun delete() {
-        WebSocketConnection.send("DELETEPASSWORD", "$group", "$id")
-    }
-}
-
 class PasswordForm(
   val password: Password,
   var showPassword: Boolean = false,
@@ -82,12 +28,12 @@ class PasswordForm(
   var valid: Boolean = false
 ) {
 
-    fun validate(): Boolean {
+    fun validate(newPassword: Boolean): Boolean {
         valid = true
         messages.clear()
 
         check(password.title.isNotBlank(), "title", "Please enter a title for this password.")
-        check(password.id > 0 || password.password1.isNotBlank(), "password1", "Password field can not be empty for a new entry.")
+        check(!newPassword || password.password1.isNotBlank(), "password1", "Password field can not be empty for a new entry.")
         check(password.password1 == password.password2, "password1", "Passwords don't match.")
 
         println("validate: $valid -> $messages")
@@ -109,9 +55,13 @@ class PasswordForm(
         messages[param] = list
     }
 
-    fun save() {
-        if (validate()) {
-            password.send()
+    fun save(newPassword: Boolean) {
+        if (validate(newPassword)) {
+            if (newPassword) {
+                password.group.passwords.add(password)
+            }
+
+            UserState.saveData()
         } else {
             ModalView.showAlert("Error", "Couldn't validate form?")
         }
@@ -137,13 +87,11 @@ object PasswordOverviewView {
                         val a = createTag("a").cls("btn btn-success btn-sm").txt("Add")
 
                         a.onClick {
-                            val password = Password()
+                            val password = Password(group)
                             val passwordForm = PasswordForm(password)
 
-                            password.group = group.id
-
                             passwordForm.password.decrypt()
-                            createPasswordEditor(parent, group, passwords, passwordForm)
+                            createPasswordEditor(parent, group, passwords, passwordForm, true)
                         }
 
                         a
@@ -213,6 +161,8 @@ object PasswordOverviewView {
                                 createTag("span").txt("Are you sure you want to delete password '${password.title}'?"),
                                 confirm = {
                                     password.delete()
+                                    UserState.saveData()
+                                    PasswordOverviewView.show(parent, group, passwords)
                                 }
                               )
                           }.attr("style", "margin-left: 5px;")
@@ -232,17 +182,18 @@ object PasswordOverviewView {
       parent: Element,
       group: Group,
       passwords: List<Password>,
-      passwordForm: PasswordForm) {
+      passwordForm: PasswordForm,
+      newPassword: Boolean = false) {
 
         PasswordView.create(parent, passwordForm, cancel = {
             show(parent, group, passwords)
         }, save = {
-            if (passwordForm.validate()) {
-                passwordForm.save()
+            if (passwordForm.validate(newPassword)) {
+                passwordForm.save(newPassword)
 
                 show(parent, group, passwords)
             } else {
-                createPasswordEditor(parent, group, passwords, passwordForm)
+                createPasswordEditor(parent, group, passwords, passwordForm, newPassword)
             }
         })
     }

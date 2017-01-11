@@ -2,6 +2,7 @@ package nl.astraeus.spm.model
 
 import nl.astraeus.database.SimpleDao
 import nl.astraeus.database.annotations.*
+import java.nio.charset.Charset
 import java.util.*
 
 /**
@@ -10,6 +11,8 @@ import java.util.*
  * Time: 12:54
  */
 
+var utf8 = Charset.forName("UTF-8")
+
 @Table(name = "usrs")
 @Cache(maxSize = 5000)
 data class User(
@@ -17,13 +20,19 @@ data class User(
   var password: String,
   var encryptedKey: String,
   @Index var name: String,
-  @Blob  var data: String,
   var created: Date,
-  var updated: Date
+  var updated: Date,
+  @Blob var data: ByteArray = ByteArray(0)
 ) {
-    constructor(name: String, password: String, encryptedKey: String): this(0, password, encryptedKey, name, "", Date(), Date())
+    constructor(name: String, password: String, encryptedKey: String): this(0, password, encryptedKey, name, Date(), Date())
 
-    constructor(): this(0, "", "", "", "", Date(), Date())
+    constructor(): this(0, "", "", "", Date(), Date())
+
+    fun setData(data: String) {
+        this.data = data.toByteArray(utf8)
+    }
+
+    fun getData()= String(data, utf8)
 
     fun checkPassword(password: String) = (password == this.password)
 }
