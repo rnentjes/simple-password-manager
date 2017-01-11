@@ -100,7 +100,6 @@ object UserState {
         if (tg != null) {
             val export = tg.export()
 
-            console.log("export: ["+export+"]")
             val data = Aes.encrypt(export, decryptedEncryptionKey).toString()
 
             WebSocketConnection.send("SAVEDATA", data)

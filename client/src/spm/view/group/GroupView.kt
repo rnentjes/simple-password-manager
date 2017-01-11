@@ -50,7 +50,6 @@ object GroupView {
             }
         }
 
-        println("CURRENT: ${UserState.currentGroup?.name}")
         if (UserState.currentGroup != null) {
             clickGroup(UserState.currentGroup!!)
         }
