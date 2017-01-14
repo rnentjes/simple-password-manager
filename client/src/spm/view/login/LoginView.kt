@@ -118,7 +118,7 @@ object LoginView {
             }.add {
                 val pwInput = Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4)
 
-                pwInput.on("keypress", true) { e ->
+                pwInput.onEvent("keypress") { e ->
                     if (e is KeyboardEvent && e.keyCode === 13) {
                         login()
                     }
@@ -154,7 +154,7 @@ object LoginView {
                   helpText = "Please note that if you lose your password there is no way to restore it.\n" +
                     "We don't know and we don't store your password, so make sure you don't forget it!")
 
-                pwInput.on("keypress", true) { e ->
+                pwInput.onEvent("keypress") { e ->
                     if (e is KeyboardEvent && e.keyCode === 13) {
                         register()
                     }

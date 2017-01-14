@@ -129,9 +129,9 @@ object Input {
             input.attr("placeholder", placeHolder)
         }
 
-        input.on("blur", true, blur)
+        input.onEvent("blur", blur)
 
-        input.on("keyup", true, change)
+        input.onEvent("keyup", change)
 
         result.add {
             div().cls("col-md-$inputWidth").add {
@@ -190,9 +190,9 @@ object TextArea {
             input.attr("placeholder", placeHolder)
         }
 
-        input.on("blur", true, change)
+        input.onEvent("blur", change)
 
-        input.on("keyup", true, change)
+        input.onEvent("keyup", change)
 
         result.add {
             div().cls("col-md-$inputWidth").add {
