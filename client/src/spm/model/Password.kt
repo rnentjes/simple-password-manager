@@ -24,7 +24,7 @@ data class Password(
     constructor(group: Group) : this(nextId(), "", group, "", "", "", "", "", "", "")
 
     constructor(tk: Tokenizer, group: Group) : this(
-      parseInt(tk.next()).toLong(),
+      tk.next().toLong(),
       tk.next(),
       group,
       tk.next(),

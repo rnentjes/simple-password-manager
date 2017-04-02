@@ -1,9 +1,9 @@
 package spm.view.login
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
-import spm.crypt.Hash
 import spm.state.UserState
 import spm.view.*
 import spm.view.form.Form
@@ -13,8 +13,6 @@ import spm.view.form.Input
 import spm.view.modal.ModalView
 import spm.ws.WebSocketConnection
 import kotlin.dom.addClass
-import kotlin.dom.on
-import kotlin.dom.onClick
 import kotlin.dom.removeClass
 
 /**
@@ -59,11 +57,11 @@ object LoginView {
             result.cls("active")
         }
 
-        val link = createTag("a").txt("Login")
+        val link = createTag("a").txt("Login") as HTMLElement
 
         result.with(link)
 
-        link.onClick {
+        link.onclick = {
             if (!showLogin) {
                 showLogin = true
 
@@ -85,11 +83,11 @@ object LoginView {
             result.cls("active")
         }
 
-        val link = createTag("a").txt("Register")
+        val link = createTag("a").txt("Register") as HTMLElement
 
         result.with(link)
 
-        link.onClick {
+        link.onclick = {
             if (showLogin) {
                 showLogin = false
 
@@ -116,9 +114,9 @@ object LoginView {
             Form.create(FormType.HORIZONTAL).add {
                 Input.create("login_name", label = "Login name", labelWidth = 4)
             }.add {
-                val pwInput = Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4)
+                val pwInput = Input.create("login_password", type = "password", label = "Passphrase", labelWidth = 4) as HTMLElement
 
-                pwInput.onEvent("keypress") { e ->
+                pwInput.onkeypress = { e ->
                     if (e is KeyboardEvent && e.keyCode === 13) {
                         login()
                     }
@@ -152,9 +150,9 @@ object LoginView {
             }.add {
                 val pwInput = Input.create("register_password2", type = "password", label = "Confirm passphrase", labelWidth = 4,
                   helpText = "Please note that if you lose your password there is no way to restore it.\n" +
-                    "We don't know and we don't store your password, so make sure you don't forget it!")
+                    "We don't know and we don't store your password, so make sure you don't forget it!") as HTMLElement
 
-                pwInput.onEvent("keypress") { e ->
+                pwInput.onkeypress = { e ->
                     if (e is KeyboardEvent && e.keyCode === 13) {
                         register()
                     }

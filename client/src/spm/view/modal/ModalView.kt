@@ -1,10 +1,10 @@
 package spm.view.modal
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 import spm.view.*
 import kotlin.browser.document
-import kotlin.dom.onClick
 
 /**
  * Created by rnentjes on 27-11-16.
@@ -70,13 +70,17 @@ object ModalView {
               div().cls("modal-footer").add {
                   createTag("button").cls("btn btn-default").attr("data-dismiss", "modal").txt(denyText)
               }.add {
-                  val confirmButton = createTag("button").attr("id", "modal_confirm_button").cls("btn btn-success").attr("data-dismiss", "modal").txt(confirmText)
+                  val confirmButton = createTag("button")
+                    .attr("id", "modal_confirm_button")
+                    .cls("btn btn-success")
+                    .attr("data-dismiss", "modal")
+                    .txt(confirmText) as HTMLElement
 
                   if (disabledConfirm) {
                       confirmButton.attr("disabled", "disabled")
                   }
 
-                  confirmButton.onClick { e -> confirm(e) }
+                  confirmButton.onclick = { e -> confirm(e) }
 
                   confirmButton
               }

@@ -1,6 +1,7 @@
 package spm.view.password
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.EventTarget
@@ -11,9 +12,7 @@ import spm.view.*
 import spm.view.form.*
 import spm.view.modal.ModalView
 import spm.view.modal.Notify
-import java.util.*
 import kotlin.browser.window
-import kotlin.dom.onClick
 import kotlin.dom.removeClass
 
 /**
@@ -95,9 +94,9 @@ object PasswordOverviewView {
             div().cls("page-header").add {
                 div().cls("btn-toolbar pull-right").add {
                     div().cls("button-group").add {
-                        val a = createTag("a").cls("btn btn-success btn-sm").txt("Add")
+                        val a = createTag("a").cls("btn btn-success btn-sm").txt("Add") as HTMLElement
 
-                        a.onClick {
+                        a.onclick = {
                             val password = Password(group)
                             val passwordForm = PasswordForm(null, password)
 
@@ -367,16 +366,16 @@ object PasswordView {
                   .cls("form-group")
                   .add {
                       div().cls("col-sm-offset-4 col-sm-8").add {
-                          val saveButton = createTag("button").cls("btn btn-success").txt("Save")
+                          val saveButton = createTag("button").cls("btn btn-success").txt("Save") as HTMLElement
 
-                          saveButton.onClick { save(passwordForm) }
+                          saveButton.onclick = { save(passwordForm) }
 
                           saveButton
                       }.add {
-                          val cancelButton = createTag("button").cls("btn btn-default").txt("Cancel")
+                          val cancelButton = createTag("button").cls("btn btn-default").txt("Cancel") as HTMLElement
 
                           cancelButton.attr("style", "margin-left: 5px;")
-                          cancelButton.onClick { cancel(passwordForm) }
+                          cancelButton.onclick = { cancel(passwordForm) }
 
                           cancelButton
                       }

@@ -1,6 +1,7 @@
 package spm.view.group
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import spm.model.Group
 import spm.state.UserState
@@ -11,7 +12,6 @@ import spm.view.form.Input
 import spm.view.modal.ModalView
 import spm.view.password.PasswordOverviewView
 import kotlin.dom.addClass
-import kotlin.dom.onClick
 import kotlin.dom.removeClass
 
 /**
@@ -59,7 +59,7 @@ object GroupView {
 
     fun createGroup(topGroup: Group, group: Group): Element {
         val result = createTag("li").add {
-            val icon = createTag("span").attr("style", "margin-right: 10px;")
+            val icon = createTag("span").attr("style", "margin-right: 10px;") as HTMLElement
 
             if (group.children.isNotEmpty()) {
                 if (group.opened) {
@@ -71,13 +71,13 @@ object GroupView {
                 icon.cls("glyphicon glyphicon-none")
             }
 
-            icon.onClick {
+            icon.onclick = {
                 clickExpandGroup(topGroup, group)
             }
 
             icon
         }.add {
-            val link = createTag("a").attr("id", "group_link_${group.id}")
+            val link = createTag("a").attr("id", "group_link_${group.id}") as HTMLElement
 
              var name = group.name
 
@@ -92,7 +92,7 @@ object GroupView {
             }
 
             link.setAttribute("href", "#")
-            link.onClick {
+            link.onclick = {
                 val currentGroup = UserState.currentGroup
 
                 if (currentGroup != null && hasElem("group_link_${currentGroup.id}")) {
@@ -162,9 +162,9 @@ object GroupPasswordsView {
                   inputWidth = 4,
                   classes = "input-lg",
                   value = group.name).add {
-                    val a = createTag("a").cls("btn btn-success btn-sm col-md-2").txt("Save name")
+                    val a = createTag("a").cls("btn btn-success btn-sm col-md-2").txt("Save name") as HTMLElement
 
-                    a.onClick {
+                    a.onclick = {
                         val input = elem("group_name") as HTMLInputElement
 
                         if (input.value.isBlank()) {
@@ -183,9 +183,9 @@ object GroupPasswordsView {
                     val a = createTag("a")
                       .cls("btn btn-primary btn-sm col-md-2")
                       .attr("style", "margin-left:5px;")
-                      .txt("Add subgroup")
+                      .txt("Add subgroup") as HTMLElement
 
-                    a.onClick {
+                    a.onclick = {
                         ModalView.showConfirm("New group",
                           body = Form.create(FormType.HORIZONTAL).add {
                               Input.create("modal_group_name", label = "Group name", labelWidth = 4, value = "")
@@ -213,13 +213,13 @@ object GroupPasswordsView {
                     val a = createTag("a")
                       .cls("btn btn-danger btn-sm col-md-2")
                       .txt("Remove group")
-                      .attr("style", "margin-left:5px;")
+                      .attr("style", "margin-left:5px;") as HTMLElement
 
                     if (group.children.isNotEmpty()) {
                         a.attr("disabled", "disabled")
                     }
 
-                    a.onClick { }
+                    a.onclick = { }
 
                     a
                 }

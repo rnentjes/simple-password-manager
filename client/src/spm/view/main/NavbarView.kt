@@ -1,8 +1,8 @@
 package spm.view.main
 
 import org.w3c.dom.Element
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.WebSocket
 import spm.http.Http
 import spm.state.UserState
 import spm.view.div
@@ -10,7 +10,6 @@ import spm.view.elem
 import spm.view.group.GroupView
 import spm.view.modal.Notify
 import spm.ws.WebSocketConnection
-import kotlin.dom.onClick
 
 /**
  * User: rnentjes
@@ -38,8 +37,9 @@ object NavbarView {
             })
         } else {
             parent.innerHTML = html
+            val search = elem("navbar_search") as HTMLElement
 
-            elem("navbar_search").onClick { event ->
+            search.onclick = { event ->
                 val searchBox = elem("navbar_search_input") as HTMLInputElement
                 val root = UserState.topGroup
 
@@ -62,7 +62,9 @@ object NavbarView {
                 event.preventDefault()
             }
 
-            elem("logout_action").onClick {
+            val logout = elem("logout_action") as HTMLElement
+
+            logout.onclick = {
                 MainView.logout()
             }
         }

@@ -6,8 +6,19 @@ sourceSets {
     main.java.srcDirs += 'src'
 }
 
+buildscript {
+    ext.kotlin_version = '1.1.1'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 dependencies {
-  compile "org.jetbrains.kotlin:kotlin-js-library:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "nl.astraeus:komp:0.0.1-SNAPSHOT"
 }
 
 libSassParameters {
@@ -18,15 +29,6 @@ libSassParameters {
     //Type: String Mandatory
     //Compiled file path
     outputFilePath = "client/web/css/spm.css"
-}
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
 }
 
 repositories {

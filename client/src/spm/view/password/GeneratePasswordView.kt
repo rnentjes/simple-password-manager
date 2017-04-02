@@ -7,6 +7,7 @@ import spm.view.add
 import spm.view.elem
 import spm.view.form.*
 import spm.view.modal.Notify
+import kotlin.js.Math
 
 /**
  * User: rnentjes
@@ -29,7 +30,7 @@ object GeneratePasswordView {
                     val target = it.target
                     if (target is HTMLInputElement) {
                         try {
-                            var length = parseInt(target.value)
+                            var length = target.value.toInt()
                             if (length < 1) {
                                 length = 1
                             }
@@ -48,7 +49,7 @@ object GeneratePasswordView {
                     val target = it.target
                     if (target is HTMLInputElement) {
                         try {
-                            var length = parseInt(target.value)
+                            var length = target.value.toInt()
                             if (length < 1) {
                                 length = 1
                             }

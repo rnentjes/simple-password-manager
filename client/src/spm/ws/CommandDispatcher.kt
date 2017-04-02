@@ -8,7 +8,7 @@ import spm.view.modal.ModalView
  */
 
 object CommandDispatcher {
-    val commands: MutableMap<String, (ws: org.w3c.dom.WebSocket, tk: spm.ws.Tokenizer) -> Unit> = java.util.HashMap()
+    val commands: MutableMap<String, (ws: org.w3c.dom.WebSocket, tk: spm.ws.Tokenizer) -> Unit> = HashMap()
 
     init {
         commands.put("LOGIN", ::login)

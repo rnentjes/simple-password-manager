@@ -1,14 +1,10 @@
 package spm.view.form
 
-import org.w3c.dom.Element
-import org.w3c.dom.HTMLFormElement
-import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.*
 import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.view.*
 import spm.ws.Tokenizer
-import kotlin.dom.on
-import kotlin.dom.onClick
 
 /**
  * Created by rnentjes on 20-11-16.
@@ -123,15 +119,15 @@ object Input {
           .attr("id", id)
           .attr("type", type)
           .attr("value", value)
-          .cls("form-control $classes")
+          .cls("form-control $classes") as HTMLInputElement
 
         if (placeHolder.isNotBlank()) {
             input.attr("placeholder", placeHolder)
         }
 
-        input.onEvent("blur", blur)
+        input.onblur = blur
 
-        input.onEvent("keyup", change)
+        input.onkeyup = change
 
         result.add {
             div().cls("col-md-$inputWidth").add {
@@ -184,15 +180,15 @@ object TextArea {
         val input = createTag("textarea")
           .attr("id", id)
           .cls("form-control $classes")
-          .txt(value)
+          .txt(value) as HTMLTextAreaElement
 
         if (placeHolder.isNotBlank()) {
             input.attr("placeholder", placeHolder)
         }
 
-        input.onEvent("blur", change)
+        input.onblur = change
 
-        input.onEvent("keyup", change)
+        input.onkeyup = change
 
         result.add {
             div().cls("col-md-$inputWidth").add {
@@ -248,9 +244,9 @@ object FormLinkButton {
       buttonClass: String = "btn-default",
       click: (Event) -> Unit = {}
     ): Element {
-        val a = createTag("a").cls("btn ${buttonClass}").txt(label)
+        val a = createTag("a").cls("btn ${buttonClass}").txt(label) as HTMLElement
 
-        a.onClick { click(it) }
+        a.onclick = { click(it) }
 
         return div().cls("form-group").with(
           div().cls("col-sm-offset-${labelWidth} col-sm-${12-labelWidth}").with(a)
@@ -269,7 +265,7 @@ object IconButton {
         val button = createTag("button")
           .attr("type", "button")
           .cls("btn $buttonClass")
-          .attr("aria-label", "Show")
+          .attr("aria-label", "Show") as HTMLElement
 
         if (text.isNotBlank()) {
             button.txt(text)
@@ -281,7 +277,7 @@ object IconButton {
               .attr("aria-hidden", "true")
         }
 
-        button.onClick { e -> click(e) }
+        button.onclick = { e -> click(e) }
 
         return button
     }
@@ -299,9 +295,9 @@ object TextButton {
           .attr("aria-label", "Show")
           .add {
               createTag("span").attr("aria-hidden", "true").txt(text)
-          }
+          } as HTMLElement
 
-        button.onClick { e -> click(e) }
+        button.onclick = { e -> click(e) }
 
         return button
     }
@@ -321,13 +317,13 @@ object Checkbox {
                 div().cls("checkbox").add {
                     val labelElem = createTag("label").addFirst {
                         val input = createTag("input")
-                          .attr("type", "checkbox")
+                          .attr("type", "checkbox") as HTMLElement
 
                         if (checked) {
                             input.attr("checked", "checked")
                         }
 
-                        input.onClick { it ->
+                        input.onclick = { it ->
                             val target = it.target
                             if (target is HTMLInputElement) {
                                 click(target)

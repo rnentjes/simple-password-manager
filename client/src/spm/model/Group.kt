@@ -1,7 +1,6 @@
 package spm.model
 
 import spm.ws.Tokenizer
-import java.util.*
 
 /**
  * User: rnentjes
@@ -21,16 +20,16 @@ data class Group(
 ) {
     constructor(name: String, parent: Group) : this(nextId(), name, false, parent)
 
-    constructor(tk: Tokenizer) : this(parseInt(tk.next()).toLong(), tk.next(), tk.next() == "true", null) {
+    constructor(tk: Tokenizer) : this(tk.next().toLong(), tk.next(), tk.next() == "true", null) {
         if (id > lastId) { lastId = id }
-        val numberOfPasswords = parseInt(tk.next())
+        val numberOfPasswords = tk.next().toInt()
         for (index in 0..numberOfPasswords - 1) {
             val password = Password(tk, this)
 
             passwords.add(password)
         }
 
-        val numberOfChildren = parseInt(tk.next())
+        val numberOfChildren = tk.next().toInt()
 
         for (index in 0..numberOfChildren - 1) {
             val child = Group(tk)

@@ -2,10 +2,8 @@ package spm.view
 
 import org.w3c.dom.Element
 import org.w3c.dom.HTMLTextAreaElement
-import org.w3c.dom.events.Event
 import kotlin.browser.document
 import kotlin.dom.addClass
-import kotlin.dom.eventHandler
 
 /**
  * Created by rnentjes on 20-11-16.
@@ -32,9 +30,9 @@ fun hasElem(id: String) = document.getElementById(id) != null
 fun elem(id: String) = document.getElementById(id) ?: throw IllegalArgumentException("Element with id: '$id' not found!")
 fun div() = createTag("div")
 
-fun Element.onEvent(name: String, handler: (Event) -> Unit) {
-    addEventListener(name, eventHandler(handler), true)
-}
+//fun Element.onEvent(name: String, handler: (Event) -> Unit) {
+//    addEventListener(name, eventHandler(handler), true)
+//}
 
 fun Element.attr(name: String, value: String): Element {
     this.setAttribute(name, value)
