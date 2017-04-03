@@ -29,7 +29,8 @@ object LoginView {
         result.add {
             div().cls("row").add {
                 div().cls("col-md-6 col-md-offset-3").add {
-                    createTag("h1").txt("Simple password manager").attr("style", "text-align: center;")
+                    createTag("h1").txt("Simple password manager")
+                      .attr("style", "text-align: center;")
                 }
             }
         }
@@ -153,7 +154,7 @@ object LoginView {
                     "We don't know and we don't store your password, so make sure you don't forget it!") as HTMLElement
 
                 pwInput.onkeypress = { e ->
-                    if (e is KeyboardEvent && e.keyCode === 13) {
+                    if (e is KeyboardEvent && e.keyCode == 13) {
                         register()
                     }
                 }
