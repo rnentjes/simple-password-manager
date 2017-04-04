@@ -230,5 +230,4 @@ object GroupPasswordsView {
             div().attr("id", "passwords_overview")
         }
     }
-
 }
