@@ -8,7 +8,6 @@ import org.w3c.dom.HTMLElement
 import spm.model.Group
 import spm.state.UserState
 import spm.state.UserState.topGroup
-import spm.view.group.GroupView
 
 /**
  * Created by rnentjes on 4-4-17.
@@ -25,6 +24,7 @@ class GroupOverview(val container: HtmlComponent) : HtmlComponent() {
                 if (group.children.isNotEmpty()) {
                     if (group.opened) {
                         classes += "glyphicon-folder-open"
+                    } else {
                         classes += "glyphicon-folder-close"
                     }
                 } else {
@@ -32,7 +32,10 @@ class GroupOverview(val container: HtmlComponent) : HtmlComponent() {
                 }
 
                 onClickFunction = {
-                    GroupView.clickExpandGroup(topGroup, group)
+                    group.opened = !group.opened
+                    UserState.saveData()
+
+                    refresh()
                 }
             }
             a {

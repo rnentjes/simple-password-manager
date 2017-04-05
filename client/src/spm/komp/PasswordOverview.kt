@@ -2,13 +2,18 @@ package spm.komp
 
 import kotlinx.html.*
 import kotlinx.html.js.div
+import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onKeyUpFunction
 import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
+import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
+import spm.view.modal.ModalView
 import spm.view.modal.Notify
 import stats.view.Modal
 import kotlin.browser.document
@@ -24,23 +29,78 @@ class RemovePasswordConfirm(val password: Password) : HtmlComponent() {
     }
 }
 
+class GroupNameEdit(var groupname : String = "") : HtmlComponent() {
+
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "") {
+        form(classes = "form form-horizontal") {
+            div(classes = "form-group") {
+                label(classes = "col-md-3") {
+                    for_ = "groupname"
+                    +"Group name"
+                }
+                div(classes = "col-md-9") {
+                    input(classes = "form-control") {
+                        id = "groupname"
+                        value = groupname
+
+                        fun changeName(e: Event) {
+                            groupname = (e.target as HTMLInputElement).value
+                        }
+
+                        onBlurFunction = ::changeName
+                        onKeyUpFunction = ::changeName
+                    }
+                }
+            }
+
+        }
+    }
+}
+
+
 class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
 
-    fun rename() {}
+    fun rename(group: Group) {
+        val renameSubgroup = GroupNameEdit(group.name)
+        Modal.openModal("Add group", renameSubgroup, okText = "Save", okButtonClass = "btn-success", ok = {
 
-    fun addSubgroup() {}
+            if (renameSubgroup.groupname.isBlank()) {
+                //Notify.show("Group name can not be blank!", "error")
+                ModalView.showAlert("Error", "Group name can not be blank")
+            } else {
+                group.name = renameSubgroup.groupname
+                UserState.saveData()
+                container.refresh()
+            }
+
+            true
+        })
+    }
+
+    fun addSubgroup(group: Group) {
+        val addSubgroup = GroupNameEdit()
+        Modal.openModal("Add group", addSubgroup, okText = "Save", okButtonClass = "btn-success", ok = {
+
+            if (addSubgroup.groupname.isBlank()) {
+                //Notify.show("Group name can not be blank!", "error")
+                ModalView.showAlert("Error", "Group name can not be blank")
+            } else {
+                val newGroup = Group(addSubgroup.groupname, group)
+                group.children.add(newGroup)
+
+                UserState.saveData()
+                container.refresh()
+            }
+
+            true
+        })
+    }
 
     fun removeGroup() {}
 
-    // language=html
-    val html = """
-        <a class="btn btn-success btn-sm col-md-2">Save name</a>
-        <a class="btn btn-primary btn-sm col-md-2" style="margin-left:5px;">Add subgroup</a>
-        <a class="btn btn-danger btn-sm col-md-2" style="margin-left:5px;" disabled="disabled">Remove group</a></div>
-        """
-
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
         val cg = UserState.currentGroup
+        console.log("Currentgroup: ", cg)
         if (cg != null) {
             div(classes = "row") {
                 div(classes = "col-md-6") {
@@ -58,14 +118,14 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                     a(classes = "btn btn-success btn-sm") {
                         +"Rename"
                         onClickFunction = {
-                            rename()
+                            rename(cg)
                         }
                     }
                     a(classes = "btn btn-primary btn-sm") {
                         style = "margin-left:5px;"
                         +"Add subgroup"
                         onClickFunction = {
-                            addSubgroup()
+                            addSubgroup(cg)
                         }
                     }
                     a(classes = "btn btn-danger btn-sm") {
@@ -84,39 +144,36 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
             div {
                 //id = "passwords_overview"
                 div(classes = "page-header") {
-                    val cg = UserState.currentGroup
-                    if (cg != null) {
-                        div(classes = "btn-toolbar pull-right") {
-                            div(classes = "button-group") {
-                                a(classes = "btn btn-success btn-sm") {
-                                    +"Add"
-                                    onClickFunction = {
-                                        val editor = PasswordEditor(cg)
-                                        Modal.openModal("Edit password",
-                                          editor,
-                                          okText = "Save",
-                                          okButtonClass = "btn-success",
-                                          ok = {
-                                            if (editor.validate()) {
-                                                if (editor.originalPassword == null) {
-                                                    editor.password.encryptedPassword = UserState.encryptPassword(editor.password.password1)
-                                                    cg.passwords.add(editor.password)
-                                                } else {
-                                                    throw IllegalStateException("Add button modal has existing password!?")
-                                                }
-                                                UserState.saveData()
-                                                container.refresh()
+                    div(classes = "btn-toolbar pull-right") {
+                        div(classes = "button-group") {
+                            a(classes = "btn btn-success btn-sm") {
+                                +"Add"
+                                onClickFunction = {
+                                    val editor = PasswordEditor(cg)
+                                    Modal.openModal("Edit password",
+                                      editor,
+                                      okText = "Save",
+                                      okButtonClass = "btn-success",
+                                      ok = {
+                                          if (editor.validate()) {
+                                              if (editor.originalPassword == null) {
+                                                  editor.password.encryptedPassword = UserState.encryptPassword(editor.password.password1)
+                                                  cg.passwords.add(editor.password)
+                                              } else {
+                                                  throw IllegalStateException("Add button modal has existing password!?")
+                                              }
+                                              UserState.saveData()
+                                              container.refresh()
 
-                                                true
-                                            } else {
+                                              true
+                                          } else {
 
-                                                false
-                                            }
-                                        })
-                                    }
+                                              false
+                                          }
+                                      })
                                 }
-
                             }
+
                         }
                     }
                     h4 {
@@ -188,12 +245,12 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                           RemovePasswordConfirm(password),
                                           okButtonClass = "btn-danger",
                                           ok = {
-                                            password.delete()
-                                            UserState.saveData()
-                                            refresh()
+                                              password.delete()
+                                              UserState.saveData()
+                                              refresh()
 
-                                            true
-                                        })
+                                              true
+                                          })
                                     }
                                 }
                             }
@@ -218,7 +275,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
             }
             attributes["aria-label"] = text
 
-            unsafe { + text }
+            unsafe { +text }
             span(classes = "glyphicon glyphicon-$icon") {
                 attributes["aria-hidden"] = "true"
             }
