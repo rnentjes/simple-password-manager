@@ -37,6 +37,18 @@ data class Password(
         if (id > lastId) { lastId = id }
     }
 
+    constructor(other: Password) : this(
+      other.id,
+      other.user,
+      other.group,
+      other.title,
+      other.website,
+      other.username,
+      other.encryptedPassword,
+      other.password1,
+      other.password2,
+      other.description)
+
     fun tokenized(): String = Tokenizer.tokenize("$id", user, title, website, username, encryptedPassword, description)
 
     fun decrypt() {
