@@ -25,11 +25,17 @@ import kotlin.browser.window
 
 class RemovePasswordConfirm(val password: Password) : HtmlComponent() {
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
-        +"Are you sure you want to delete password '${password.title}'?"
+        +"Are you sure you want to remove password '${password.title}'?"
     }
 }
 
-class GroupNameEdit(var groupname : String = "") : HtmlComponent() {
+class RemoveGroupConfirm(val groupName: String) : HtmlComponent() {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+        +"Are you sure you want to remove group '$groupName'?"
+    }
+}
+
+class GroupNameEdit(var groupname: String = "") : HtmlComponent() {
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "") {
         form(classes = "form form-horizontal") {
@@ -96,7 +102,17 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
         })
     }
 
-    fun removeGroup() {}
+    fun removeGroup(group: Group) {
+        val removeSubGroup = RemoveGroupConfirm(group.name)
+        Modal.openModal("Remove group", removeSubGroup, okText = "Remove", okButtonClass = "btn-danger", ok = {
+            group.parent?.children?.remove(group);
+
+            UserState.saveData()
+            container.refresh()
+
+            true
+        })
+    }
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
         val cg = UserState.currentGroup
@@ -130,10 +146,14 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                     }
                     a(classes = "btn btn-danger btn-sm") {
                         style = "margin-left:5px;"
-                        attributes["disabled"] = "disabled"
+                        if (cg.children.isNotEmpty() || cg.passwords.isNotEmpty() || cg.parent == null) {
+                            attributes["disabled"] = "disabled"
+                        }
                         +"Remove group"
                         onClickFunction = {
-                            removeGroup()
+                            if (cg.children.isEmpty() && cg.passwords.isEmpty() && cg.parent != null) {
+                                removeGroup(cg)
+                            }
                         }
                     }
                 }

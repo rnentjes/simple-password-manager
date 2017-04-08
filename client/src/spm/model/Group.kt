@@ -8,7 +8,6 @@ import spm.ws.Tokenizer
  * Time: 11:28
  */
 
-
 data class Group(
   var id: Long,
   var name: String,
@@ -22,7 +21,9 @@ data class Group(
 
     constructor(tk: Tokenizer) : this(tk.next().toLong(), tk.next(), tk.next() == "true", null) {
         if (id > lastId) { lastId = id }
+        console.log("Read group $name", this)
         val numberOfPasswords = tk.next().toInt()
+        println("\t Number of passwords :$numberOfPasswords")
         for (index in 0..numberOfPasswords - 1) {
             val password = Password(tk, this)
 
@@ -31,7 +32,9 @@ data class Group(
 
         val numberOfChildren = tk.next().toInt()
 
-        for (index in 0..numberOfChildren - 1) {
+        println("\t Number of children :$numberOfChildren")
+        for (idx2 in 0..numberOfChildren - 1) {
+            println("\t Child $idx2")
             val child = Group(tk)
 
             child.parent = this
@@ -97,7 +100,15 @@ data class Group(
     fun search(value: String): Group? {
         var result: Group? = null
 
-        if (name.toLowerCase().contains(value.toLowerCase())) {
+        var hasMatch = name.toLowerCase().contains(value.toLowerCase())
+
+        if (!hasMatch) {
+            for (password in passwords) {
+                hasMatch = hasMatch || password.search(value.toLowerCase())
+            }
+        }
+
+        if (hasMatch) {
             opened = false
             found = true
 

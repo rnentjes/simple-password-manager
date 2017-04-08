@@ -12,7 +12,7 @@ import org.w3c.dom.HTMLElement
  */
 
 class Container: HtmlComponent() {
-    val navbar = Navbar()
+    val navbar = Navbar(this)
     val groupOverview = GroupOverview(this)
     val passwordOverview = PasswordOverview(this)
 

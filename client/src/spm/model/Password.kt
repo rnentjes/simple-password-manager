@@ -67,4 +67,11 @@ data class Password(
             return ++lastId
         }
     }
+
+    fun search(value: String): Boolean {
+        return username.toLowerCase().contains(value) ||
+          title.toLowerCase().contains(value) ||
+          website.toLowerCase().contains(value) ||
+          description.toLowerCase().contains(value)
+    }
 }

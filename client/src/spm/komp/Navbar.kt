@@ -4,11 +4,13 @@ import kotlinx.html.*
 import kotlinx.html.js.nav
 import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
+import spm.state.UserState
 
 /**
  * Created by rnentjes on 3-4-17.
  */
-class Navbar: HtmlComponent() {
+class Navbar(val container: HtmlComponent): HtmlComponent() {
+    var search = UserState.currentSearch
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
@@ -37,18 +39,32 @@ class Navbar: HtmlComponent() {
                         }
                     }
                 }
+/*
                 form(classes = "navbar-form navbar-right") {
                     div(classes = "form-group") {
                         input(classes = "form-control") {
                             type = InputType.text
                             placeholder = "Search"
+                            value = search
+
+                            onKeyUpFunction = { e ->
+                                search = (e.target as HTMLInputElement).value
+                            }
                         }
                     }
                     button(classes = "btn btn-default") {
                         type = ButtonType.submit
                         + "Search"
+
+                        onClickFunction = {
+                            UserState.currentSearch = search
+                            UserState.topGroup?.search(search)
+
+                            container.refresh()
+                        }
                     }
                 }
+*/
             }
         }
     }

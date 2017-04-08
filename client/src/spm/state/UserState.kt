@@ -25,6 +25,7 @@ object UserState {
     // groups
     var currentGroup: Group? = null
     var topGroup: Group? = null
+    var currentSearch: String = ""
 
     private var decryptPassphraseHash: String? = null
 
@@ -82,6 +83,8 @@ object UserState {
         val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
         val decryptedData = Aes.decrypt(data, decryptedEncryptionKey).toString()
 
+        console.log("IMPORT: ", decryptedData)
+
         if (decryptedData.isBlank()) {
             topGroup = Group(0, "Root", false, null, false, ArrayList(), ArrayList())
         } else {
@@ -98,6 +101,8 @@ object UserState {
 
         if (tg != null) {
             val export = tg.export()
+
+            console.log("EXPORT: ", export)
 
             val data = Aes.encrypt(export, decryptedEncryptionKey).toString()
 

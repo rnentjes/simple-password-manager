@@ -8,6 +8,7 @@ import org.w3c.dom.HTMLElement
 import spm.model.Group
 import spm.state.UserState
 import spm.state.UserState.topGroup
+import spm.view.group.GroupView.createGroup
 
 /**
  * Created by rnentjes on 4-4-17.
@@ -16,58 +17,61 @@ import spm.state.UserState.topGroup
 class GroupOverview(val container: HtmlComponent) : HtmlComponent() {
 
     private fun createGroup(consumer: TagConsumer<HTMLElement>, topGroup: Group, group: Group) {
-        consumer.li {
-            span {
-                style = "margin-right: 10px;"
-                classes += "glyphicon"
+        consumer.ul(classes = "tree") {
+            li {
+                span {
+                    style = "margin-right: 10px;"
+                    classes += "glyphicon"
 
-                if (group.children.isNotEmpty()) {
-                    if (group.opened) {
-                        classes += "glyphicon-folder-open"
+                    if (group.children.isNotEmpty()) {
+                        if (group.opened) {
+                            classes += "glyphicon-folder-open"
+                        } else {
+                            classes += "glyphicon-folder-close"
+                        }
                     } else {
                         classes += "glyphicon-folder-close"
+                        style = "color: transparent;"
                     }
-                } else {
-                    classes += "glyphicon-none"
+
+                    onClickFunction = {
+                        group.opened = !group.opened
+                        UserState.saveData()
+
+                        refresh()
+                    }
                 }
+                a {
+                    href = "#"
+                    var name = group.name
 
-                onClickFunction = {
-                    group.opened = !group.opened
-                    UserState.saveData()
+                    if (name.length > 14) {
+                        name = name.slice(0..11) + "..."
+                    }
 
-                    refresh()
+                    +name
+
+                    if (group.found) {
+                        classes += "found"
+                    }
+                    if (group == UserState.currentGroup) {
+                        classes += "selected"
+                    }
+
+                    onClickFunction = {
+                        UserState.currentGroup = group
+
+                        container.refresh()
+                    }
+
                 }
-            }
-            a {
-                href = "#"
-                var name = group.name
-
-                if (name.length > 14) {
-                    name = name.slice(0..11) + "..."
+                span(classes = "badge") {
+                    +"${group.passwords.size}/${group.getPasswordsCountInGroup()}"
                 }
-
-                + name
-
-                if (group.found) {
-                    classes += "found"
-                }
-                if (group == UserState.currentGroup) {
-                    classes += "selected"
-                }
-
-                onClickFunction = {
-                    UserState.currentGroup = group
-
-                    container.refresh()
-                }
-
-            }
-            span(classes = "badge") {
-                + "${group.passwords.size}/${group.getPasswordsCountInGroup()}"
-            }
-            if (group.opened) {
-                group.children.forEach {
-                    createGroup(consumer, topGroup, it)
+                if (group.opened) {
+                    group.children.forEach {
+                        createGroup(consumer, topGroup, it)
+                    }
                 }
             }
         }
@@ -80,11 +84,10 @@ class GroupOverview(val container: HtmlComponent) : HtmlComponent() {
                     + "Password groups"
                 }
             }
-            ul(classes = "tree") {
-                val tg = topGroup
-                if (tg != null) {
-                    createGroup(consumer, tg, tg)
-                }
+            val tg = topGroup
+
+            if (tg != null) {
+                createGroup(consumer, tg, tg)
             }
         }
     }
