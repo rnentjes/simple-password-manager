@@ -11,8 +11,8 @@ import org.w3c.dom.HTMLElement
  * Created by rnentjes on 3-4-17.
  */
 
-class Container: HtmlComponent() {
-    val navbar = Navbar(this)
+class Container(main: HtmlComponent): HtmlComponent() {
+    val navbar = Navbar(main, this)
     val groupOverview = GroupOverview(this)
     val passwordOverview = PasswordOverview(this)
 

@@ -21,9 +21,9 @@ data class Group(
 
     constructor(tk: Tokenizer) : this(tk.next().toLong(), tk.next(), tk.next() == "true", null) {
         if (id > lastId) { lastId = id }
-        console.log("Read group $name", this)
+        //console.log("Read group $name", this)
         val numberOfPasswords = tk.next().toInt()
-        println("\t Number of passwords :$numberOfPasswords")
+        //println("\t Number of passwords :$numberOfPasswords")
         for (index in 0..numberOfPasswords - 1) {
             val password = Password(tk, this)
 
@@ -32,19 +32,18 @@ data class Group(
 
         val numberOfChildren = tk.next().toInt()
 
-        println("\t Number of children :$numberOfChildren")
-        for (idx2 in 0..numberOfChildren - 1) {
-            println("\t Child $idx2")
+        //println("\t Number of children :$numberOfChildren")
+        // weird for-loop bug work-around
+        var index = 0
+        while(index < numberOfChildren) {
+            //println("\t Child $index")
             val child = Group(tk)
 
             child.parent = this
             children.add(child)
+            index++
         }
     }
-
-    override fun equals(other: Any?) = super.equals(other)
-
-    override fun hashCode() = super.hashCode()
 
     fun all(): List<Group> {
         val result = ArrayList<Group>()

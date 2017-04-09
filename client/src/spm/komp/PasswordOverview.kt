@@ -116,7 +116,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
         val cg = UserState.currentGroup
-        console.log("Currentgroup: ", cg)
+        //console.log("Currentgroup: ", cg)
         if (cg != null) {
             div(classes = "row") {
                 div(classes = "col-md-6") {
@@ -245,7 +245,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                                     if (editor.password.password1.isNotBlank()) {
                                                         editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
                                                     } else {
-                                                        console.log("blank pwd: ", password)
+                                                        //console.log("blank pwd: ", password)
                                                     }
                                                 } else {
                                                     throw IllegalStateException("Edit button doesn't have original password!?")

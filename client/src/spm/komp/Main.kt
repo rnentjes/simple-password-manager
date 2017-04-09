@@ -31,7 +31,7 @@ class Main : HtmlComponent() {
         if (!UserState.loggedIn) {
             include(Login())
         } else {
-            include(Container())
+            include(Container(this@Main))
         }
     }
 

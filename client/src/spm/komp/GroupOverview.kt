@@ -8,7 +8,6 @@ import org.w3c.dom.HTMLElement
 import spm.model.Group
 import spm.state.UserState
 import spm.state.UserState.topGroup
-import spm.view.group.GroupView.createGroup
 
 /**
  * Created by rnentjes on 4-4-17.

@@ -2,6 +2,7 @@ package spm.komp
 
 import kotlinx.html.*
 import kotlinx.html.js.nav
+import kotlinx.html.js.onClickFunction
 import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
 import spm.state.UserState
@@ -9,7 +10,7 @@ import spm.state.UserState
 /**
  * Created by rnentjes on 3-4-17.
  */
-class Navbar(val container: HtmlComponent): HtmlComponent() {
+class Navbar(val main: HtmlComponent, val container: HtmlComponent): HtmlComponent() {
     var search = UserState.currentSearch
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
@@ -36,6 +37,12 @@ class Navbar(val container: HtmlComponent): HtmlComponent() {
                         a {
                             href = "#"
                             + "Logout"
+
+                            onClickFunction = {
+                                UserState.clear()
+
+                                main.refresh()
+                            }
                         }
                     }
                 }

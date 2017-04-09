@@ -6,7 +6,6 @@ import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import spm.state.UserState
 import spm.view.*
-import spm.view.main.MainView
 import spm.view.modal.ModalView
 import kotlin.browser.document
 import kotlin.browser.window
