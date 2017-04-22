@@ -1,11 +1,13 @@
 package spm.ws
 
-import org.w3c.dom.Element
+import kotlinx.html.dom.create
+import kotlinx.html.id
+import kotlinx.html.js.div
+import org.w3c.dom.HTMLElement
 import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import spm.state.UserState
-import spm.view.*
 import stats.view.Modal
 import kotlin.browser.document
 import kotlin.browser.window
@@ -33,10 +35,10 @@ object WebSocketConnection {
         val ws = websocket
 
         if (ws != null) {
-            ws.onopen       = { onOpen(ws, it)      }
-            ws.onmessage    = { onMessage(ws, it)   }
-            ws.onclose      = { onClose(ws, it)     }
-            ws.onerror      = { onError(ws, it)     }
+            ws.onopen = { onOpen(ws, it) }
+            ws.onmessage = { onMessage(ws, it) }
+            ws.onclose = { onClose(ws, it) }
+            ws.onerror = { onError(ws, it) }
         }
     }
 
@@ -111,7 +113,7 @@ object WebSocketConnection {
     fun send(message: String) {
         websocket?.send(message)
 
-        if(websocket == null) {
+        if (websocket == null) {
             if (!UserState.loggedIn) {
                 UserState.clear()
             }
@@ -123,19 +125,18 @@ object WebSocketConnection {
         send(Tokenizer.tokenize(*args))
     }
 
-    fun getLoadingDiv(): Element {
-        val result: Element
+    fun getLoadingDiv(): HTMLElement {
+        var result = document.getElementById("loading_div")
 
-        if (!hasElem("loading_div")) {
-            result = div().attr("id", "loading_div").cls("loading").txt("Loading&8230;")
-
-            val body = document.body ?: throw IllegalStateException("The body was not found!")
-            body.add { result }
-        } else {
-            result = elem("loading_div")
+        if (result == null) {
+            result = document.create.div(classes = "loading") {
+                id = "loading_div"
+                +"Loading&8230;"
+            }
+            document.body?.appendChild(result)
         }
 
-        return result
+        return result as HTMLElement
     }
 
     fun loadingWork(callback: () -> Unit = {}) {
@@ -143,7 +144,7 @@ object WebSocketConnection {
 
         if (loadingCalls >= 1) {
             // hide interface
-            getLoadingDiv().attr("style", "display: block;")
+            getLoadingDiv().style.display = "block"
         }
 
         window.requestAnimationFrame {
@@ -162,7 +163,7 @@ object WebSocketConnection {
 
         if (loadingCalls >= 1) {
             // hide interface
-            getLoadingDiv().attr("style", "display: block;")
+            getLoadingDiv().style.display = "block"
         }
 
         try {
@@ -179,7 +180,7 @@ object WebSocketConnection {
 
         if (loadingCalls == 0) {
             // show interface
-            getLoadingDiv().attr("style", "display: none;")
+            getLoadingDiv().style.display = "none"
         }
     }
 

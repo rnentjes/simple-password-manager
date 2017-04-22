@@ -213,17 +213,17 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                 td { +password.username }
                                 td(classes = "col-md-4") {
                                     passwordButton(consumer, "copy", text = "U&nbsp;", btnClass = "btn-xs btn-default") {
-                                        spm.view.copyToClipboard(password.username)
+                                        copyToClipboard(password.username)
 
                                         Notify.show("Copied username to clipboard.", "success")
                                     }
                                     passwordButton(consumer, "copy", text = "P&nbsp;", btnClass = "btn-xs btn-warning", buttonStyle = "margin-left: 5px;") {
-                                        spm.view.copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
+                                        copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
 
                                         Notify.show("Copied password to clipboard.", "success")
                                     }
                                     passwordButton(consumer, "copy", text = "U&nbsp;", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
-                                        spm.view.copyToClipboard(password.website)
+                                        copyToClipboard(password.website)
 
                                         Notify.show("Copied password to clipboard.", "success")
                                     }

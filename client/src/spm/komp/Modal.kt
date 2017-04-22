@@ -1,15 +1,12 @@
 package stats.view
 
 import kotlinx.html.*
-import kotlinx.html.dom.create
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import nl.astraeus.komp.HtmlComponent
 import nl.astraeus.komp.Komp
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.events.Event
-import spm.view.*
 import kotlin.browser.document
 
 /**
