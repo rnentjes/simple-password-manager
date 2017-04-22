@@ -8,8 +8,8 @@ import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import spm.state.UserState
-import spm.view.modal.ModalView
 import spm.ws.WebSocketConnection
+import stats.view.Modal
 
 /**
  * Created by rnentjes on 3-4-17.
@@ -32,9 +32,9 @@ class Login : HtmlComponent() {
 
     fun login() {
         if (loginForm.login.isBlank()) {
-            ModalView.showAlert("Error", "Login name must be filled in!")
+            Modal.showAlert("Error", "Login name must be filled in!")
         } else if (loginForm.pwd1.isBlank()) {
-            ModalView.showAlert("Error", "Password must be filled in!")
+            Modal.showAlert("Error", "Password must be filled in!")
         } else {
             UserState.loginname = loginForm.login
 
@@ -51,11 +51,11 @@ class Login : HtmlComponent() {
 
     fun register() {
         if (loginForm.login.isBlank()) {
-            ModalView.showAlert("Error", "Login name must be filled in!")
+            Modal.showAlert("Error", "Login name must be filled in!")
         } else if (loginForm.pwd1.isBlank()) {
-            ModalView.showAlert("Error", "Password must be filled in!")
+            Modal.showAlert("Error", "Password must be filled in!")
         } else if (loginForm.pwd1 != loginForm.pwd2) {
-            ModalView.showAlert("Error", "Passwords must match!")
+            Modal.showAlert("Error", "Passwords must match!")
         } else {
             UserState.loginname = loginForm.login
 
@@ -222,7 +222,7 @@ class Login : HtmlComponent() {
                         div(classes = "col-md-offset-4 col-md-8") {
                             span(classes = "help-block") {
                                 style = "color: red;"
-                                +"Please note that if you lose your password there is no way to restore it. We don't know and we don't store your password, so make sure you don't forget it!"
+                                +"Please note that if you lose your passphrase there is no way to restore it. We don't know and we don't store your passphrase, so make sure you don't forget it!"
                             }
                         }
                         div(classes = "form-group") {

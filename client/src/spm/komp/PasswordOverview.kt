@@ -13,8 +13,6 @@ import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import spm.view.modal.ModalView
-import spm.view.modal.Notify
 import stats.view.Modal
 import kotlin.browser.document
 import kotlin.browser.window
@@ -72,7 +70,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
 
             if (renameSubgroup.groupname.isBlank()) {
                 //Notify.show("Group name can not be blank!", "error")
-                ModalView.showAlert("Error", "Group name can not be blank")
+                Modal.showAlert("Error", "Group name can not be blank")
             } else {
                 group.name = renameSubgroup.groupname
                 UserState.saveData()
@@ -89,7 +87,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
 
             if (addSubgroup.groupname.isBlank()) {
                 //Notify.show("Group name can not be blank!", "error")
-                ModalView.showAlert("Error", "Group name can not be blank")
+                Modal.showAlert("Error", "Group name can not be blank")
             } else {
                 val newGroup = Group(addSubgroup.groupname, group)
                 group.children.add(newGroup)

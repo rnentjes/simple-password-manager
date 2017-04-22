@@ -1,7 +1,7 @@
 package spm.ws
 
 import org.w3c.dom.WebSocket
-import spm.view.modal.ModalView
+import stats.view.Modal
 
 /**
  * Created by rnentjes on 7-6-16.
@@ -13,7 +13,7 @@ object CommandDispatcher {
 
     init {
         commands.put("LOGIN", this::login)
-        commands.put("ALERT", { ws, tk -> ModalView.showAlert(tk.next(), tk.next()) })
+        commands.put("ALERT", { ws, tk -> Modal.showAlert(tk.next(), tk.next()) })
     }
 
     fun login(ws: WebSocket, tk: Tokenizer) {

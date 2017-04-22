@@ -6,7 +6,7 @@ import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import spm.state.UserState
 import spm.view.*
-import spm.view.modal.ModalView
+import stats.view.Modal
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -63,7 +63,7 @@ object WebSocketConnection {
                 window.clearInterval(interval)
                 //MainView.logout()
 
-                ModalView.showAlert("Error", "Connection to the server was lost!\nPlease try again later.")
+                Modal.showAlert("Error", "Connection to the server was lost!\nPlease try again later.")
                 WebSocketConnection.loading()
                 reconnect()
             }
@@ -74,7 +74,7 @@ object WebSocketConnection {
         val actualWs = websocket
 
         if (actualWs != null) {
-            ModalView.showAlert("Succes", "Connection with the server was restored!")
+            Modal.showAlert("Succes", "Connection with the server was restored!")
         } else {
             open()
 
@@ -115,7 +115,7 @@ object WebSocketConnection {
             if (!UserState.loggedIn) {
                 UserState.clear()
             }
-            ModalView.showAlert("Error", "Cannot connect to the server!")
+            Modal.showAlert("Error", "Cannot connect to the server!")
         }
     }
 
