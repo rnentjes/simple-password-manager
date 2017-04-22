@@ -1,4 +1,4 @@
-package spm.komp
+package spm.view
 
 /**
  * User: rnentjes

@@ -1,7 +1,7 @@
 package spm
 
 import nl.astraeus.komp.Komp
-import spm.komp.Main
+import spm.view.Main
 import spm.ws.WebSocketConnection
 import kotlin.browser.document
 

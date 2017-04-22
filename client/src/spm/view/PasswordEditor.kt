@@ -1,4 +1,4 @@
-package spm.komp
+package spm.view
 
 import kotlinx.html.*
 import kotlinx.html.js.onBlurFunction
@@ -11,9 +11,7 @@ import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
-import spm.state.UserState
 import stats.view.Modal
-import kotlin.js.Math
 
 /**
  * User: rnentjes

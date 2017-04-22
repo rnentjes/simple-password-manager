@@ -1,4 +1,4 @@
-package spm.komp
+package spm.view
 
 import kotlinx.html.*
 import kotlinx.html.js.div

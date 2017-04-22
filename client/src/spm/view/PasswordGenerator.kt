@@ -1,4 +1,4 @@
-package spm.komp
+package spm.view
 
 import kotlinx.html.*
 import kotlinx.html.js.onBlurFunction
@@ -7,12 +7,9 @@ import kotlinx.html.js.onKeyUpFunction
 import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
-import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
-import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import stats.view.Modal
 import kotlin.js.Math
 
 /**
