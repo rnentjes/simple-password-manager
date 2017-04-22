@@ -4,9 +4,11 @@ import kotlinx.html.*
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onInputFunction
+import kotlinx.html.js.onKeyDownFunction
 import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.KeyboardEvent
 import spm.state.UserState
 import spm.ws.WebSocketConnection
 import stats.view.Modal
@@ -149,6 +151,13 @@ class Login : HtmlComponent() {
                                             loginForm.pwd1 = target.value
                                         }
                                     }
+                                    onKeyDownFunction = { e ->
+                                        if (e is KeyboardEvent) {
+                                            if (e.keyCode == 13) {
+                                                login()
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -214,6 +223,13 @@ class Login : HtmlComponent() {
                                         val target = e.target
                                         if (target is HTMLInputElement) {
                                             loginForm.pwd2 = target.value
+                                        }
+                                    }
+                                    onKeyDownFunction = { e ->
+                                        if (e is KeyboardEvent) {
+                                            if (e.keyCode == 13) {
+                                                register()
+                                            }
                                         }
                                     }
                                 }
