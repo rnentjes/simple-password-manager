@@ -66,6 +66,7 @@ class Navbar(val main: HtmlComponent, val container: HtmlComponent): HtmlCompone
 
                         onClickFunction = {
                             UserState.currentSearch = search
+                            UserState.currentGroup = null
 
                             container.refresh()
                         }
