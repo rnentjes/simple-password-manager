@@ -3,8 +3,10 @@ package spm.view
 import kotlinx.html.*
 import kotlinx.html.js.nav
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onKeyUpFunction
 import nl.astraeus.komp.HtmlComponent
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.HTMLInputElement
 import spm.state.UserState
 
 /**
@@ -46,7 +48,6 @@ class Navbar(val main: HtmlComponent, val container: HtmlComponent): HtmlCompone
                         }
                     }
                 }
-/*
                 form(classes = "navbar-form navbar-right") {
                     div(classes = "form-group") {
                         input(classes = "form-control") {
@@ -65,13 +66,11 @@ class Navbar(val main: HtmlComponent, val container: HtmlComponent): HtmlCompone
 
                         onClickFunction = {
                             UserState.currentSearch = search
-                            UserState.topGroup?.search(search)
 
                             container.refresh()
                         }
                     }
                 }
-*/
             }
         }
     }

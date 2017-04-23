@@ -96,53 +96,6 @@ data class Group(
         return null
     }
 
-    fun search(value: String): Group? {
-        var result: Group? = null
-
-        var hasMatch = name.toLowerCase().contains(value.toLowerCase())
-
-        if (!hasMatch) {
-            for (password in passwords) {
-                hasMatch = hasMatch || password.search(value.toLowerCase())
-            }
-        }
-
-        if (hasMatch) {
-            opened = false
-            found = true
-
-            result = this
-            var parent = parent
-
-            while (parent != null) {
-                parent.opened = true
-                parent = parent.parent
-            }
-        } else {
-            opened = false
-            found = false
-        }
-
-        if (opened) {
-            var parent = parent
-
-            while (parent != null) {
-                parent.opened = true
-                parent = parent.parent
-            }
-        }
-
-        for (child in children) {
-            val firstFound = child.search(value)
-
-            if (result == null) {
-                result = firstFound
-            }
-        }
-
-        return result
-    }
-
     fun getPasswordsCountInGroup(): Int {
         var result = passwords.size
 

@@ -59,6 +59,7 @@ class GroupOverview(val container: HtmlComponent) : HtmlComponent() {
 
                     onClickFunction = {
                         UserState.currentGroup = group
+                        UserState.currentSearch = ""
 
                         container.refresh()
                     }
