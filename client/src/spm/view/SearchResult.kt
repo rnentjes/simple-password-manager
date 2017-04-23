@@ -48,7 +48,7 @@ class SearchResult(val container: HtmlComponent) : HtmlComponent() {
                     // background-color: #f8f8f8;
                     style = "text-align: center; padding: 10px; margin: 5px"
 
-                    + "Searched for '${UserState.currentSearch}'"
+                    + "Search result for '${UserState.currentSearch}'"
                 }
             }
         }
@@ -65,6 +65,7 @@ class SearchResult(val container: HtmlComponent) : HtmlComponent() {
             div(classes = "row") {
                 table(classes = "table table-striped table-condensed table-hover") {
                     tr {
+                        th { +"Group" }
                         th { +"Title" }
                         th { +"Url" }
                         th { +"Username" }
@@ -72,6 +73,7 @@ class SearchResult(val container: HtmlComponent) : HtmlComponent() {
                     }
                     for (password in searchResult) {
                         tr {
+                            td { +password.group.name }
                             td { +password.title }
                             td { +password.website }
                             td { +password.username }

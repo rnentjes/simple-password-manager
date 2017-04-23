@@ -43,3 +43,16 @@ project('client') {
   apply plugin: 'kotlin2js'
 }
 
+task zipDist(type: Zip, dependsOn: [':server:jar', ':client:compileKotlin2Js'] ) {
+  from('server/build/libs') {
+    include '*.jar'
+  }
+
+  from('client/web') {
+    include '**/**'
+    into 'web'
+  }
+
+  archiveName 'spm.zip'
+  destinationDir(file('build'))
+}
