@@ -6,8 +6,11 @@ import nl.astraeus.database.jdbc.ConnectionProvider
 import nl.astraeus.spm.sql.DatabaseMigration
 import nl.astraeus.spm.web.SimpleWebSocketServer
 import org.slf4j.LoggerFactory
+import java.io.File
+import java.io.FileInputStream
 import java.sql.Connection
 import java.sql.DriverManager
+import java.util.*
 
 /**
  * User: rnentjes
@@ -15,18 +18,64 @@ import java.sql.DriverManager
  * Time: 12:09
  */
 
-fun initDbConnection(connectionString: String) {
+object Settings {
+    var port                = 3456
+    var connectionTimeout   = 30000
+
+    var jdbcDriver          = "nl.astraeus.jdbc.Driver"
+    var jdbcConnectionUrl   = "jdbc:stat:webServerPort=18200:jdbc:h2:file:"
+    var jdbcUser            = "sa"
+    var jdbcPassword        = ""
+
+    init {
+        // /home/rnentjes/apps/spm/data/data
+
+        val file = File("data", "spm")
+
+        jdbcConnectionUrl += file.canonicalPath
+    }
+
+    fun readProperties(args: Array<String>) {
+        var filename = "spm.properties"
+
+        if (args.isNotEmpty()) {
+            filename = args[0]
+        }
+
+        val propertiesFile = File(filename)
+
+        if (propertiesFile.exists()) {
+            val properties = Properties()
+
+            FileInputStream(propertiesFile).use {
+                properties.load(it)
+            }
+
+            port = properties.getProperty("port", port.toString()).toInt()
+            connectionTimeout = properties.getProperty("connectionTimeout", connectionTimeout.toString()).toInt()
+
+            jdbcDriver = properties.getProperty("jdbcDriver", jdbcDriver)
+            jdbcConnectionUrl = properties.getProperty("jdbcConnectionUrl", jdbcConnectionUrl)
+            jdbcUser = properties.getProperty("jdbcUser", jdbcUser)
+            jdbcPassword = properties.getProperty("jdbcPassword", jdbcPassword)
+
+        }
+    }
+}
+
+fun initDbConnection() {
     val db = SimpleDatabase.define(ConnectionPool(object : ConnectionProvider() {
         override fun getConnection(): Connection {
-            Class.forName("org.h2.Driver")
-            Class.forName("nl.astraeus.jdbc.Driver")
+            Class.forName(Settings.jdbcDriver)
 
-            val connection = DriverManager.getConnection(connectionString, "sa", "")
+            val connection = DriverManager.getConnection(
+              Settings.jdbcConnectionUrl,
+              Settings.jdbcUser,
+              Settings.jdbcPassword)
             connection.autoCommit = false
 
             return connection
         }
-
     }))
 
     db.setExecuteDDLUpdates(true)
@@ -35,14 +84,14 @@ fun initDbConnection(connectionString: String) {
 fun main(args: Array<String>) {
     val logger = LoggerFactory.getLogger("nl.astraeus.spm.main")
 
-    val server = SimpleWebSocketServer(3456)
+    Settings.readProperties(args)
 
-    val cs = "jdbc:stat:webServerPort=18200:jdbc:h2:file:/home/rnentjes/apps/spm/data/data"
+    val server = SimpleWebSocketServer(Settings.port)
 
-    initDbConnection(cs)
+    initDbConnection()
     DatabaseMigration.check()
 
-    server.start(30000, false)
+    server.start(Settings.connectionTimeout, false)
 
-    logger.warn("Started server!")
+    logger.info("Started server on port ${Settings.port}.")
 }

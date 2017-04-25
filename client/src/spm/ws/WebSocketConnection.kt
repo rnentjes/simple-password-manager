@@ -27,7 +27,7 @@ object WebSocketConnection {
         close()
 
         if (window.location.hostname.contains("localhost")) {
-            websocket = WebSocket("ws://${window.location.hostname}:3456")
+            websocket = WebSocket("ws://${window.location.hostname}:${window.location.port}")
         } else {
             websocket = WebSocket("wss://${window.location.hostname}")
         }

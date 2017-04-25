@@ -7,6 +7,9 @@ import stats.view.Modal
  * Created by rnentjes on 7-6-16.
  */
 
+//language=JSON
+val html = ""
+
 object CommandDispatcher {
     val commands: MutableMap<String, (ws: org.w3c.dom.WebSocket, tk: spm.ws.Tokenizer) -> Unit> = HashMap()
     var loginListener: ((WebSocket, Tokenizer) -> Unit)? = null

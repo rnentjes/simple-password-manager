@@ -15,6 +15,8 @@ import spm.state.UserState
 class Navbar(val main: HtmlComponent, val container: HtmlComponent): HtmlComponent() {
     var search = UserState.currentSearch
 
+    //language=HTML
+    var test = "<div classes=\"pipo\">\n  <span style=\"color: black;\">Hello world!</span>\n</div>\n"
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
             unsafe {
