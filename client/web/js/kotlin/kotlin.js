@@ -12,19 +12,53 @@
 }(this, function (Kotlin) {
     var _ = Kotlin;
 
+Kotlin.isBooleanArray = function(a) {
+  return (Array.isArray(a) || a instanceof Int8Array) && a.$type$ === "BooleanArray";
+};
+Kotlin.isByteArray = function(a) {
+  return a instanceof Int8Array && a.$type$ !== "BooleanArray";
+};
+Kotlin.isShortArray = function(a) {
+  return a instanceof Int16Array;
+};
+Kotlin.isCharArray = function(a) {
+  return a instanceof Uint16Array && a.$type$ === "CharArray";
+};
+Kotlin.isIntArray = function(a) {
+  return a instanceof Int32Array;
+};
+Kotlin.isFloatArray = function(a) {
+  return a instanceof Float32Array;
+};
+Kotlin.isDoubleArray = function(a) {
+  return a instanceof Float64Array;
+};
+Kotlin.isLongArray = function(a) {
+  return Array.isArray(a) && a.$type$ === "LongArray";
+};
+Kotlin.isArray = function(a) {
+  return Array.isArray(a) && !a.$type$;
+};
+Kotlin.isArrayish = function(a) {
+  return Array.isArray(a) || ArrayBuffer.isView(a);
+};
 Kotlin.arrayToString = function(a) {
   return "[" + a.map(Kotlin.toString).join(", ") + "]";
 };
 Kotlin.arrayDeepToString = function(a, visited) {
   visited = visited || [a];
+  var toString = Kotlin.toString;
+  if (Kotlin.isCharArray(a)) {
+    toString = String.fromCharCode;
+  }
   return "[" + a.map(function(e) {
-    if (Array.isArray(e) && visited.indexOf(e) < 0) {
+    if (Kotlin.isArrayish(e) && visited.indexOf(e) < 0) {
       visited.push(e);
       var result = Kotlin.arrayDeepToString(e, visited);
       visited.pop();
       return result;
     } else {
-      return Kotlin.toString(e);
+      return toString(e);
     }
   }).join(", ") + "]";
 };
@@ -32,7 +66,7 @@ Kotlin.arrayEquals = function(a, b) {
   if (a === b) {
     return true;
   }
-  if (!Array.isArray(b) || a.length !== b.length) {
+  if (!Kotlin.isArrayish(b) || a.length !== b.length) {
     return false;
   }
   for (var i = 0, n = a.length;i < n;i++) {
@@ -46,11 +80,11 @@ Kotlin.arrayDeepEquals = function(a, b) {
   if (a === b) {
     return true;
   }
-  if (!Array.isArray(b) || a.length !== b.length) {
+  if (!Kotlin.isArrayish(b) || a.length !== b.length) {
     return false;
   }
   for (var i = 0, n = a.length;i < n;i++) {
-    if (Array.isArray(a[i])) {
+    if (Kotlin.isArrayish(a[i])) {
       if (!Kotlin.arrayDeepEquals(a[i], b[i])) {
         return false;
       }
@@ -73,7 +107,7 @@ Kotlin.arrayDeepHashCode = function(arr) {
   var result = 1;
   for (var i = 0, n = arr.length;i < n;i++) {
     var e = arr[i];
-    result = (31 * result | 0) + (Array.isArray(e) ? Kotlin.arrayDeepHashCode(e) : Kotlin.hashCode(e)) | 0;
+    result = (31 * result | 0) + (Kotlin.isArrayish(e) ? Kotlin.arrayDeepHashCode(e) : Kotlin.hashCode(e)) | 0;
   }
   return result;
 };
@@ -159,6 +193,9 @@ Kotlin.equals = function(obj1, obj2) {
   if (obj2 == null) {
     return false;
   }
+  if (obj1 !== obj1) {
+    return obj2 !== obj2;
+  }
   if (typeof obj1 == "object" && typeof obj1.equals === "function") {
     return obj1.equals(obj2);
   }
@@ -189,7 +226,7 @@ Kotlin.toString = function(o) {
   if (o == null) {
     return "null";
   } else {
-    if (Array.isArray(o)) {
+    if (Kotlin.isArrayish(o)) {
       return "[...]";
     } else {
       return o.toString();
@@ -218,6 +255,7 @@ Kotlin.Long = function(low, high) {
   this.low_ = low | 0;
   this.high_ = high | 0;
 };
+Kotlin.Long.$metadata$ = {kind:"class", simpleName:"Long", interfaces:[]};
 Kotlin.Long.IntCache_ = {};
 Kotlin.Long.fromInt = function(value) {
   if (-128 <= value && value < 128) {
@@ -723,6 +761,11 @@ if (typeof String.prototype.endsWith === "undefined") {
     return lastIndex !== -1 && lastIndex === position;
   };
 }
+if (typeof ArrayBuffer.isView === "undefined") {
+  ArrayBuffer.isView = function(a) {
+    return a != null && a.__proto__ != null && a.__proto__.__proto__ === Int8Array.prototype.__proto__;
+  };
+}
 ;Kotlin.Kind = {CLASS:"class", INTERFACE:"interface", OBJECT:"object"};
 Kotlin.callGetter = function(thisObject, klass, propertyName) {
   var propertyDescriptor = Object.getOwnPropertyDescriptor(klass, propertyName);
@@ -865,24 +908,67 @@ Kotlin.isCharSequence = function(value) {
   }
   Enum.$metadata$ = {kind:Kotlin.Kind.CLASS, simpleName:"Enum", interfaces:[Comparable]};
   function newArray(size, initValue) {
-    return fillArray(Array(size), initValue);
+    return fillArrayVal(Array(size), initValue);
   }
-  function fillArray(array, value) {
+  function arrayWithFun(size, init) {
+    return fillArrayFun(Array(size), init);
+  }
+  function fillArrayFun(array, init) {
     var tmp$;
     tmp$ = array.length - 1 | 0;
     for (var i = 0;i <= tmp$;i++) {
-      array[i] = value;
+      array[i] = init(i);
     }
     return array;
   }
-  function arrayWithFun(size, init) {
+  function booleanArray(size, init) {
     var tmp$;
     var result = Array(size);
-    tmp$ = size - 1 | 0;
-    for (var i = 0;i <= tmp$;i++) {
-      result[i] = init(i);
+    result.$type$ = "BooleanArray";
+    if (init == null || Kotlin.equals(init, true)) {
+      tmp$ = fillArrayVal(result, false);
+    } else {
+      if (Kotlin.equals(init, false)) {
+        tmp$ = result;
+      } else {
+        tmp$ = fillArrayFun(result, init);
+      }
     }
-    return result;
+    return tmp$;
+  }
+  function charArray(size, init) {
+    var tmp$;
+    var result = new Uint16Array(size);
+    result.$type$ = "CharArray";
+    if (init == null || Kotlin.equals(init, true) || Kotlin.equals(init, false)) {
+      tmp$ = result;
+    } else {
+      tmp$ = fillArrayFun(result, init);
+    }
+    return tmp$;
+  }
+  function longArray(size, init) {
+    var tmp$;
+    var result = Array(size);
+    result.$type$ = "LongArray";
+    if (init == null || Kotlin.equals(init, true)) {
+      tmp$ = fillArrayVal(result, Kotlin.Long.ZERO);
+    } else {
+      if (Kotlin.equals(init, false)) {
+        tmp$ = result;
+      } else {
+        tmp$ = fillArrayFun(result, init);
+      }
+    }
+    return tmp$;
+  }
+  function fillArrayVal(array, initValue) {
+    var tmp$;
+    tmp$ = array.length - 1 | 0;
+    for (var i = 0;i <= tmp$;i++) {
+      array[i] = initValue;
+    }
+    return array;
   }
   function DoubleCompanionObject() {
     DoubleCompanionObject_instance = this;
@@ -1002,6 +1088,10 @@ Kotlin.isCharSequence = function(value) {
   package$kotlin.Enum = Enum;
   _.newArray = newArray;
   _.newArrayF = arrayWithFun;
+  _.fillArray = fillArrayFun;
+  _.booleanArray = booleanArray;
+  _.charArray = charArray;
+  _.longArray = longArray;
   var package$js = package$kotlin.js || (package$kotlin.js = {});
   var package$internal = package$js.internal || (package$js.internal = {});
   Object.defineProperty(package$internal, "DoubleCompanionObject", {get:DoubleCompanionObject_getInstance});
@@ -1041,6 +1131,22 @@ Kotlin.isCharSequence = function(value) {
   AnnotationTarget.prototype.constructor = AnnotationTarget;
   AnnotationRetention.prototype = Object.create(Enum.prototype);
   AnnotationRetention.prototype.constructor = AnnotationRetention;
+  booleanArrayIterator$ObjectLiteral.prototype = Object.create(BooleanIterator.prototype);
+  booleanArrayIterator$ObjectLiteral.prototype.constructor = booleanArrayIterator$ObjectLiteral;
+  byteArrayIterator$ObjectLiteral.prototype = Object.create(ByteIterator.prototype);
+  byteArrayIterator$ObjectLiteral.prototype.constructor = byteArrayIterator$ObjectLiteral;
+  shortArrayIterator$ObjectLiteral.prototype = Object.create(ShortIterator.prototype);
+  shortArrayIterator$ObjectLiteral.prototype.constructor = shortArrayIterator$ObjectLiteral;
+  charArrayIterator$ObjectLiteral.prototype = Object.create(CharIterator.prototype);
+  charArrayIterator$ObjectLiteral.prototype.constructor = charArrayIterator$ObjectLiteral;
+  intArrayIterator$ObjectLiteral.prototype = Object.create(IntIterator.prototype);
+  intArrayIterator$ObjectLiteral.prototype.constructor = intArrayIterator$ObjectLiteral;
+  floatArrayIterator$ObjectLiteral.prototype = Object.create(FloatIterator.prototype);
+  floatArrayIterator$ObjectLiteral.prototype.constructor = floatArrayIterator$ObjectLiteral;
+  doubleArrayIterator$ObjectLiteral.prototype = Object.create(DoubleIterator.prototype);
+  doubleArrayIterator$ObjectLiteral.prototype.constructor = doubleArrayIterator$ObjectLiteral;
+  longArrayIterator$ObjectLiteral.prototype = Object.create(LongIterator.prototype);
+  longArrayIterator$ObjectLiteral.prototype.constructor = longArrayIterator$ObjectLiteral;
   AbstractMutableCollection.prototype = Object.create(AbstractCollection.prototype);
   AbstractMutableCollection.prototype.constructor = AbstractMutableCollection;
   AbstractMutableList$ListIteratorImpl.prototype = Object.create(AbstractMutableList$IteratorImpl.prototype);
@@ -1272,9 +1378,9 @@ Kotlin.isCharSequence = function(value) {
   function CharProgressionIterator(first_24, last_25, step_2) {
     CharIterator.call(this);
     this.step = step_2;
-    this.next_0 = Kotlin.unboxChar(first_24) | 0;
     this.finalElement_0 = Kotlin.unboxChar(last_25) | 0;
     this.hasNext_0 = this.step > 0 ? Kotlin.unboxChar(first_24) <= Kotlin.unboxChar(last_25) : Kotlin.unboxChar(first_24) >= Kotlin.unboxChar(last_25);
+    this.next_0 = this.hasNext_0 ? Kotlin.unboxChar(first_24) | 0 : this.finalElement_0;
   }
   CharProgressionIterator.prototype.hasNext = function() {
     return this.hasNext_0;
@@ -1282,6 +1388,9 @@ Kotlin.isCharSequence = function(value) {
   CharProgressionIterator.prototype.nextChar = function() {
     var value = this.next_0;
     if (value === this.finalElement_0) {
+      if (!this.hasNext_0) {
+        throw new NoSuchElementException;
+      }
       this.hasNext_0 = false;
     } else {
       this.next_0 = this.next_0 + this.step | 0;
@@ -1292,9 +1401,9 @@ Kotlin.isCharSequence = function(value) {
   function IntProgressionIterator(first_24, last_25, step_2) {
     IntIterator.call(this);
     this.step = step_2;
-    this.next_0 = first_24;
     this.finalElement_0 = last_25;
     this.hasNext_0 = this.step > 0 ? first_24 <= last_25 : first_24 >= last_25;
+    this.next_0 = this.hasNext_0 ? first_24 : this.finalElement_0;
   }
   IntProgressionIterator.prototype.hasNext = function() {
     return this.hasNext_0;
@@ -1302,6 +1411,9 @@ Kotlin.isCharSequence = function(value) {
   IntProgressionIterator.prototype.nextInt = function() {
     var value = this.next_0;
     if (value === this.finalElement_0) {
+      if (!this.hasNext_0) {
+        throw new NoSuchElementException;
+      }
       this.hasNext_0 = false;
     } else {
       this.next_0 = this.next_0 + this.step | 0;
@@ -1312,9 +1424,9 @@ Kotlin.isCharSequence = function(value) {
   function LongProgressionIterator(first_24, last_25, step_2) {
     LongIterator.call(this);
     this.step = step_2;
-    this.next_0 = first_24;
     this.finalElement_0 = last_25;
     this.hasNext_0 = this.step.compareTo_11rb$(Kotlin.Long.fromInt(0)) > 0 ? first_24.compareTo_11rb$(last_25) <= 0 : first_24.compareTo_11rb$(last_25) >= 0;
+    this.next_0 = this.hasNext_0 ? first_24 : this.finalElement_0;
   }
   LongProgressionIterator.prototype.hasNext = function() {
     return this.hasNext_0;
@@ -1322,6 +1434,9 @@ Kotlin.isCharSequence = function(value) {
   LongProgressionIterator.prototype.nextLong = function() {
     var value = this.next_0;
     if (Kotlin.equals(value, this.finalElement_0)) {
+      if (!this.hasNext_0) {
+        throw new NoSuchElementException;
+      }
       this.hasNext_0 = false;
     } else {
       this.next_0 = this.next_0.add(this.step);
@@ -1882,24 +1997,221 @@ Kotlin.isCharSequence = function(value) {
   function JvmField() {
   }
   JvmField.$metadata$ = {kind:Kotlin.Kind.CLASS, simpleName:"JvmField", interfaces:[Annotation_0]};
-  function arrayIterator$ObjectLiteral(closure$array) {
-    this.closure$array = closure$array;
+  function arrayIterator$ObjectLiteral(closure$arr) {
+    this.closure$arr = closure$arr;
     this.index = 0;
   }
   arrayIterator$ObjectLiteral.prototype.hasNext = function() {
-    var length = this.closure$array.length;
-    return this.index < length;
+    return this.index < this.closure$arr.length;
   };
   arrayIterator$ObjectLiteral.prototype.next = function() {
     var tmp$;
-    return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    if (this.index < this.closure$arr.length) {
+      return this.closure$arr[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
   };
-  arrayIterator$ObjectLiteral.prototype.remove = function() {
-    this.closure$array.splice((this.index = this.index - 1 | 0, this.index), 1);
+  arrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[Iterator]};
+  function arrayIterator(array, type) {
+    if (type == null) {
+      var arr = array;
+      return new arrayIterator$ObjectLiteral(arr);
+    } else {
+      if (Kotlin.equals(type, "BooleanArray")) {
+        return booleanArrayIterator(array);
+      } else {
+        if (Kotlin.equals(type, "ByteArray")) {
+          return byteArrayIterator(array);
+        } else {
+          if (Kotlin.equals(type, "ShortArray")) {
+            return shortArrayIterator(array);
+          } else {
+            if (Kotlin.equals(type, "CharArray")) {
+              return charArrayIterator(array);
+            } else {
+              if (Kotlin.equals(type, "IntArray")) {
+                return intArrayIterator(array);
+              } else {
+                if (Kotlin.equals(type, "LongArray")) {
+                  return longArrayIterator(array);
+                } else {
+                  if (Kotlin.equals(type, "FloatArray")) {
+                    return floatArrayIterator(array);
+                  } else {
+                    if (Kotlin.equals(type, "DoubleArray")) {
+                      return doubleArrayIterator(array);
+                    } else {
+                      throw new IllegalStateException("Unsupported type argument for arrayIterator: " + Kotlin.toString(type));
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  function booleanArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    BooleanIterator.call(this);
+    this.index = 0;
+  }
+  booleanArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
   };
-  arrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[MutableIterator]};
-  function arrayIterator(array) {
-    return new arrayIterator$ObjectLiteral(array);
+  booleanArrayIterator$ObjectLiteral.prototype.nextBoolean = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  booleanArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[BooleanIterator]};
+  function booleanArrayIterator(array) {
+    return new booleanArrayIterator$ObjectLiteral(array);
+  }
+  function byteArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    ByteIterator.call(this);
+    this.index = 0;
+  }
+  byteArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  byteArrayIterator$ObjectLiteral.prototype.nextByte = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  byteArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[ByteIterator]};
+  function byteArrayIterator(array) {
+    return new byteArrayIterator$ObjectLiteral(array);
+  }
+  function shortArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    ShortIterator.call(this);
+    this.index = 0;
+  }
+  shortArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  shortArrayIterator$ObjectLiteral.prototype.nextShort = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  shortArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[ShortIterator]};
+  function shortArrayIterator(array) {
+    return new shortArrayIterator$ObjectLiteral(array);
+  }
+  function charArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    CharIterator.call(this);
+    this.index = 0;
+  }
+  charArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  charArrayIterator$ObjectLiteral.prototype.nextChar = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  charArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[CharIterator]};
+  function charArrayIterator(array) {
+    return new charArrayIterator$ObjectLiteral(array);
+  }
+  function intArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    IntIterator.call(this);
+    this.index = 0;
+  }
+  intArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  intArrayIterator$ObjectLiteral.prototype.nextInt = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  intArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[IntIterator]};
+  function intArrayIterator(array) {
+    return new intArrayIterator$ObjectLiteral(array);
+  }
+  function floatArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    FloatIterator.call(this);
+    this.index = 0;
+  }
+  floatArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  floatArrayIterator$ObjectLiteral.prototype.nextFloat = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  floatArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[FloatIterator]};
+  function floatArrayIterator(array) {
+    return new floatArrayIterator$ObjectLiteral(array);
+  }
+  function doubleArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    DoubleIterator.call(this);
+    this.index = 0;
+  }
+  doubleArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  doubleArrayIterator$ObjectLiteral.prototype.nextDouble = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  doubleArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[DoubleIterator]};
+  function doubleArrayIterator(array) {
+    return new doubleArrayIterator$ObjectLiteral(array);
+  }
+  function longArrayIterator$ObjectLiteral(closure$array) {
+    this.closure$array = closure$array;
+    LongIterator.call(this);
+    this.index = 0;
+  }
+  longArrayIterator$ObjectLiteral.prototype.hasNext = function() {
+    return this.index < this.closure$array.length;
+  };
+  longArrayIterator$ObjectLiteral.prototype.nextLong = function() {
+    var tmp$;
+    if (this.index < this.closure$array.length) {
+      return this.closure$array[tmp$ = this.index, this.index = tmp$ + 1 | 0, tmp$];
+    } else {
+      throw new IndexOutOfBoundsException(this.index.toString());
+    }
+  };
+  longArrayIterator$ObjectLiteral.$metadata$ = {kind:Kotlin.Kind.CLASS, interfaces:[LongIterator]};
+  function longArrayIterator(array) {
+    return new longArrayIterator$ObjectLiteral(array);
   }
   function PropertyMetadata(name) {
     this.callableName = name;
@@ -1954,11 +2266,99 @@ Kotlin.isCharSequence = function(value) {
     return this.c;
   };
   BoxedChar.$metadata$ = {kind:Kotlin.Kind.CLASS, simpleName:"BoxedChar", interfaces:[Comparable]};
+  function concat(args) {
+    var tmp$;
+    var typed = Array(args.length);
+    tmp$ = args.length - 1 | 0;
+    for (var i = 0;i <= tmp$;i++) {
+      var arr = args[i];
+      if (!Array.isArray(arr)) {
+        typed[i] = [].slice.call(arr);
+      } else {
+        typed[i] = arr;
+      }
+    }
+    return [].concat.apply([], typed);
+  }
   function arrayConcat(a, b) {
-    return a.concat.apply([], arguments);
+    var args = arguments;
+    var tmp$;
+    var typed = Array(args.length);
+    tmp$ = args.length - 1 | 0;
+    for (var i = 0;i <= tmp$;i++) {
+      var arr = args[i];
+      if (!Array.isArray(arr)) {
+        typed[i] = [].slice.call(arr);
+      } else {
+        typed[i] = arr;
+      }
+    }
+    return [].concat.apply([], typed);
   }
   function primitiveArrayConcat(a, b) {
-    return a.concat.apply([], arguments);
+    var tmp$, tmp$_1, tmp$_2, tmp$_3;
+    var args = arguments;
+    var tmp$_4 = Array.isArray(a);
+    if (tmp$_4) {
+      tmp$_4 = a.$type$ === undefined;
+    }
+    if (tmp$_4) {
+      var tmp$_5;
+      var typed = Array(args.length);
+      tmp$_5 = args.length - 1 | 0;
+      for (var i_1 = 0;i_1 <= tmp$_5;i_1++) {
+        var arr_0 = args[i_1];
+        if (!Array.isArray(arr_0)) {
+          typed[i_1] = [].slice.call(arr_0);
+        } else {
+          typed[i_1] = arr_0;
+        }
+      }
+      return [].concat.apply([], typed);
+    } else {
+      var size = 0;
+      tmp$ = args.length - 1 | 0;
+      for (var i = 0;i <= tmp$;i++) {
+        var tmp$_0;
+        size = size + (typeof(tmp$_0 = args[i].length) === "number" ? tmp$_0 : Kotlin.throwCCE()) | 0;
+      }
+      var result = new a.constructor(size);
+      if (a.$type$ !== undefined) {
+        result.$type$ = a.$type$;
+      }
+      size = 0;
+      tmp$_1 = args.length - 1 | 0;
+      for (var i_0 = 0;i_0 <= tmp$_1;i_0++) {
+        var arr = args[i_0];
+        tmp$_2 = arr.length - 1;
+        for (var j = 0;j <= tmp$_2;j++) {
+          result[tmp$_3 = size, size = tmp$_3 + 1 | 0, tmp$_3] = arr[j];
+        }
+      }
+      return result;
+    }
+  }
+  function booleanArrayOf() {
+    var type = "BooleanArray";
+    var array = [].slice.call(arguments);
+    array.$type$ = type;
+    return array;
+  }
+  function charArrayOf() {
+    var type = "CharArray";
+    var array = new Uint16Array([].slice.call(arguments));
+    array.$type$ = type;
+    return array;
+  }
+  function longArrayOf() {
+    var type = "LongArray";
+    var array = [].slice.call(arguments);
+    array.$type$ = type;
+    return array;
+  }
+  function withType(type, array) {
+    array.$type$ = type;
+    return array;
   }
   function isWhitespace($receiver) {
     var result = String.fromCharCode(Kotlin.toBoxedChar($receiver)).match("[\\s\\xA0]");
@@ -3219,6 +3619,7 @@ Kotlin.isCharSequence = function(value) {
     $this = $this || Object.create(LinkedHashMap.prototype);
     HashMap_init_0($this);
     LinkedHashMap.call($this);
+    var tmp$;
     $this.map_bqz7u3$_0 = Kotlin.isType(tmp$ = backingMap, HashMap) ? tmp$ : Kotlin.throwCCE();
     return $this;
   }
@@ -3501,7 +3902,7 @@ Kotlin.isCharSequence = function(value) {
     if ($receiver["iterator"] != null) {
       tmp$_0 = $receiver["iterator"]();
     } else {
-      if (Array.isArray(r)) {
+      if (Kotlin.isArrayish(r)) {
         tmp$_0 = Kotlin.arrayIterator(r);
       } else {
         tmp$_0 = (Kotlin.isType(tmp$ = r, Iterable) ? tmp$ : Kotlin.throwCCE()).iterator();
@@ -4604,7 +5005,7 @@ Kotlin.isCharSequence = function(value) {
     tmp$_1 = tmp$.last;
     tmp$_2 = tmp$.step;
     for (var index = tmp$_0;index <= tmp$_1;index += tmp$_2) {
-      if (Kotlin.equals(element, $receiver[index])) {
+      if (element === $receiver[index]) {
         return index;
       }
     }
@@ -5093,7 +5494,7 @@ Kotlin.isCharSequence = function(value) {
     tmp$ = reversed(get_indices_6($receiver)).iterator();
     while (tmp$.hasNext()) {
       var index = tmp$.next();
-      if (Kotlin.equals(element, $receiver[index])) {
+      if (element === $receiver[index]) {
         return index;
       }
     }
@@ -6823,7 +7224,7 @@ Kotlin.isCharSequence = function(value) {
     if (indices.isEmpty()) {
       return _.kotlin.collections.emptyList_287e2$();
     }
-    return _.kotlin.collections.asList_us0mfu$($receiver.slice(indices.start, indices.endInclusive + 1 | 0));
+    return _.kotlin.collections.asList_us0mfu$(copyOfRange_3($receiver, indices.start, indices.endInclusive + 1 | 0));
   }
   function slice_4($receiver, indices) {
     if (indices.isEmpty()) {
@@ -6841,13 +7242,13 @@ Kotlin.isCharSequence = function(value) {
     if (indices.isEmpty()) {
       return _.kotlin.collections.emptyList_287e2$();
     }
-    return _.kotlin.collections.asList_us0mfu$($receiver.slice(indices.start, indices.endInclusive + 1 | 0));
+    return _.kotlin.collections.asList_us0mfu$(copyOfRange_6($receiver, indices.start, indices.endInclusive + 1 | 0));
   }
   function slice_7($receiver, indices) {
     if (indices.isEmpty()) {
       return _.kotlin.collections.emptyList_287e2$();
     }
-    return asList_7($receiver.slice(indices.start, indices.endInclusive + 1 | 0));
+    return asList_7(copyOfRange_7($receiver, indices.start, indices.endInclusive + 1 | 0));
   }
   function slice_8($receiver, indices) {
     var tmp$;
@@ -7102,7 +7503,7 @@ Kotlin.isCharSequence = function(value) {
     if (indices.isEmpty()) {
       return Kotlin.newArray(0, Kotlin.Long.ZERO);
     }
-    return $receiver.slice(indices.start, indices.endInclusive + 1 | 0);
+    return copyOfRange_3($receiver, indices.start, indices.endInclusive + 1 | 0);
   }
   function sliceArray_13($receiver, indices) {
     if (indices.isEmpty()) {
@@ -7120,13 +7521,13 @@ Kotlin.isCharSequence = function(value) {
     if (indices.isEmpty()) {
       return Kotlin.newArray(0, false);
     }
-    return $receiver.slice(indices.start, indices.endInclusive + 1 | 0);
+    return copyOfRange_6($receiver, indices.start, indices.endInclusive + 1 | 0);
   }
   function sliceArray_16($receiver, indices) {
     if (indices.isEmpty()) {
       return Kotlin.newArray(0, 0);
     }
-    return $receiver.slice(indices.start, indices.endInclusive + 1 | 0);
+    return copyOfRange_7($receiver, indices.start, indices.endInclusive + 1 | 0);
   }
   function take($receiver, n) {
     var tmp$, tmp$_0;
@@ -8193,7 +8594,7 @@ Kotlin.isCharSequence = function(value) {
     if ($receiver.length === 0) {
       return $receiver;
     }
-    var $receiver_0 = $receiver.slice();
+    var $receiver_0 = copyOf_3($receiver);
     sort_0($receiver_0);
     return $receiver_0;
   }
@@ -8217,7 +8618,7 @@ Kotlin.isCharSequence = function(value) {
     if ($receiver.length === 0) {
       return $receiver;
     }
-    var $receiver_0 = $receiver.slice();
+    var $receiver_0 = copyOf_6($receiver);
     Kotlin.primitiveArraySort($receiver_0);
     return $receiver_0;
   }
@@ -8257,7 +8658,7 @@ Kotlin.isCharSequence = function(value) {
     if ($receiver.length === 0) {
       return $receiver;
     }
-    var $receiver_0 = $receiver.slice();
+    var $receiver_0 = copyOf_3($receiver);
     sortDescending_3($receiver_0);
     return $receiver_0;
   }
@@ -8281,7 +8682,7 @@ Kotlin.isCharSequence = function(value) {
     if ($receiver.length === 0) {
       return $receiver;
     }
-    var $receiver_0 = $receiver.slice();
+    var $receiver_0 = copyOf_6($receiver);
     sortDescending_6($receiver_0);
     return $receiver_0;
   }
@@ -8366,7 +8767,7 @@ Kotlin.isCharSequence = function(value) {
     return reversed_3($receiver_0);
   }
   function sortedDescending_3($receiver) {
-    var $receiver_0 = $receiver.slice();
+    var $receiver_0 = copyOf_3($receiver);
     sort_0($receiver_0);
     return reversed_4($receiver_0);
   }
@@ -8381,7 +8782,7 @@ Kotlin.isCharSequence = function(value) {
     return reversed_6($receiver_0);
   }
   function sortedDescending_6($receiver) {
-    var $receiver_0 = $receiver.slice();
+    var $receiver_0 = copyOf_6($receiver);
     Kotlin.primitiveArraySort($receiver_0);
     return reversed_8($receiver_0);
   }
@@ -10893,7 +11294,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_0(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "ByteArray");
     };
   }
   function withIndex_0($receiver) {
@@ -10901,7 +11302,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_1(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "ShortArray");
     };
   }
   function withIndex_1($receiver) {
@@ -10909,7 +11310,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_2(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "IntArray");
     };
   }
   function withIndex_2($receiver) {
@@ -10917,7 +11318,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_3(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "LongArray");
     };
   }
   function withIndex_3($receiver) {
@@ -10925,7 +11326,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_4(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "FloatArray");
     };
   }
   function withIndex_4($receiver) {
@@ -10933,7 +11334,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_5(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "DoubleArray");
     };
   }
   function withIndex_5($receiver) {
@@ -10941,7 +11342,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_6(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "BooleanArray");
     };
   }
   function withIndex_6($receiver) {
@@ -10949,7 +11350,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function withIndex$lambda_7(this$withIndex) {
     return function() {
-      return Kotlin.arrayIterator(this$withIndex);
+      return Kotlin.arrayIterator(this$withIndex, "CharArray");
     };
   }
   function withIndex_7($receiver) {
@@ -15203,7 +15604,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_0(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "ByteArray");
     };
   }
   function asIterable_0($receiver) {
@@ -15214,7 +15615,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_1(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "ShortArray");
     };
   }
   function asIterable_1($receiver) {
@@ -15225,7 +15626,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_2(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "IntArray");
     };
   }
   function asIterable_2($receiver) {
@@ -15236,7 +15637,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_3(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "LongArray");
     };
   }
   function asIterable_3($receiver) {
@@ -15247,7 +15648,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_4(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "FloatArray");
     };
   }
   function asIterable_4($receiver) {
@@ -15258,7 +15659,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_5(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "DoubleArray");
     };
   }
   function asIterable_5($receiver) {
@@ -15269,7 +15670,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_6(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "BooleanArray");
     };
   }
   function asIterable_6($receiver) {
@@ -15280,7 +15681,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asIterable$lambda_7(this$asIterable) {
     return function() {
-      return Kotlin.arrayIterator(this$asIterable);
+      return Kotlin.arrayIterator(this$asIterable, "CharArray");
     };
   }
   function asIterable_7($receiver) {
@@ -15302,7 +15703,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_0(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "ByteArray");
     };
   }
   function asSequence_0($receiver) {
@@ -15313,7 +15714,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_1(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "ShortArray");
     };
   }
   function asSequence_1($receiver) {
@@ -15324,7 +15725,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_2(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "IntArray");
     };
   }
   function asSequence_2($receiver) {
@@ -15335,7 +15736,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_3(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "LongArray");
     };
   }
   function asSequence_3($receiver) {
@@ -15346,7 +15747,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_4(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "FloatArray");
     };
   }
   function asSequence_4($receiver) {
@@ -15357,7 +15758,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_5(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "DoubleArray");
     };
   }
   function asSequence_5($receiver) {
@@ -15368,7 +15769,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_6(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "BooleanArray");
     };
   }
   function asSequence_6($receiver) {
@@ -15379,7 +15780,7 @@ Kotlin.isCharSequence = function(value) {
   }
   function asSequence$lambda_7(this$asSequence) {
     return function() {
-      return Kotlin.arrayIterator(this$asSequence);
+      return Kotlin.arrayIterator(this$asSequence, "CharArray");
     };
   }
   function asSequence_7($receiver) {
@@ -15690,44 +16091,62 @@ Kotlin.isCharSequence = function(value) {
   var copyOf_2 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOf_tmsbgo$", function($receiver) {
     return $receiver.slice();
   });
-  var copyOf_3 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOf_se6h4x$", function($receiver) {
-    return $receiver.slice();
-  });
+  function copyOf_3($receiver) {
+    var type = "LongArray";
+    var array = $receiver.slice();
+    array.$type$ = type;
+    return array;
+  }
   var copyOf_4 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOf_rjqryz$", function($receiver) {
     return $receiver.slice();
   });
   var copyOf_5 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOf_bvy38s$", function($receiver) {
     return $receiver.slice();
   });
-  var copyOf_7 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOf_l1lu5t$", function($receiver) {
-    return $receiver.slice();
-  });
-  var copyOf_6 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOf_355ntz$", function($receiver) {
-    return $receiver.slice();
-  });
+  function copyOf_7($receiver) {
+    var type = "BooleanArray";
+    var array = $receiver.slice();
+    array.$type$ = type;
+    return array;
+  }
+  function copyOf_6($receiver) {
+    var type = "CharArray";
+    var array = $receiver.slice();
+    array.$type$ = type;
+    return array;
+  }
   function copyOf_8($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, 0);
+    return fillFrom($receiver, Kotlin.newArray(newSize, 0));
   }
   function copyOf_9($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, 0);
+    return fillFrom($receiver, Kotlin.newArray(newSize, 0));
   }
   function copyOf_10($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, 0);
+    return fillFrom($receiver, Kotlin.newArray(newSize, 0));
   }
   function copyOf_11($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, Kotlin.Long.ZERO);
+    var type = "LongArray";
+    var array = arrayCopyResize($receiver, newSize, Kotlin.Long.ZERO);
+    array.$type$ = type;
+    return array;
   }
   function copyOf_12($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, 0);
+    return fillFrom($receiver, Kotlin.newArray(newSize, 0));
   }
   function copyOf_13($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, 0);
+    return fillFrom($receiver, Kotlin.newArray(newSize, 0));
   }
   function copyOf_14($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, false);
+    var type = "BooleanArray";
+    var array = arrayCopyResize($receiver, newSize, false);
+    array.$type$ = type;
+    return array;
   }
   function copyOf_15($receiver, newSize) {
-    return arrayCopyResize($receiver, newSize, 0);
+    var type = "CharArray";
+    var array = fillFrom($receiver, Kotlin.newArray(newSize, 0));
+    array.$type$ = type;
+    return array;
   }
   function copyOf_16($receiver, newSize) {
     return arrayCopyResize($receiver, newSize, null);
@@ -15744,21 +16163,30 @@ Kotlin.isCharSequence = function(value) {
   var copyOfRange_2 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOfRange_6pxxqk$", function($receiver, fromIndex, toIndex) {
     return $receiver.slice(fromIndex, toIndex);
   });
-  var copyOfRange_3 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOfRange_2n8m0j$", function($receiver, fromIndex, toIndex) {
-    return $receiver.slice(fromIndex, toIndex);
-  });
+  function copyOfRange_3($receiver, fromIndex, toIndex) {
+    var type = "LongArray";
+    var array = $receiver.slice(fromIndex, toIndex);
+    array.$type$ = type;
+    return array;
+  }
   var copyOfRange_4 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOfRange_kh1mav$", function($receiver, fromIndex, toIndex) {
     return $receiver.slice(fromIndex, toIndex);
   });
   var copyOfRange_5 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOfRange_yfnal4$", function($receiver, fromIndex, toIndex) {
     return $receiver.slice(fromIndex, toIndex);
   });
-  var copyOfRange_6 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOfRange_ke2ov9$", function($receiver, fromIndex, toIndex) {
-    return $receiver.slice(fromIndex, toIndex);
-  });
-  var copyOfRange_7 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.copyOfRange_wlitf7$", function($receiver, fromIndex, toIndex) {
-    return $receiver.slice(fromIndex, toIndex);
-  });
+  function copyOfRange_6($receiver, fromIndex, toIndex) {
+    var type = "BooleanArray";
+    var array = $receiver.slice(fromIndex, toIndex);
+    array.$type$ = type;
+    return array;
+  }
+  function copyOfRange_7($receiver, fromIndex, toIndex) {
+    var type = "CharArray";
+    var array = $receiver.slice(fromIndex, toIndex);
+    array.$type$ = type;
+    return array;
+  }
   var plus_0 = Kotlin.defineInlineFunction("kotlin.kotlin.collections.plus_mjy6jw$", function($receiver, element) {
     return $receiver.concat([element]);
   });
@@ -15790,28 +16218,28 @@ Kotlin.isCharSequence = function(value) {
     return arrayPlusCollection($receiver, elements);
   }
   function plus_18($receiver, elements) {
-    return arrayPlusCollection($receiver, elements);
+    return fillFromCollection(copyOf_8($receiver, $receiver.length + elements.size | 0), $receiver.length, elements);
   }
   function plus_19($receiver, elements) {
-    return arrayPlusCollection($receiver, elements);
+    return fillFromCollection(copyOf_9($receiver, $receiver.length + elements.size | 0), $receiver.length, elements);
   }
   function plus_20($receiver, elements) {
-    return arrayPlusCollection($receiver, elements);
+    return fillFromCollection(copyOf_10($receiver, $receiver.length + elements.size | 0), $receiver.length, elements);
   }
   function plus_21($receiver, elements) {
     return arrayPlusCollection($receiver, elements);
   }
   function plus_22($receiver, elements) {
-    return arrayPlusCollection($receiver, elements);
+    return fillFromCollection(copyOf_12($receiver, $receiver.length + elements.size | 0), $receiver.length, elements);
   }
   function plus_23($receiver, elements) {
-    return arrayPlusCollection($receiver, elements);
+    return fillFromCollection(copyOf_13($receiver, $receiver.length + elements.size | 0), $receiver.length, elements);
   }
   function plus_24($receiver, elements) {
     return arrayPlusCollection($receiver, elements);
   }
   function plus_25($receiver, elements) {
-    return arrayPlusCollection($receiver, elements);
+    return fillFromCollection(copyOf_15($receiver, $receiver.length + elements.size | 0), $receiver.length, elements);
   }
   var plus = Kotlin.defineInlineFunction("kotlin.kotlin.collections.plus_vu4gah$", function($receiver, elements) {
     return $receiver.concat(elements);
@@ -15870,25 +16298,25 @@ Kotlin.isCharSequence = function(value) {
     }
   }
   function toTypedArray_0($receiver) {
-    return $receiver.slice();
+    return [].slice.call($receiver);
   }
   function toTypedArray_1($receiver) {
-    return $receiver.slice();
+    return [].slice.call($receiver);
   }
   function toTypedArray_2($receiver) {
-    return $receiver.slice();
+    return [].slice.call($receiver);
   }
   function toTypedArray_3($receiver) {
-    return $receiver.slice();
+    return copyOf_3($receiver);
   }
   function toTypedArray_4($receiver) {
-    return $receiver.slice();
+    return [].slice.call($receiver);
   }
   function toTypedArray_5($receiver) {
-    return $receiver.slice();
+    return [].slice.call($receiver);
   }
   function toTypedArray_7($receiver) {
-    return $receiver.slice();
+    return copyOf_7($receiver);
   }
   function toTypedArray$lambda(this$toTypedArray) {
     return function(i) {
@@ -21678,7 +22106,8 @@ Kotlin.isCharSequence = function(value) {
     var tmp$_0;
     var res = {};
     for (tmp$_0 = 0;tmp$_0 !== pairs.length;++tmp$_0) {
-      var tmp$ = pairs[tmp$_0], name = tmp$.component1(), value = tmp$.component2();
+      var tmp$ = pairs[tmp$_0];
+      var name = tmp$.component1(), value = tmp$.component2();
       res[name] = value;
     }
     return res;
@@ -21709,9 +22138,22 @@ Kotlin.isCharSequence = function(value) {
   function arrayOfNulls(reference, size) {
     return Kotlin.newArray(size, null);
   }
+  function fillFrom(src, dst) {
+    var tmp$;
+    var srcLen = src.length;
+    var dstLen = dst.length;
+    var index = 0;
+    while (index < srcLen && index < dstLen) {
+      dst[index] = src[tmp$ = index, index = tmp$ + 1 | 0, tmp$];
+    }
+    return dst;
+  }
   function arrayCopyResize(source, newSize, defaultValue) {
     var tmp$;
     var result = source.slice(0, newSize);
+    if (source.$type$ !== undefined) {
+      result.$type$ = source.$type$;
+    }
     var index = source.length;
     if (newSize > index) {
       result.length = newSize;
@@ -21725,6 +22167,9 @@ Kotlin.isCharSequence = function(value) {
     var tmp$, tmp$_0;
     var result = array.slice();
     result.length += collection.size;
+    if (array.$type$ !== undefined) {
+      result.$type$ = array.$type$;
+    }
     var index = array.length;
     tmp$ = collection.iterator();
     while (tmp$.hasNext()) {
@@ -21732,6 +22177,21 @@ Kotlin.isCharSequence = function(value) {
       result[tmp$_0 = index, index = tmp$_0 + 1 | 0, tmp$_0] = element;
     }
     return result;
+  }
+  function fillFromCollection(dst, startIndex, collection) {
+    var tmp$, tmp$_0;
+    var index = startIndex;
+    tmp$ = collection.iterator();
+    while (tmp$.hasNext()) {
+      var element = tmp$.next();
+      dst[tmp$_0 = index, index = tmp$_0 + 1 | 0, tmp$_0] = element;
+    }
+    return dst;
+  }
+  function copyArrayType(from, to_0) {
+    if (from.$type$ !== undefined) {
+      to_0.$type$ = from.$type$;
+    }
   }
   function toSingletonMapOrSelf($receiver) {
     return $receiver;
@@ -22173,7 +22633,7 @@ Kotlin.isCharSequence = function(value) {
   var substring = Kotlin.defineInlineFunction("kotlin.kotlin.text.substring_qgyqat$", function($receiver, startIndex, endIndex) {
     return $receiver.substring(startIndex, endIndex);
   });
-  var concat = Kotlin.defineInlineFunction("kotlin.kotlin.text.concat_rjktp$", function($receiver, str) {
+  var concat_0 = Kotlin.defineInlineFunction("kotlin.kotlin.text.concat_rjktp$", function($receiver, str) {
     return $receiver.concat(str);
   });
   var match = Kotlin.defineInlineFunction("kotlin.kotlin.text.match_rjktp$", function($receiver, regex) {
@@ -24921,7 +25381,21 @@ Kotlin.isCharSequence = function(value) {
     return "text";
   });
   function get_jsClass($receiver) {
-    return Object.getPrototypeOf($receiver).constructor;
+    var tmp$;
+    tmp$ = typeof $receiver;
+    if (Kotlin.equals(tmp$, "string")) {
+      return String;
+    } else {
+      if (Kotlin.equals(tmp$, "number")) {
+        return Number;
+      } else {
+        if (Kotlin.equals(tmp$, "boolean")) {
+          return Boolean;
+        } else {
+          return Object.getPrototypeOf($receiver).constructor;
+        }
+      }
+    }
   }
   function get_js($receiver) {
     var tmp$;
@@ -25581,12 +26055,12 @@ Kotlin.isCharSequence = function(value) {
       throw new IndexOutOfBoundsException("index: " + index + ", size: " + size);
     }
   };
-  AbstractList$Companion.prototype.checkRangeIndexes_0 = function(start, end, size) {
-    if (start < 0 || end > size) {
-      throw new IndexOutOfBoundsException("fromIndex: " + start + ", toIndex: " + end + ", size: " + size);
+  AbstractList$Companion.prototype.checkRangeIndexes_0 = function(fromIndex, toIndex, size) {
+    if (fromIndex < 0 || toIndex > size) {
+      throw new IndexOutOfBoundsException("fromIndex: " + fromIndex + ", toIndex: " + toIndex + ", size: " + size);
     }
-    if (start > end) {
-      throw new IllegalArgumentException("fromIndex: " + start + " > toIndex: " + end);
+    if (fromIndex > toIndex) {
+      throw new IllegalArgumentException("fromIndex: " + fromIndex + " > toIndex: " + toIndex);
     }
   };
   AbstractList$Companion.prototype.orderedHashCode_0 = function(c) {
@@ -26862,7 +27336,8 @@ Kotlin.isCharSequence = function(value) {
   function putAll($receiver, pairs) {
     var tmp$_0;
     for (tmp$_0 = 0;tmp$_0 !== pairs.length;++tmp$_0) {
-      var tmp$ = pairs[tmp$_0], key = tmp$.component1(), value = tmp$.component2();
+      var tmp$ = pairs[tmp$_0];
+      var key = tmp$.component1(), value = tmp$.component2();
       $receiver.put_xwzc9p$(key, value);
     }
   }
@@ -26870,7 +27345,8 @@ Kotlin.isCharSequence = function(value) {
     var tmp$_0;
     tmp$_0 = pairs.iterator();
     while (tmp$_0.hasNext()) {
-      var tmp$ = tmp$_0.next(), key = tmp$.component1(), value = tmp$.component2();
+      var tmp$ = tmp$_0.next();
+      var key = tmp$.component1(), value = tmp$.component2();
       $receiver.put_xwzc9p$(key, value);
     }
   }
@@ -26878,7 +27354,8 @@ Kotlin.isCharSequence = function(value) {
     var tmp$_0;
     tmp$_0 = pairs.iterator();
     while (tmp$_0.hasNext()) {
-      var tmp$ = tmp$_0.next(), key = tmp$.component1(), value = tmp$.component2();
+      var tmp$ = tmp$_0.next();
+      var key = tmp$.component1(), value = tmp$.component2();
       $receiver.put_xwzc9p$(key, value);
     }
   }
@@ -27218,7 +27695,7 @@ Kotlin.isCharSequence = function(value) {
     var result = {v:false};
     var $receiver_0 = $receiver.iterator();
     while ($receiver_0.hasNext()) {
-      if (Kotlin.equals(predicate($receiver_0.next()), predicateResultToRemove)) {
+      if (predicate($receiver_0.next()) === predicateResultToRemove) {
         $receiver_0.remove();
         result.v = true;
       }
@@ -27240,7 +27717,7 @@ Kotlin.isCharSequence = function(value) {
     tmp$_0 = get_lastIndex($receiver);
     for (var readIndex = 0;readIndex <= tmp$_0;readIndex++) {
       var element = $receiver.get_za3lpa$(readIndex);
-      if (Kotlin.equals(predicate(element), predicateResultToRemove)) {
+      if (predicate(element) === predicateResultToRemove) {
         continue;
       }
       if (writeIndex !== readIndex) {
@@ -27331,17 +27808,17 @@ Kotlin.isCharSequence = function(value) {
   };
   ReversedList.$metadata$ = {kind:Kotlin.Kind.CLASS, simpleName:"ReversedList", interfaces:[AbstractMutableList]};
   function reverseElementIndex($receiver, index) {
-    if ((new IntRange(0, $receiver.size - 1 | 0)).contains_mef7kx$(index)) {
-      return $receiver.size - index - 1 | 0;
+    if ((new IntRange(0, get_lastIndex($receiver))).contains_mef7kx$(index)) {
+      return get_lastIndex($receiver) - index | 0;
     } else {
-      throw new IndexOutOfBoundsException("Index " + index + " should be in range [" + new IntRange(0, $receiver.size - 1 | 0) + "].");
+      throw new IndexOutOfBoundsException("Element index " + index + " must be in range [" + new IntRange(0, get_lastIndex($receiver)) + "].");
     }
   }
   function reversePositionIndex($receiver, index) {
     if ((new IntRange(0, $receiver.size)).contains_mef7kx$(index)) {
       return $receiver.size - index | 0;
     } else {
-      throw new IndexOutOfBoundsException("Index " + index + " should be in range [" + new IntRange(0, $receiver.size) + "].");
+      throw new IndexOutOfBoundsException("Position index " + index + " must be in range [" + new IntRange(0, $receiver.size) + "].");
     }
   }
   function asReversed($receiver) {
@@ -27448,7 +27925,7 @@ Kotlin.isCharSequence = function(value) {
   FilteringSequence$iterator$ObjectLiteral.prototype.calcNext_0 = function() {
     while (this.iterator.hasNext()) {
       var item = this.iterator.next();
-      if (Kotlin.equals(this.this$FilteringSequence.predicate_0(item), this.this$FilteringSequence.sendWhen_0)) {
+      if (this.this$FilteringSequence.predicate_0(item) === this.this$FilteringSequence.sendWhen_0) {
         this.nextItem = item;
         this.nextState = 1;
         return;
@@ -27585,7 +28062,7 @@ Kotlin.isCharSequence = function(value) {
   };
   FlatteningSequence$iterator$ObjectLiteral.prototype.ensureItemIterator_0 = function() {
     var tmp$;
-    if (Kotlin.equals((tmp$ = this.itemIterator) != null ? tmp$.hasNext() : null, false)) {
+    if (((tmp$ = this.itemIterator) != null ? tmp$.hasNext() : null) === false) {
       this.itemIterator = null;
     }
     while (this.itemIterator == null) {
@@ -28553,6 +29030,7 @@ Kotlin.isCharSequence = function(value) {
   };
   SequenceBuilder.$metadata$ = {kind:Kotlin.Kind.CLASS, simpleName:"SequenceBuilder", interfaces:[]};
   var State_NotReady;
+  var State_ManyNotReady;
   var State_ManyReady;
   var State_Ready;
   var State_Done;
@@ -28569,8 +29047,9 @@ Kotlin.isCharSequence = function(value) {
     while (true) {
       tmp$ = this.state_0;
       if (tmp$ !== State_NotReady) {
-        if (tmp$ === State_ManyReady) {
+        if (tmp$ === State_ManyNotReady) {
           if (((tmp$_0 = this.nextIterator_0) != null ? tmp$_0 : Kotlin.throwNPE()).hasNext()) {
+            this.state_0 = State_ManyReady;
             return true;
           } else {
             this.nextIterator_0 = null;
@@ -28579,7 +29058,7 @@ Kotlin.isCharSequence = function(value) {
           if (tmp$ === State_Done) {
             return false;
           } else {
-            if (tmp$ === State_Ready) {
+            if (tmp$ === State_Ready || tmp$ === State_ManyReady) {
               return true;
             } else {
               throw this.exceptionalState_0();
@@ -28596,10 +29075,11 @@ Kotlin.isCharSequence = function(value) {
   SequenceBuilderIterator.prototype.next = function() {
     var tmp$, tmp$_0, tmp$_1;
     tmp$ = this.state_0;
-    if (tmp$ === State_NotReady) {
+    if (tmp$ === State_NotReady || tmp$ === State_ManyNotReady) {
       return this.nextNotReady_0();
     } else {
       if (tmp$ === State_ManyReady) {
+        this.state_0 = State_ManyNotReady;
         return ((tmp$_0 = this.nextIterator_0) != null ? tmp$_0 : Kotlin.throwNPE()).next();
       } else {
         if (tmp$ === State_Ready) {
@@ -29499,7 +29979,7 @@ Kotlin.isCharSequence = function(value) {
     var startFound = false;
     while (startIndex <= endIndex) {
       var index = !startFound ? startIndex : endIndex;
-      var match_0 = isWhitespace(Kotlin.unboxChar(Kotlin.toBoxedChar($receiver.charCodeAt(index))));
+      var match_0 = isWhitespace(Kotlin.toBoxedChar($receiver.charCodeAt(index)));
       if (!startFound) {
         if (!match_0) {
           startFound = true;
@@ -29529,7 +30009,7 @@ Kotlin.isCharSequence = function(value) {
       tmp$_1 = tmp$.last;
       tmp$_2 = tmp$.step;
       for (var index = tmp$_0;index <= tmp$_1;index += tmp$_2) {
-        if (!isWhitespace(Kotlin.unboxChar(Kotlin.toBoxedChar($receiver.charCodeAt(index))))) {
+        if (!isWhitespace(Kotlin.toBoxedChar($receiver.charCodeAt(index)))) {
           trimStart$result = Kotlin.subSequence($receiver, index, $receiver.length);
           break trimStart$break;
         }
@@ -29549,7 +30029,7 @@ Kotlin.isCharSequence = function(value) {
       tmp$ = _.kotlin.ranges.reversed_zf1xzc$(_.kotlin.text.get_indices_gw00vp$($receiver)).iterator();
       while (tmp$.hasNext()) {
         var index = tmp$.next();
-        if (!isWhitespace(Kotlin.unboxChar(Kotlin.toBoxedChar($receiver.charCodeAt(index))))) {
+        if (!isWhitespace(Kotlin.toBoxedChar($receiver.charCodeAt(index)))) {
           trimEnd$result = Kotlin.subSequence($receiver, 0, index + 1 | 0).toString();
           break trimEnd$break;
         }
@@ -30332,7 +30812,8 @@ Kotlin.isCharSequence = function(value) {
           this.nextItem = new IntRange(this.currentStartIndex, get_lastIndex_9(this.this$DelimitedRangesSequence.input_0));
           this.nextSearchIndex = -1;
         } else {
-          var tmp$ = match_0, index = tmp$.component1(), length = tmp$.component2();
+          var tmp$ = match_0;
+          var index = tmp$.component1(), length = tmp$.component2();
           this.nextItem = new IntRange(this.currentStartIndex, index - 1 | 0);
           this.currentStartIndex = index + length | 0;
           this.nextSearchIndex = this.currentStartIndex + (length === 0 ? 1 : 0) | 0;
@@ -30636,7 +31117,7 @@ Kotlin.isCharSequence = function(value) {
   function KotlinVersion$Companion() {
     KotlinVersion$Companion_instance = this;
     this.MAX_COMPONENT_VALUE = 255;
-    this.CURRENT = new KotlinVersion(1, 1, 1);
+    this.CURRENT = new KotlinVersion(1, 1, 2);
   }
   KotlinVersion$Companion.$metadata$ = {kind:Kotlin.Kind.OBJECT, simpleName:"Companion", interfaces:[]};
   var KotlinVersion$Companion_instance = null;
@@ -31076,6 +31557,14 @@ Kotlin.isCharSequence = function(value) {
   package$js.JsNonModule = JsNonModule;
   package$js.JsQualifier = JsQualifier;
   _.arrayIterator = arrayIterator;
+  _.booleanArrayIterator = booleanArrayIterator;
+  _.byteArrayIterator = byteArrayIterator;
+  _.shortArrayIterator = shortArrayIterator;
+  _.charArrayIterator = charArrayIterator;
+  _.intArrayIterator = intArrayIterator;
+  _.floatArrayIterator = floatArrayIterator;
+  _.doubleArrayIterator = doubleArrayIterator;
+  _.longArrayIterator = longArrayIterator;
   _.PropertyMetadata = PropertyMetadata;
   _.noWhenBranchMatched = noWhenBranchMatched;
   _.subSequence = subSequence;
@@ -31084,6 +31573,10 @@ Kotlin.isCharSequence = function(value) {
   _.BoxedChar = BoxedChar;
   _.arrayConcat = arrayConcat;
   _.primitiveArrayConcat = primitiveArrayConcat;
+  _.booleanArrayOf = booleanArrayOf;
+  _.charArrayOf = charArrayOf;
+  _.longArrayOf = longArrayOf;
+  _.withType = withType;
   var package$text = package$kotlin.text || (package$kotlin.text = {});
   package$text.isWhitespace_myv2d0$ = isWhitespace;
   package$text.isHighSurrogate_myv2d0$ = isHighSurrogate;
@@ -32977,116 +33470,17 @@ Kotlin.isCharSequence = function(value) {
   package$dom_0.asList_kt9thq$ = asList_8;
   package$dom.clear_asww5s$ = clear;
   package$dom.appendText_46n0ku$ = appendText;
-  var package$khronos = package$org.khronos || (package$org.khronos = {});
-  var package$webgl = package$khronos.webgl || (package$khronos.webgl = {});
-  package$webgl.WebGLContextAttributes_2tn698$ = WebGLContextAttributes;
-  package$webgl.WebGLContextEventInit_cndsqx$ = WebGLContextEventInit;
-  package$webgl.get_xri1zq$ = get_0;
-  package$webgl.set_wq71gh$ = set;
-  package$webgl.get_9zp3y9$ = get_1;
-  package$webgl.set_amemmi$ = set_0;
-  package$webgl.get_2joiyx$ = get_2;
-  package$webgl.set_ttcilq$ = set_1;
-  package$webgl.get_cwlqq1$ = get_3;
-  package$webgl.set_3szanw$ = set_2;
-  package$webgl.get_vhpjqk$ = get_4;
-  package$webgl.set_vhgf5b$ = set_3;
-  package$webgl.get_6ngfjl$ = get_5;
-  package$webgl.set_yyuw59$ = set_4;
-  package$webgl.get_jzcbyy$ = get_6;
-  package$webgl.set_7aci94$ = set_5;
-  package$webgl.get_vvlk2q$ = get_7;
-  package$webgl.set_rpd3xf$ = set_6;
-  package$webgl.get_yg2kxp$ = get_8;
-  package$webgl.set_ogqgs1$ = set_7;
-  var package$css = package$dom_0.css || (package$dom_0.css = {});
-  package$css.get_hzg8kz$ = get_9;
-  package$css.get_vcm0yf$ = get_10;
-  package$css.get_yovegz$ = get_11;
-  package$css.get_nb2c3o$ = get_12;
-  package$events.UIEventInit_b3va2d$ = UIEventInit;
-  package$events.FocusEventInit_4fuajv$ = FocusEventInit;
-  package$events.MouseEventInit_w16xh5$ = MouseEventInit;
-  package$events.EventModifierInit_d8w15x$ = EventModifierInit;
-  package$events.WheelEventInit_jungk3$ = WheelEventInit;
-  package$events.InputEventInit_zb3n3s$ = InputEventInit;
-  package$events.KeyboardEventInit_f1dyzo$ = KeyboardEventInit;
-  package$events.CompositionEventInit_d8ew9s$ = CompositionEventInit;
-  package$dom_0.get_faw09z$ = get_13;
-  package$dom_0.get_ewayf0$ = get_14;
-  package$dom_0.set_hw3ic1$ = set_8;
-  package$dom_0.get_82muyz$ = get_15;
-  package$dom_0.set_itmgw7$ = set_9;
-  package$dom_0.get_x9t80x$ = get_16;
-  package$dom_0.get_s80h6u$ = get_17;
-  package$dom_0.get_60td5e$ = get_18;
-  package$dom_0.get_5fk35t$ = get_19;
-  package$dom_0.TrackEventInit_mfyf40$ = TrackEventInit;
-  package$dom_0.get_o5xz3$ = get_20;
-  package$dom_0.get_ws6i9t$ = get_21;
-  package$dom_0.get_kaa3nr$ = get_22;
-  package$dom_0.set_9jj6cz$ = set_10;
-  package$dom_0.RelatedEventInit_j4rtn8$ = RelatedEventInit;
-  package$dom_0.AssignedNodesOptions_1v8dbw$ = AssignedNodesOptions;
-  package$dom_0.CanvasRenderingContext2DSettings_1v8dbw$ = CanvasRenderingContext2DSettings;
   package$dom_0.get_NONZERO_mhbikd$ = get_NONZERO;
-  package$dom_0.HitRegionOptions_6a0gjt$ = HitRegionOptions;
-  package$dom_0.ImageBitmapRenderingContextSettings_1v8dbw$ = ImageBitmapRenderingContextSettings;
-  package$dom_0.ElementDefinitionOptions_pdl1vj$ = ElementDefinitionOptions;
-  package$dom_0.get_c2gw6m$ = get_23;
-  package$dom_0.DragEventInit_rb6t3c$ = DragEventInit;
-  package$dom_0.PopStateEventInit_m0in9k$ = PopStateEventInit;
-  package$dom_0.HashChangeEventInit_pex3e4$ = HashChangeEventInit;
-  package$dom_0.PageTransitionEventInit_bx6eq4$ = PageTransitionEventInit;
-  package$dom_0.ErrorEventInit_k9ji8a$ = ErrorEventInit;
-  package$dom_0.PromiseRejectionEventInit_jhmgqd$ = PromiseRejectionEventInit;
-  package$dom_0.get_l671a0$ = get_24;
-  package$dom_0.get_ldwsk8$ = get_25;
-  package$dom_0.get_iatcyr$ = get_26;
-  package$dom_0.get_usmy71$ = get_27;
-  package$dom_0.get_t3yadb$ = get_28;
-  package$dom_0.get_bempxb$ = get_29;
   package$dom_0.get_NONE_xgljrz$ = get_NONE;
   package$dom_0.get_DEFAULT_b5608t$ = get_DEFAULT;
   package$dom_0.get_DEFAULT_xqeuit$ = get_DEFAULT_0;
   package$dom_0.get_LOW_32fsn1$ = get_LOW;
-  package$dom_0.ImageBitmapOptions_qp88pe$ = ImageBitmapOptions;
-  package$dom_0.MessageEventInit_146zbu$ = MessageEventInit;
-  package$dom_0.EventSourceInit_1v8dbw$ = EventSourceInit;
-  package$dom_0.CloseEventInit_wdtuj7$ = CloseEventInit;
   package$dom_0.get_CLASSIC_xc77to$ = get_CLASSIC;
   var package$fetch = package$w3c.fetch || (package$w3c.fetch = {});
   package$fetch.get_OMIT_yuzaxt$ = get_OMIT;
-  package$dom_0.WorkerOptions_sllxcl$ = WorkerOptions;
-  package$dom_0.get_bsm031$ = get_30;
-  package$dom_0.set_9wlwlb$ = set_11;
-  package$dom_0.StorageEventInit_asvzxz$ = StorageEventInit;
-  package$dom_0.EventInit_uic7jo$ = EventInit;
-  package$dom_0.CustomEventInit_m0in9k$ = CustomEventInit;
-  package$dom_0.EventListenerOptions_1v8dbw$ = EventListenerOptions;
-  package$dom_0.AddEventListenerOptions_uic7jo$ = AddEventListenerOptions;
-  package$dom_0.get_axj990$ = get_31;
-  package$dom_0.get_l6emzv$ = get_32;
-  package$dom_0.get_kzcjh1$ = get_33;
-  package$dom_0.MutationObserverInit_c5um2n$ = MutationObserverInit;
-  package$dom_0.GetRootNodeOptions_1v8dbw$ = GetRootNodeOptions;
-  package$dom_0.ElementCreationOptions_pdl1vj$ = ElementCreationOptions;
-  package$dom_0.ShadowRootInit_16lofx$ = ShadowRootInit;
-  package$dom_0.get_rjm7cj$ = get_34;
-  package$dom_0.get_oszak3$ = get_35;
-  package$dom_0.get_o72cm9$ = get_36;
-  package$dom_0.DOMPointInit_rd1tgs$ = DOMPointInit;
-  package$dom_0.DOMRectInit_rd1tgs$ = DOMRectInit;
-  package$dom_0.get_p225ue$ = get_37;
   package$dom_0.get_AUTO_gi1pud$ = get_AUTO;
-  package$dom_0.ScrollOptions_pa3cpp$ = ScrollOptions;
-  package$dom_0.ScrollToOptions_5ufhvn$ = ScrollToOptions;
-  package$dom_0.MediaQueryListEventInit_vkedzz$ = MediaQueryListEventInit;
   package$dom_0.get_CENTER_ltkif$ = get_CENTER;
-  package$dom_0.ScrollIntoViewOptions_2qltkz$ = ScrollIntoViewOptions;
   package$dom_0.get_BORDER_eb1l8y$ = get_BORDER;
-  package$dom_0.BoxQuadOptions_tnnyad$ = BoxQuadOptions;
-  package$dom_0.ConvertCoordinateOptions_8oj3e4$ = ConvertCoordinateOptions;
   package$dom_0.get_LOADING_cuyr1n$ = get_LOADING;
   package$dom_0.get_INTERACTIVE_cuyr1n$ = get_INTERACTIVE;
   package$dom_0.get_COMPLETE_cuyr1n$ = get_COMPLETE;
@@ -33151,22 +33545,6 @@ Kotlin.isCharSequence = function(value) {
   package$dom_0.get_MARGIN_eb1l8y$ = get_MARGIN;
   package$dom_0.get_PADDING_eb1l8y$ = get_PADDING;
   package$dom_0.get_CONTENT_eb1l8y$ = get_CONTENT;
-  var package$svg = package$dom_0.svg || (package$dom_0.svg = {});
-  package$svg.SVGBoundingBoxOptions_bx6eq4$ = SVGBoundingBoxOptions;
-  package$svg.get_2fgwj9$ = get_38;
-  package$svg.set_xg4o68$ = set_12;
-  package$svg.get_nujcb1$ = get_39;
-  package$svg.set_vul1sp$ = set_13;
-  package$svg.get_ml6vgw$ = get_40;
-  package$svg.set_tsl60p$ = set_14;
-  package$svg.get_f2nmth$ = get_41;
-  package$svg.set_nr97t$ = set_15;
-  package$svg.get_xcci3g$ = get_42;
-  package$svg.set_7s907r$ = set_16;
-  package$svg.get_r7cbpc$ = get_43;
-  package$svg.set_8k1hvb$ = set_17;
-  package$fetch.RequestInit_302zsh$ = RequestInit;
-  package$fetch.ResponseInit_gk6zn2$ = ResponseInit;
   package$fetch.get_EMPTY_ih0r03$ = get_EMPTY_0;
   package$fetch.get_AUDIO_ih0r03$ = get_AUDIO;
   package$fetch.get_FONT_ih0r03$ = get_FONT;
@@ -33211,34 +33589,15 @@ Kotlin.isCharSequence = function(value) {
   package$fetch.get_ERROR_1el1vz$ = get_ERROR_0;
   package$fetch.get_OPAQUE_1el1vz$ = get_OPAQUE;
   package$fetch.get_OPAQUEREDIRECT_1el1vz$ = get_OPAQUEREDIRECT;
-  var package$files = package$w3c.files || (package$w3c.files = {});
-  package$files.BlobPropertyBag_pdl1vj$ = BlobPropertyBag;
-  package$files.FilePropertyBag_3gd7sg$ = FilePropertyBag;
-  package$files.get_frimup$ = get_44;
   var package$notifications = package$w3c.notifications || (package$w3c.notifications = {});
   package$notifications.get_AUTO_6wyje4$ = get_AUTO_1;
-  package$notifications.NotificationOptions_kxkl36$ = NotificationOptions;
-  package$notifications.NotificationAction_eaqb6n$ = NotificationAction;
-  package$notifications.GetNotificationOptions_pdl1vj$ = GetNotificationOptions;
-  package$notifications.NotificationEventInit_wmlth4$ = NotificationEventInit;
   package$notifications.get_DEFAULT_4wcaio$ = get_DEFAULT_3;
   package$notifications.get_DENIED_4wcaio$ = get_DENIED;
   package$notifications.get_GRANTED_4wcaio$ = get_GRANTED;
   package$notifications.get_LTR_6wyje4$ = get_LTR_0;
   package$notifications.get_RTL_6wyje4$ = get_RTL_0;
   var package$workers = package$w3c.workers || (package$w3c.workers = {});
-  package$workers.RegistrationOptions_dbr88v$ = RegistrationOptions;
-  package$workers.ServiceWorkerMessageEventInit_d2wyw1$ = ServiceWorkerMessageEventInit;
   package$workers.get_WINDOW_jpgnoe$ = get_WINDOW;
-  package$workers.ClientQueryOptions_d3lhiw$ = ClientQueryOptions;
-  package$workers.ExtendableEventInit_uic7jo$ = ExtendableEventInit;
-  package$workers.ForeignFetchOptions_aye5cc$ = ForeignFetchOptions;
-  package$workers.FetchEventInit_bfhkw8$ = FetchEventInit;
-  package$workers.ForeignFetchEventInit_kdt7mo$ = ForeignFetchEventInit;
-  package$workers.ForeignFetchResponse_ikkqih$ = ForeignFetchResponse;
-  package$workers.ExtendableMessageEventInit_ud4veo$ = ExtendableMessageEventInit;
-  package$workers.CacheQueryOptions_dh4ton$ = CacheQueryOptions;
-  package$workers.CacheBatchOperation_e4hn3k$ = CacheBatchOperation;
   package$workers.get_INSTALLING_7rndk9$ = get_INSTALLING;
   package$workers.get_INSTALLED_7rndk9$ = get_INSTALLED;
   package$workers.get_ACTIVATING_7rndk9$ = get_ACTIVATING;
@@ -33252,7 +33611,6 @@ Kotlin.isCharSequence = function(value) {
   package$workers.get_SHAREDWORKER_jpgnoe$ = get_SHAREDWORKER_0;
   package$workers.get_ALL_jpgnoe$ = get_ALL;
   var package$xhr = package$w3c.xhr || (package$w3c.xhr = {});
-  package$xhr.ProgressEventInit_swrtea$ = ProgressEventInit;
   package$xhr.get_EMPTY_8edqmh$ = get_EMPTY_2;
   package$xhr.get_ARRAYBUFFER_8edqmh$ = get_ARRAYBUFFER_0;
   package$xhr.get_BLOB_8edqmh$ = get_BLOB_0;
@@ -33587,17 +33945,17 @@ Kotlin.isCharSequence = function(value) {
   package$kotlin.toList_tt9upe$ = toList_12;
   package$kotlin.Triple = Triple;
   package$kotlin.toList_z6mquf$ = toList_13;
-  var tmp$;
   var isNode = typeof process !== "undefined" && (process.versions && !!process.versions.node);
   output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog;
   UNDECIDED = new Any;
   RESUMED = new Any;
   INT_MAX_POWER_OF_TWO = (IntCompanionObject.MAX_VALUE / 2 | 0) + 1 | 0;
   State_NotReady = 0;
-  State_ManyReady = 1;
-  State_Ready = 2;
-  State_Done = 3;
-  State_Failed = 4;
+  State_ManyNotReady = 1;
+  State_ManyReady = 2;
+  State_Ready = 3;
+  State_Done = 4;
+  State_Failed = 5;
   COROUTINE_SUSPENDED = new Any;
   Kotlin.defineModule("kotlin", _);
   
