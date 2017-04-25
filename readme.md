@@ -1,24 +1,62 @@
+# Simple password manager
 
-Server stores for each user:
+Self hosted online password manager. See a demo in action [here]()
 
-* login name
-* (hashed) password
-* encrypted encryption key
+The hashed passphrase () is use as the key to encrypt/decrypt 
+the password data on the client (with AES). There is no way for 
+the server to decrypt the data. 
 
-Server stored for each password
+Use an SSL connection to make sure the login credentials are 
+kept secret.
 
-* name/url etc
-* password send encrypted by client
+## How it works
 
-Login:
+When the user logs in the username and passphrase are send 
+hashed to the server.
 
-* Send login name and hashed password
-* If matched, return encrypted encryption key
-* Use password (with other type of hash) to decrypt encryption key
-* Send encrypted passwords to server
+The server sends back the encrypted encryption key and the encrypted data. 
 
-###Changing password means reencrypting the encryption key with new password
+The client decrypts the encryption key with the AES algorithm 
+and the bcrypt hashed passphrase. The hash send to the server is 
+different then the one used to encrypt/descrypt the data. So the
+server has no way to decrypt the data.
 
-* Must be one single operation
+Any time you make a change all the data is encrypted and send
+to the server.
 
-**If password is lost, encryption key is lost and all the data is lost.**
+**If the passphrase is lost, the encryption key is lost and all the data is lost.**
+
+## How to run
+
+Download the latest zip, extract it and run the jar file:
+
+```
+  java -jar spm-1.0.0.jar
+```
+
+Take a look in your browser at the address http://localhost:3456/. You can change the port in the properties.
+The client connects with a websocket, it will only connect on http when the domain is localhost, 
+otherwise it will try to connect to https (wss) without a port. **So install ssl with a proxy to use this!**
+
+The application will create a data directory in the current directory where it will store the database. 
+This is the file you need to backup (when the application is not running).
+
+You can also use another database by changing the properties.
+
+## Settings
+
+To change any of the settings add a file called spm.properties to the startup directory.
+
+Here is an example with the default settings (the application updates the jdbcConnectionUrl with the current directory if it's not overwritten in these properties):
+
+```
+    port                = 3456
+    connectionTimeout   = 30000
+
+    jdbcDriver          = "org.h2.Driver"
+    jdbcConnectionUrl   = "h2:file:"
+    jdbcUser            = "sa"
+    jdbcPassword        = ""
+```
+
+The connection timeout can't be to short or the websocket connection will close.

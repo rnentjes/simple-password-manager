@@ -22,14 +22,12 @@ object Settings {
     var port                = 3456
     var connectionTimeout   = 30000
 
-    var jdbcDriver          = "nl.astraeus.jdbc.Driver"
-    var jdbcConnectionUrl   = "jdbc:stat:webServerPort=18200:jdbc:h2:file:"
+    var jdbcDriver          = "org.h2.Driver"
+    var jdbcConnectionUrl   = "jdbc:h2:file:"
     var jdbcUser            = "sa"
     var jdbcPassword        = ""
 
     init {
-        // /home/rnentjes/apps/spm/data/data
-
         val file = File("data", "spm")
 
         jdbcConnectionUrl += file.canonicalPath
