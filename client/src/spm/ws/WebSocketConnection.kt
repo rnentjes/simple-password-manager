@@ -27,9 +27,9 @@ object WebSocketConnection {
         close()
 
         if (window.location.hostname.contains("localhost")) {
-            websocket = WebSocket("ws://${window.location.hostname}:${window.location.port}")
+            websocket = WebSocket("ws://${window.location.hostname}:${window.location.port}/ws")
         } else {
-            websocket = WebSocket("wss://${window.location.hostname}")
+            websocket = WebSocket("wss://${window.location.hostname}/ws")
         }
 
         val ws = websocket
