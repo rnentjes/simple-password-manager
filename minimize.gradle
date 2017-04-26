@@ -74,7 +74,7 @@ minifyJs {
 task combineMinimized(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
   source = [
 
-          "${projectDir}/client/web/js/kotlin/all.js",
+          "${projectDir}/client/web/js/kotlin/all.min.js",
           "${projectDir}/client/web/js/jquery.min.js",
           "${projectDir}/client/web/js/bootstrap.min.js",
           "${projectDir}/client/web/js/notify.min.js"
