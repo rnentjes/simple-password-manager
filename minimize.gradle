@@ -1,0 +1,83 @@
+
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "com.eriwen:gradle-js-plugin:1.12.1"
+  }
+}
+
+plugins {
+  id "com.eriwen.gradle.js" version "2.14.1"
+}
+
+// Declare your sources
+javascript.source {
+  dev {
+    js {
+      srcDir "${projectDir}/client/web/js/kotlin"
+      include "*.js"
+      exclude "all.js"
+    }
+  }
+  minimized {
+    js {
+      file("${projectDir}/client/web/js/kotlin/all.js")
+      file("${projectDir}/client/web/js/jquery.min.js")
+      file("${projectDir}/client/web/js/bootstrap.min.js")
+      file("${projectDir}/client/web/js/notify.min.js")
+    }
+  }
+}
+
+// Configure the built-in task
+combineJs {
+  encoding = "UTF-8"
+  source = javascript.source.dev.js.files
+  dest = file("${projectDir}/client/web/js/kotlin/all.js")
+}
+
+// Create new CombineJsTasks if you have multiple sets of JS files
+task jsDev(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+  source = [
+          "${projectDir}/client/web/js/cryptojs/core-min.js",
+          "${projectDir}/client/web/js/cryptojs/x64-core-min.js",
+          "${projectDir}/client/web/js/cryptojs/enc-base64-min.js",
+          "${projectDir}/client/web/js/cryptojs/md5-min.js",
+          "${projectDir}/client/web/js/cryptojs/evpkdf-min.js",
+          "${projectDir}/client/web/js/cryptojs/cipher-core-min.js",
+          "${projectDir}/client/web/js/cryptojs/aes-min.js",
+          "${projectDir}/client/web/js/cryptojs/sha1-min.js",
+          "${projectDir}/client/web/js/cryptojs/sha256-min.js",
+          "${projectDir}/client/web/js/cryptojs/sha512-min.js",
+          "${projectDir}/client/web/js/cryptojs/hmac-min.js",
+          "${projectDir}/client/web/js/cryptojs/pbkdf2-min.js",
+          "${projectDir}/client/web/js/kotlin/kotlin.js",
+          "${projectDir}/client/web/js/kotlin/kotlinx-html-js.js",
+          "${projectDir}/client/web/js/kotlin/komp.js",
+          "${projectDir}/client/web/js/generated/spm.js"
+  ]
+  dest = file("${projectDir}/client/web/js/kotlin/all.js")
+}
+
+minifyJs {
+  source = jsDev
+  dest = file("${projectDir}/client/web/js/kotlin/all.min.js")
+  closure {
+    warningLevel = 'QUIET'
+    compilerOptions.languageIn = "ECMASCRIPT5"
+  }
+}
+
+// Create new CombineJsTasks if you have multiple sets of JS files
+task combineMinimized(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+  source = [
+
+          "${projectDir}/client/web/js/kotlin/all.js",
+          "${projectDir}/client/web/js/jquery.min.js",
+          "${projectDir}/client/web/js/bootstrap.min.js",
+          "${projectDir}/client/web/js/notify.min.js"
+  ]
+  dest = file("${projectDir}/client/web/js/all.all.min.js")
+}
