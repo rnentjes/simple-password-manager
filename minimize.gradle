@@ -79,5 +79,5 @@ task combineMinimized(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
           "${projectDir}/client/web/js/bootstrap.min.js",
           "${projectDir}/client/web/js/notify.min.js"
   ]
-  dest = file("${projectDir}/client/web/js/all.all.min.js")
+  dest = file("${projectDir}/client/web/js/all.min.js")
 }
