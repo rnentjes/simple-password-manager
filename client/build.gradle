@@ -9,6 +9,9 @@ sourceSets {
 buildscript {
     repositories {
         mavenCentral()
+        maven {
+            url "http://nexus.astraeus.nl/nexus/content/groups/public"
+        }
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -38,6 +41,7 @@ compileKotlin2Js {
     kotlinOptions.metaInfo = true
 
     kotlinOptions.sourceMap = true
+    //kotlinOptions.sourceMapEmbedSources = true
     kotlinOptions.outputFile = "${projectDir}/web/js/generated/spm.js"
     kotlinOptions.suppressWarnings = true
     kotlinOptions.verbose = true

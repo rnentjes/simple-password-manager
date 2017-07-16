@@ -6,9 +6,36 @@ if (typeof this['kotlinx-html-js'] === 'undefined') {
 }
 var komp = function (_, Kotlin, $module$kotlinx_html_js) {
   'use strict';
-  var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
   var TagConsumer = $module$kotlinx_html_js.kotlinx.html.TagConsumer;
   var get_create = $module$kotlinx_html_js.kotlinx.html.dom.get_create_4wc2mh$;
+  var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
+  function include($receiver, component) {
+    var tmp$;
+    var result = component.render_q0cphf$(Kotlin.isType(tmp$ = $receiver.consumer, TagConsumer) ? tmp$ : Kotlin.throwCCE());
+    component.element = result;
+    Komp_getInstance().define_eho435$(result, component);
+  }
+  function HtmlComponent() {
+    this.element = null;
+  }
+  HtmlComponent.prototype.create = function () {
+    var elem = this.element;
+    if (elem != null) {
+      Komp_getInstance().remove_lt8gi4$(elem);
+    }
+    elem = this.render_q0cphf$(get_create(document));
+    Komp_getInstance().define_eho435$(elem, this);
+    this.element = elem;
+    return elem;
+  };
+  HtmlComponent.prototype.refresh = function () {
+    Komp_getInstance().refresh_y4uc7f$(this.element);
+  };
+  HtmlComponent.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'HtmlComponent',
+    interfaces: []
+  };
   function Komp() {
     Komp_instance = this;
     this.elements_0 = HashMap_init();
@@ -68,41 +95,14 @@ var komp = function (_, Kotlin, $module$kotlinx_html_js) {
     }
     return Komp_instance;
   }
-  function include($receiver, component) {
-    var tmp$;
-    var result = component.render_q0cphf$(Kotlin.isType(tmp$ = $receiver.consumer, TagConsumer) ? tmp$ : Kotlin.throwCCE());
-    component.element = result;
-    Komp_getInstance().define_eho435$(result, component);
-  }
-  function HtmlComponent() {
-    this.element = null;
-  }
-  HtmlComponent.prototype.create = function () {
-    var elem = this.element;
-    if (elem != null) {
-      Komp_getInstance().remove_lt8gi4$(elem);
-    }
-    elem = this.render_q0cphf$(get_create(document));
-    Komp_getInstance().define_eho435$(elem, this);
-    this.element = elem;
-    return elem;
-  };
-  HtmlComponent.prototype.refresh = function () {
-    Komp_getInstance().refresh_y4uc7f$(this.element);
-  };
-  HtmlComponent.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
-    simpleName: 'HtmlComponent',
-    interfaces: []
-  };
   var package$nl = _.nl || (_.nl = {});
   var package$astraeus = package$nl.astraeus || (package$nl.astraeus = {});
   var package$komp = package$astraeus.komp || (package$astraeus.komp = {});
+  package$komp.include_dqcce7$ = include;
+  package$komp.HtmlComponent = HtmlComponent;
   Object.defineProperty(package$komp, 'Komp', {
     get: Komp_getInstance
   });
-  package$komp.include_dqcce7$ = include;
-  package$komp.HtmlComponent = HtmlComponent;
   Kotlin.defineModule('komp', _);
   return _;
 }(typeof komp === 'undefined' ? {} : komp, kotlin, this['kotlinx-html-js']);
