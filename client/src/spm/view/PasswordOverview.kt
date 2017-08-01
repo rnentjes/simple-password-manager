@@ -177,7 +177,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                                           if (editor.validate()) {
                                               if (editor.originalPassword == null) {
                                                   editor.password.encryptedPassword = UserState.encryptPassword(editor.password.password1)
-                                                  editor.password.group.passwords.add(editor.password);
+                                                  editor.password.group.passwords.add(editor.password)
                                               } else {
                                                   throw IllegalStateException("Add button modal has existing password!?")
                                               }
@@ -244,6 +244,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                                                     if (editor.originalPassword.group != editor.password.group) {
                                                         editor.password.group.passwords.add(editor.originalPassword)
                                                         editor.originalPassword.group.passwords.remove(editor.originalPassword)
+                                                        editor.originalPassword.group = editor.password.group
                                                     }
 
                                                     if (editor.password.password1.isNotBlank()) {
