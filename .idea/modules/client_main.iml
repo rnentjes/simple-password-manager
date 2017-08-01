@@ -44,7 +44,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.4-eap-11" level="project" />
-    <orderEntry type="library" name="Gradle: nl.astraeus:komp:0.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: nl.astraeus:komp:0.0.5-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-js:0.6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-common:0.6.2" level="project" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.1.0" level="project" />

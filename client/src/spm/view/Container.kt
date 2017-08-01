@@ -3,7 +3,7 @@ package spm.view
 import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.js.div
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import spm.state.UserState
@@ -12,7 +12,7 @@ import spm.state.UserState
  * Created by rnentjes on 3-4-17.
  */
 
-class Container(main: HtmlComponent): HtmlComponent() {
+class Container(main: Komponent): Komponent() {
     val navbar = Navbar(main, this)
     val groupOverview = GroupOverview(this)
     val passwordOverview = PasswordOverview(this)

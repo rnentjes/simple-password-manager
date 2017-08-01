@@ -5,7 +5,7 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.onKeyDownFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
@@ -28,7 +28,7 @@ class LoginForm(
   var pwd2: String = ""
 )
 
-class Login : HtmlComponent() {
+class Login : Komponent() {
     var activeTab = LoginTab.LOGIN
     var loginForm = LoginForm()
 

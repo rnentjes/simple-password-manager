@@ -3,7 +3,7 @@ package spm.view
 import kotlinx.html.*
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
@@ -18,7 +18,7 @@ import kotlin.browser.window
  * Created by rnentjes on 4-4-17.
  */
 
-class SearchResult(val container: HtmlComponent) : HtmlComponent() {
+class SearchResult(val container: Komponent) : Komponent() {
 
     fun findPasswords(group: Group): ArrayList<Password> {
         val result = ArrayList<Password>()

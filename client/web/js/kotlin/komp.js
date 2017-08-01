@@ -9,41 +9,56 @@ var komp = function (_, Kotlin, $module$kotlinx_html_js) {
   var TagConsumer = $module$kotlinx_html_js.kotlinx.html.TagConsumer;
   var get_create = $module$kotlinx_html_js.kotlinx.html.dom.get_create_4wc2mh$;
   var HashMap_init = Kotlin.kotlin.collections.HashMap_init_q3lmfv$;
+  var ArrayList_init = Kotlin.kotlin.collections.ArrayList_init_ww73n8$;
   function include($receiver, component) {
     var tmp$;
     var result = component.render_q0cphf$(Kotlin.isType(tmp$ = $receiver.consumer, TagConsumer) ? tmp$ : Kotlin.throwCCE());
     component.element = result;
-    Komp_getInstance().define_eho435$(result, component);
+    Komponent$Companion_getInstance().define_63y3pe$(result, component);
   }
-  function HtmlComponent() {
+  function include_0($receiver, component) {
+    var tmp$;
+    var result = component.render_q0cphf$(Kotlin.isType(tmp$ = $receiver.consumer, TagConsumer) ? tmp$ : Kotlin.throwCCE());
+    component.element = result;
+    Komponent$Companion_getInstance().define_63y3pe$(result, component);
+  }
+  function Komponent() {
+    Komponent$Companion_getInstance();
     this.element = null;
+    this.rendered = false;
   }
-  HtmlComponent.prototype.create = function () {
+  Komponent.prototype.create = function () {
     var elem = this.element;
     if (elem != null) {
-      Komp_getInstance().remove_lt8gi4$(elem);
+      Komponent$Companion_getInstance().remove_lt8gi4$(elem);
     }
     elem = this.render_q0cphf$(get_create(document));
-    Komp_getInstance().define_eho435$(elem, this);
+    this.rendered = true;
+    Komponent$Companion_getInstance().define_63y3pe$(elem, this);
     this.element = elem;
     return elem;
   };
-  HtmlComponent.prototype.refresh = function () {
-    Komp_getInstance().refresh_y4uc7f$(this.element);
+  Komponent.prototype.refresh = function () {
+    if (this.rendered) {
+      Komponent$Companion_getInstance().refresh_y4uc7f$(this.element);
+    }
+     else {
+      this.update();
+    }
   };
-  HtmlComponent.$metadata$ = {
-    kind: Kotlin.Kind.CLASS,
-    simpleName: 'HtmlComponent',
-    interfaces: []
+  Komponent.prototype.update = function () {
+    Komponent$Companion_getInstance().refresh_y4uc7f$(this.element);
   };
-  function Komp() {
-    Komp_instance = this;
+  function Komponent$Companion() {
+    Komponent$Companion_instance = this;
     this.elements_0 = HashMap_init();
+    this.elementList_0 = ArrayList_init();
   }
-  Komp.prototype.define_eho435$ = function (element, component) {
+  Komponent$Companion.prototype.define_63y3pe$ = function (element, component) {
     this.elements_0.put_xwzc9p$(element, component);
+    this.elementList_0.add_11rb$(component);
   };
-  Komp.prototype.create_og2ns8$ = function (parent, component, insertAsFirst) {
+  Komponent$Companion.prototype.create_nkol39$ = function (parent, component, insertAsFirst) {
     if (insertAsFirst === void 0)
       insertAsFirst = false;
     var element = component.create();
@@ -54,11 +69,16 @@ var komp = function (_, Kotlin, $module$kotlinx_html_js) {
       parent.appendChild(element);
     }
     this.elements_0.put_xwzc9p$(element, component);
+    this.elementList_0.add_11rb$(component);
   };
-  Komp.prototype.remove_lt8gi4$ = function (element) {
+  Komponent$Companion.prototype.remove_lt8gi4$ = function (element) {
+    var component = this.elements_0.get_11rb$(element);
     this.elements_0.remove_11rb$(element);
+    var $receiver = this.elementList_0;
+    var tmp$;
+    (Kotlin.isType(tmp$ = $receiver, Kotlin.kotlin.collections.MutableCollection) ? tmp$ : Kotlin.throwCCE()).remove_11rb$(component);
   };
-  Komp.prototype.remove = function (component) {
+  Komponent$Companion.prototype.remove = function (component) {
     var tmp$_0;
     tmp$_0 = this.elements_0.entries.iterator();
     while (tmp$_0.hasNext()) {
@@ -69,40 +89,47 @@ var komp = function (_, Kotlin, $module$kotlinx_html_js) {
         this.elements_0.remove_11rb$(key);
       }
     }
+    this.elementList_0.remove_11rb$(component);
   };
-  Komp.prototype.refresh_ap2bc9$ = function (component) {
+  Komponent$Companion.prototype.refresh_1smjna$ = function (component) {
     this.refresh_y4uc7f$(component.element);
   };
-  Komp.prototype.refresh_y4uc7f$ = function (element) {
+  Komponent$Companion.prototype.refresh_y4uc7f$ = function (element) {
+    var tmp$;
     if (element != null) {
-      var comp = this.elements_0.get_11rb$(element);
-      if (Kotlin.isType(element, HTMLElement) && comp != null) {
+      if ((tmp$ = this.elements_0.get_11rb$(element)) != null) {
         var parent = element.parentElement;
-        var newElement = comp.create();
-        parent != null ? parent.replaceChild(newElement, element) : null;
+        var newElement = tmp$.create();
+        parent != null && parent.replaceChild(newElement, element);
       }
     }
   };
-  Komp.$metadata$ = {
+  Komponent$Companion.$metadata$ = {
     kind: Kotlin.Kind.OBJECT,
-    simpleName: 'Komp',
+    simpleName: 'Companion',
     interfaces: []
   };
-  var Komp_instance = null;
-  function Komp_getInstance() {
-    if (Komp_instance === null) {
-      new Komp();
+  var Komponent$Companion_instance = null;
+  function Komponent$Companion_getInstance() {
+    if (Komponent$Companion_instance === null) {
+      new Komponent$Companion();
     }
-    return Komp_instance;
+    return Komponent$Companion_instance;
   }
+  Komponent.$metadata$ = {
+    kind: Kotlin.Kind.CLASS,
+    simpleName: 'Komponent',
+    interfaces: []
+  };
   var package$nl = _.nl || (_.nl = {});
   var package$astraeus = package$nl.astraeus || (package$nl.astraeus = {});
   var package$komp = package$astraeus.komp || (package$astraeus.komp = {});
-  package$komp.include_dqcce7$ = include;
-  package$komp.HtmlComponent = HtmlComponent;
-  Object.defineProperty(package$komp, 'Komp', {
-    get: Komp_getInstance
+  package$komp.include_yzvepg$ = include;
+  package$komp.include_ly6v3d$ = include_0;
+  Object.defineProperty(Komponent, 'Companion', {
+    get: Komponent$Companion_getInstance
   });
+  package$komp.Komponent = Komponent;
   Kotlin.defineModule('komp', _);
   return _;
 }(typeof komp === 'undefined' ? {} : komp, kotlin, this['kotlinx-html-js']);

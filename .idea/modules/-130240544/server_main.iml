@@ -2,7 +2,7 @@
 <module external.linked.project.id=":server:main" external.linked.project.path="$MODULE_DIR$/../../../server" external.root.project.path="$MODULE_DIR$/../../../client" external.system.id="GRADLE" external.system.module.group="nl.astraeus.spm" external.system.module.type="sourceSet" external.system.module.version="1.0.0-SNAPSHOT" type="JAVA_MODULE" version="4">
   <component name="FacetManager">
     <facet type="kotlin-language" name="Kotlin">
-      <configuration version="2" platform="JVM 1.6" useProjectSettings="false">
+      <configuration version="3" platform="JVM 1.6" useProjectSettings="false">
         <compilerSettings />
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/../../../server/build/kotlin-classes/main" />
@@ -20,7 +20,6 @@
           <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="coroutinesWarn" value="true" />
         </compilerArguments>
       </configuration>
     </facet>

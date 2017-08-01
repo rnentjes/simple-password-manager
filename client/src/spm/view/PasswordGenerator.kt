@@ -4,7 +4,7 @@ import kotlinx.html.*
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
@@ -24,7 +24,7 @@ private val numbers         = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVW
 private val special         = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~`!@#$%*()_+-={}[]:\"|;'\\<>?,./"
 private val specialNumbers  = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ~`!@#$%*()_+-={}[]:\"|;'\\<>?,./0123456789"
 
-class PasswordGenerator(val password: Password) : HtmlComponent() {
+class PasswordGenerator(val password: Password) : Komponent() {
     var passwordLength = 26
     var includeNumbers = true
     var includeSpecial = true

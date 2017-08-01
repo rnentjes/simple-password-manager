@@ -5,7 +5,7 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
@@ -21,19 +21,19 @@ import kotlin.browser.window
  * Created by rnentjes on 4-4-17.
  */
 
-class RemovePasswordConfirm(val password: Password) : HtmlComponent() {
+class RemovePasswordConfirm(val password: Password) : Komponent() {
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
         +"Are you sure you want to remove password '${password.title}'?"
     }
 }
 
-class RemoveGroupConfirm(val groupName: String) : HtmlComponent() {
+class RemoveGroupConfirm(val groupName: String) : Komponent() {
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
         +"Are you sure you want to remove group '$groupName'?"
     }
 }
 
-class GroupNameEdit(var groupname: String = "") : HtmlComponent() {
+class GroupNameEdit(var groupname: String = "") : Komponent() {
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "") {
         form(classes = "form form-horizontal") {
@@ -62,7 +62,7 @@ class GroupNameEdit(var groupname: String = "") : HtmlComponent() {
 }
 
 
-class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
+class PasswordOverview(val container: Komponent) : Komponent() {
 
     fun rename(group: Group) {
         val renameSubgroup = GroupNameEdit(group.name)
@@ -168,6 +168,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                 +"Add"
                                 onClickFunction = {
                                     val editor = PasswordEditor(cg)
+                                    editor.password.group = cg
                                     Modal.openModal("Edit password",
                                       editor,
                                       okText = "Save",
@@ -176,7 +177,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                           if (editor.validate()) {
                                               if (editor.originalPassword == null) {
                                                   editor.password.encryptedPassword = UserState.encryptPassword(editor.password.password1)
-                                                  cg.passwords.add(editor.password)
+                                                  editor.password.group.passwords.add(editor.password);
                                               } else {
                                                   throw IllegalStateException("Add button modal has existing password!?")
                                               }
@@ -240,6 +241,11 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                                     editor.originalPassword.username = editor.password.username
                                                     editor.originalPassword.description = editor.password.description
 
+                                                    if (editor.originalPassword.group != editor.password.group) {
+                                                        editor.password.group.passwords.add(editor.originalPassword)
+                                                        editor.originalPassword.group.passwords.remove(editor.originalPassword)
+                                                    }
+
                                                     if (editor.password.password1.isNotBlank()) {
                                                         editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
                                                     } else {
@@ -250,7 +256,7 @@ class PasswordOverview(val container: HtmlComponent) : HtmlComponent() {
                                                 }
 
                                                 UserState.saveData()
-                                                refresh()
+                                                container.refresh()
 
                                                 true
                                             } else {

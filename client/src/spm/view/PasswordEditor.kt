@@ -4,13 +4,17 @@ import kotlinx.html.*
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
+import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
+import spm.state.UserState
+import spm.view.input.SelectInput
 import stats.view.Modal
 
 /**
@@ -19,7 +23,7 @@ import stats.view.Modal
  * Time: 9:46
  */
 
-class PasswordEditor(val group: Group, val originalPassword: Password? = null) : HtmlComponent() {
+class PasswordEditor(val group: Group, val originalPassword: Password? = null) : Komponent() {
     val password: Password
     var showPassword = false
 
@@ -46,6 +50,25 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
         }
 
         form(classes = "form form-horizontal") {
+
+            include(SelectInput(
+              "password_group",
+              label = "Group",
+              inputValue = "${password.group.id}",
+              options = UserState.topGroup?.getGroups() ?: ArrayList(),
+              change = { e ->
+                  val target = e.target
+
+                  if (target is HTMLSelectElement) {
+                      val group = UserState.topGroup?.findById(target.value.toLong()) ?:
+                        throw IllegalStateException("Group with id ${target.value} not found!")
+
+                      console.log("Update group", group)
+                      password.group = group
+                  }
+              }
+            ))
+
             createInput(consumer, "password_title", "Title", password.title,
               blur = { e ->
                   password.title = (e.target as HTMLInputElement).value
@@ -184,7 +207,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                         id = "password_notes"
                         rows = "4"
 
-                        + password.description
+                        +password.description
                     }
 //                    if (error.isNotBlank()) {
 //                        span(classes = "help-block") {

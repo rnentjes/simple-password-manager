@@ -20,7 +20,9 @@ data class Group(
     constructor(name: String, parent: Group) : this(nextId(), name, false, parent)
 
     constructor(tk: Tokenizer) : this(tk.next().toLong(), tk.next(), tk.next() == "true", null) {
-        if (id > lastId) { lastId = id }
+        if (id > lastId) {
+            lastId = id
+        }
         //console.log("Read group $name", this)
         val numberOfPasswords = tk.next().toInt()
         //println("\t Number of passwords :$numberOfPasswords")
@@ -35,7 +37,7 @@ data class Group(
         //println("\t Number of children :$numberOfChildren")
         // weird for-loop bug work-around
         var index = 0
-        while(index < numberOfChildren) {
+        while (index < numberOfChildren) {
             //println("\t Child $index")
             val child = Group(tk)
 
@@ -101,6 +103,24 @@ data class Group(
 
         for (child in children) {
             result += child.getPasswordsCountInGroup()
+        }
+
+        return result
+    }
+
+    fun getGroups(prefix: String = ""): List<Pair<String, String>> {
+        val result = ArrayList<Pair<String, String>>()
+
+        val childPrefix = if (prefix.isBlank()) {
+            name
+        } else {
+            "$prefix / $name"
+        }
+
+        result.add("$id" to childPrefix)
+
+        for (child in children) {
+            result.addAll(child.getGroups(childPrefix))
         }
 
         return result

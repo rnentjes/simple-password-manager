@@ -3,8 +3,7 @@ package stats.view
 import kotlinx.html.*
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
-import nl.astraeus.komp.HtmlComponent
-import nl.astraeus.komp.Komp
+import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import kotlin.browser.document
@@ -16,7 +15,7 @@ import kotlin.browser.document
 class ModalComponent(
   val modalId: String,
   val modalTitle: String,
-  val body: HtmlComponent,
+  val body: Komponent,
   val okText: String = "Ok",
   val cancelText: String = "Cancel",
   val okButtonClass: String = "btn-primary",
@@ -24,7 +23,7 @@ class ModalComponent(
   val showCancel: Boolean = true,
   val disabledOk: Boolean = false,
   var ok: () -> Unit = {},
-  var cancel: () -> Unit = {}) : HtmlComponent() {
+  var cancel: () -> Unit = {}) : Komponent() {
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "modal fade") {
         id = modalId
@@ -73,7 +72,7 @@ class ModalComponent(
     }
 }
 
-class AlertComponent(val message: String): HtmlComponent() {
+class AlertComponent(val message: String): Komponent() {
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div {
         println("render AlertComponent $message")
@@ -91,7 +90,7 @@ object Modal {
 
     fun openModal(
       title: String,
-      body: HtmlComponent,
+      body: Komponent,
       okText: String = "Ok",
       cancelText: String = "Cancel",
       modalSize: String = "",
@@ -121,9 +120,9 @@ object Modal {
             }
         }
 
-        Komp.create(document.body ?: throw IllegalStateException("Document.body not found!"), modal)
+        Komponent.create(document.body ?: throw IllegalStateException("Document.body not found!"), modal)
 
-        attachHideEvent(id, Komp)
+        attachHideEvent(id, Komponent)
 
         showModal(id)
 
@@ -136,7 +135,7 @@ object Modal {
 
     fun showConfirm(
       title: String,
-      body: HtmlComponent,
+      body: Komponent,
       confirmText: String = "Yes",
       denyText: String = "No",
       disabledConfirm: Boolean = false,

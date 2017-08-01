@@ -21,14 +21,6 @@ javascript.source {
       exclude "all.js"
     }
   }
-  minimized {
-    js {
-      file("${projectDir}/client/web/js/kotlin/all.js")
-      file("${projectDir}/client/web/js/jquery.min.js")
-      file("${projectDir}/client/web/js/bootstrap.min.js")
-      file("${projectDir}/client/web/js/notify.min.js")
-    }
-  }
 }
 
 // Configure the built-in task

@@ -1,6 +1,6 @@
 package spm
 
-import nl.astraeus.komp.Komp
+import nl.astraeus.komp.Komponent
 import spm.view.Main
 import spm.ws.WebSocketConnection
 import kotlin.browser.document
@@ -12,7 +12,7 @@ import kotlin.browser.document
  */
 
 fun main(args: Array<String>) {
-    Komp.create(document.body!!, Main())
+    Komponent.create(document.body!!, Main())
 
     WebSocketConnection.open()
 }

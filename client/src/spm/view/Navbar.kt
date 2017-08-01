@@ -4,7 +4,7 @@ import kotlinx.html.*
 import kotlinx.html.js.nav
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import spm.state.UserState
@@ -12,7 +12,7 @@ import spm.state.UserState
 /**
  * Created by rnentjes on 3-4-17.
  */
-class Navbar(val main: HtmlComponent, val container: HtmlComponent): HtmlComponent() {
+class Navbar(val main: Komponent, val container: Komponent): Komponent() {
     var search = UserState.currentSearch
 
     //language=HTML

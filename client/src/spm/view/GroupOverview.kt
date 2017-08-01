@@ -3,7 +3,7 @@ package spm.view
 import kotlinx.html.*
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import spm.model.Group
 import spm.state.UserState
@@ -13,7 +13,7 @@ import spm.state.UserState.topGroup
  * Created by rnentjes on 4-4-17.
  */
 
-class GroupOverview(val container: HtmlComponent) : HtmlComponent() {
+class GroupOverview(val container: Komponent) : Komponent() {
 
     private fun createGroup(consumer: TagConsumer<HTMLElement>, topGroup: Group, group: Group) {
         consumer.ul(classes = "tree") {

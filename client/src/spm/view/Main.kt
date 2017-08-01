@@ -2,7 +2,7 @@ package spm.view
 
 import kotlinx.html.TagConsumer
 import kotlinx.html.js.div
-import nl.astraeus.komp.HtmlComponent
+import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.WebSocket
@@ -14,7 +14,7 @@ import spm.ws.Tokenizer
  * Created by rnentjes on 3-4-17.
  */
 
-class Main : HtmlComponent() {
+class Main : Komponent() {
     init {
         CommandDispatcher.setLoginListener(this::login)
     }
