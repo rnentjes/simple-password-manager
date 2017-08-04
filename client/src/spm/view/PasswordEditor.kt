@@ -15,6 +15,7 @@ import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
 import spm.view.input.SelectInput
+import spm.view.input.TextInput
 import stats.view.Modal
 
 /**
@@ -69,27 +70,28 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
               }
             ))
 
-            createInput(consumer, "password_title", "Title", password.title,
+            include(TextInput("password_title", "Title", password.title,
               blur = { e ->
                   password.title = (e.target as HTMLInputElement).value
               },
               change = { e ->
                   password.title = (e.target as HTMLInputElement).value
-              })
-            createInput(consumer, "password_url", "Url", password.website,
+              }))
+
+            include(TextInput("password_url", "Url", password.website,
               blur = { e ->
                   password.website = (e.target as HTMLInputElement).value
               },
               change = { e ->
                   password.website = (e.target as HTMLInputElement).value
-              })
-            createInput(consumer, "password_username", "Username", password.username,
+              }))
+            include(TextInput("password_username", "Username", password.username,
               blur = { e ->
                   password.username = (e.target as HTMLInputElement).value
               },
               change = { e ->
                   password.username = (e.target as HTMLInputElement).value
-              })
+              }))
             div(classes = "form-group") {
                 //                if (error.isNotBlank()) {
 //                    classes += "has-error"
@@ -226,48 +228,4 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
         }
     }
 
-}
-
-
-private fun createInput(
-  consumer: TagConsumer<HTMLElement>,
-  inputId: String,
-  label: String = "",
-  inputValue: String = "",
-  inputType: InputType = InputType.text,
-  placeholderText: String = "",
-  error: String = "",
-  blur: (Event) -> Unit = {},
-  change: (Event) -> Unit = {}
-) {
-    consumer.div(classes = "form-group") {
-        if (error.isNotBlank()) {
-            classes += "has-error"
-        }
-        if (label.isNotBlank()) {
-            label(classes = "col-md-3") {
-                for_ = inputId
-                +label
-            }
-        }
-        div(classes = "col-md-9") {
-            input(classes = "form-control") {
-                id = inputId
-                name = inputId
-                type = InputType.text
-                value = inputValue
-            }
-            if (placeholderText.isNotBlank()) {
-                attributes["placeholder"] = placeholderText
-            }
-            if (error.isNotBlank()) {
-                span(classes = "help-block") {
-                    +error
-                }
-            }
-        }
-
-        onBlurFunction = blur
-        onKeyUpFunction = change
-    }
 }
