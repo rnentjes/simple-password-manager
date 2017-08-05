@@ -55,6 +55,7 @@ fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
 
     transaction {
         user.setData(data)
+        user.updated = Date()
         UserDao.update(user)
     }
 }
