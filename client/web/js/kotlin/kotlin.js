@@ -11,103 +11,6 @@
   }
 }(this, function (Kotlin) {
   var _ = Kotlin;
-  Kotlin.Kind = {CLASS: 'class', INTERFACE: 'interface', OBJECT: 'object'};
-  Kotlin.callGetter = function (thisObject, klass, propertyName) {
-    var propertyDescriptor = Object.getOwnPropertyDescriptor(klass, propertyName);
-    if (propertyDescriptor != null) {
-      if (propertyDescriptor.get != null) {
-        return propertyDescriptor.get.call(thisObject);
-      }
-       else if ('value' in propertyDescriptor) {
-        return propertyDescriptor.value;
-      }
-    }
-     else {
-      return Kotlin.callGetter(thisObject, Object.getPrototypeOf(klass), propertyName);
-    }
-    return null;
-  };
-  Kotlin.callSetter = function (thisObject, klass, propertyName, value) {
-    var propertyDescriptor = Object.getOwnPropertyDescriptor(klass, propertyName);
-    if (propertyDescriptor != null) {
-      if (propertyDescriptor.set != null) {
-        propertyDescriptor.set.call(thisObject, value);
-      }
-       else if ('value' in propertyDescriptor) {
-        throw new Error('Assertion failed: Kotlin compiler should not generate simple JavaScript properties for overridable ' + 'Kotlin properties.');
-      }
-    }
-     else {
-      return Kotlin.callSetter(thisObject, Object.getPrototypeOf(klass), propertyName, value);
-    }
-  };
-  function isInheritanceFromInterface(metadata, iface) {
-    if (metadata == null)
-      return false;
-    var interfaces = metadata.interfaces;
-    var i;
-    for (i = 0; i < interfaces.length; i++) {
-      if (interfaces[i] === iface) {
-        return true;
-      }
-    }
-    for (i = 0; i < interfaces.length; i++) {
-      if (isInheritanceFromInterface(interfaces[i].$metadata$, iface)) {
-        return true;
-      }
-    }
-    return false;
-  }
-  Kotlin.isType = function (object, klass) {
-    if (klass === Object) {
-      switch (typeof object) {
-        case 'string':
-        case 'number':
-        case 'boolean':
-        case 'function':
-          return true;
-        default:return object instanceof Object;
-      }
-    }
-    if (object == null || klass == null || (typeof object !== 'object' && typeof object !== 'function')) {
-      return false;
-    }
-    if (typeof klass === 'function' && object instanceof klass) {
-      return true;
-    }
-    var proto = Object.getPrototypeOf(klass);
-    var constructor = proto != null ? proto.constructor : null;
-    if (constructor != null && '$metadata$' in constructor) {
-      var metadata = constructor.$metadata$;
-      if (metadata.kind === Kotlin.Kind.OBJECT) {
-        return object === klass;
-      }
-    }
-    var klassMetadata = klass.$metadata$;
-    if (klassMetadata == null) {
-      return object instanceof klass;
-    }
-    if (klassMetadata.kind === Kotlin.Kind.INTERFACE && object.constructor != null) {
-      metadata = object.constructor.$metadata$;
-      if (metadata != null) {
-        return isInheritanceFromInterface(metadata, klass);
-      }
-    }
-    return false;
-  };
-  Kotlin.isNumber = function (a) {
-    return typeof a == 'number' || a instanceof Kotlin.Long;
-  };
-  Kotlin.isChar = function (value) {
-    return value instanceof Kotlin.BoxedChar;
-  };
-  Kotlin.isComparable = function (value) {
-    var type = typeof value;
-    return type === 'string' || type === 'boolean' || Kotlin.isNumber(value) || Kotlin.isType(value, Kotlin.kotlin.Comparable);
-  };
-  Kotlin.isCharSequence = function (value) {
-    return typeof value === 'string' || Kotlin.isType(value, Kotlin.kotlin.CharSequence);
-  };
   Kotlin.defineModule = function (id, declaration) {
   };
   Kotlin.defineInlineFunction = function (tag, fun) {
@@ -135,6 +38,36 @@
   };
   Kotlin.kotlinModuleMetadata = function (abiVersion, moduleName, data) {
   };
+  Kotlin.getCallableRef = function (name, f) {
+    f.callableName = name;
+    return f;
+  };
+  Kotlin.getPropertyCallableRef = function (name, paramCount, getter, setter) {
+    getter.get = getter;
+    getter.set = setter;
+    getter.callableName = name;
+    return getPropertyRefClass(getter, setter, propertyRefClassMetadataCache[paramCount]);
+  };
+  function getPropertyRefClass(obj, setter, cache) {
+    obj.$metadata$ = getPropertyRefMetadata(typeof setter === 'function' ? cache.mutable : cache.immutable);
+    obj.constructor = obj;
+    return obj;
+  }
+  var propertyRefClassMetadataCache = [{mutable: {value: null, implementedInterface: function () {
+    return Kotlin.kotlin.reflect.KMutableProperty0;
+  }}, immutable: {value: null, implementedInterface: function () {
+    return Kotlin.kotlin.reflect.KProperty0;
+  }}}, {mutable: {value: null, implementedInterface: function () {
+    return Kotlin.kotlin.reflect.KMutableProperty1;
+  }}, immutable: {value: null, implementedInterface: function () {
+    return Kotlin.kotlin.reflect.KProperty1;
+  }}}];
+  function getPropertyRefMetadata(cache) {
+    if (cache.value === null) {
+      cache.value = {interfaces: [cache.implementedInterface()], baseClass: null, functions: {}, properties: {}, types: {}, staticMembers: {}};
+    }
+    return cache.value;
+  }
   Kotlin.toShort = function (a) {
     return (a & 65535) << 16 >> 16;
   };
@@ -174,6 +107,99 @@
       return a;
     return Kotlin.toChar(a);
   };
+  Kotlin.equals = function (obj1, obj2) {
+    if (obj1 == null) {
+      return obj2 == null;
+    }
+    if (obj2 == null) {
+      return false;
+    }
+    if (obj1 !== obj1) {
+      return obj2 !== obj2;
+    }
+    if (typeof obj1 === 'object' && typeof obj1.equals === 'function') {
+      return obj1.equals(obj2);
+    }
+    return obj1 === obj2;
+  };
+  Kotlin.hashCode = function (obj) {
+    if (obj == null) {
+      return 0;
+    }
+    var objType = typeof obj;
+    if ('object' === objType) {
+      return 'function' === typeof obj.hashCode ? obj.hashCode() : getObjectHashCode(obj);
+    }
+    if ('function' === objType) {
+      return getObjectHashCode(obj);
+    }
+    if ('number' === objType) {
+      return numberHashCode(obj);
+    }
+    if ('boolean' === objType) {
+      return Number(obj);
+    }
+    var str = String(obj);
+    return getStringHashCode(str);
+  };
+  var numberHashCode;
+  if (typeof ArrayBuffer === 'function') {
+    var bufferForNumberConversion = new ArrayBuffer(8);
+    var arrayForDoubleConversion = new Float64Array(bufferForNumberConversion);
+    var arrayForIntegerConversion = new Int32Array(bufferForNumberConversion);
+    var lowerIntegerIndex = 0;
+    var upperIntegerIndex = 1;
+    (function () {
+      arrayForDoubleConversion[0] = 1.2;
+      if (arrayForIntegerConversion[0] !== 1072902963) {
+        lowerIntegerIndex = 1;
+        upperIntegerIndex = 0;
+      }
+    }());
+    numberHashCode = function (obj) {
+      if ((obj | 0) === obj) {
+        return obj | 0;
+      }
+       else {
+        arrayForDoubleConversion[0] = obj;
+        return (arrayForIntegerConversion[lowerIntegerIndex] * 31 | 0) + arrayForIntegerConversion[upperIntegerIndex] | 0;
+      }
+    };
+  }
+   else {
+    numberHashCode = function (obj) {
+      return obj | 0;
+    };
+  }
+  Kotlin.toString = function (o) {
+    if (o == null) {
+      return 'null';
+    }
+     else if (Kotlin.isArrayish(o)) {
+      return '[...]';
+    }
+     else {
+      return o.toString();
+    }
+  };
+  var POW_2_32 = 4.294967296E9;
+  var OBJECT_HASH_CODE_PROPERTY_NAME = 'kotlinHashCodeValue$';
+  function getObjectHashCode(obj) {
+    if (!(OBJECT_HASH_CODE_PROPERTY_NAME in obj)) {
+      var hash = Math.random() * POW_2_32 | 0;
+      Object.defineProperty(obj, OBJECT_HASH_CODE_PROPERTY_NAME, {value: hash, enumerable: false});
+    }
+    return obj[OBJECT_HASH_CODE_PROPERTY_NAME];
+  }
+  function getStringHashCode(str) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
+      var code = str.charCodeAt(i);
+      hash = hash * 31 + code | 0;
+    }
+    return hash;
+  }
+  Kotlin.identityHashCode = getObjectHashCode;
   Kotlin.Long = function (low, high) {
     this.low_ = low | 0;
     this.high_ = high | 0;
@@ -618,6 +644,103 @@
   Kotlin.Long.prototype.rangeTo = function (other) {
     return new Kotlin.kotlin.ranges.LongRange(this, other);
   };
+  Kotlin.Kind = {CLASS: 'class', INTERFACE: 'interface', OBJECT: 'object'};
+  Kotlin.callGetter = function (thisObject, klass, propertyName) {
+    var propertyDescriptor = Object.getOwnPropertyDescriptor(klass, propertyName);
+    if (propertyDescriptor != null) {
+      if (propertyDescriptor.get != null) {
+        return propertyDescriptor.get.call(thisObject);
+      }
+       else if ('value' in propertyDescriptor) {
+        return propertyDescriptor.value;
+      }
+    }
+     else {
+      return Kotlin.callGetter(thisObject, Object.getPrototypeOf(klass), propertyName);
+    }
+    return null;
+  };
+  Kotlin.callSetter = function (thisObject, klass, propertyName, value) {
+    var propertyDescriptor = Object.getOwnPropertyDescriptor(klass, propertyName);
+    if (propertyDescriptor != null) {
+      if (propertyDescriptor.set != null) {
+        propertyDescriptor.set.call(thisObject, value);
+      }
+       else if ('value' in propertyDescriptor) {
+        throw new Error('Assertion failed: Kotlin compiler should not generate simple JavaScript properties for overridable ' + 'Kotlin properties.');
+      }
+    }
+     else {
+      return Kotlin.callSetter(thisObject, Object.getPrototypeOf(klass), propertyName, value);
+    }
+  };
+  function isInheritanceFromInterface(metadata, iface) {
+    if (metadata == null)
+      return false;
+    var interfaces = metadata.interfaces;
+    var i;
+    for (i = 0; i < interfaces.length; i++) {
+      if (interfaces[i] === iface) {
+        return true;
+      }
+    }
+    for (i = 0; i < interfaces.length; i++) {
+      if (isInheritanceFromInterface(interfaces[i].$metadata$, iface)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  Kotlin.isType = function (object, klass) {
+    if (klass === Object) {
+      switch (typeof object) {
+        case 'string':
+        case 'number':
+        case 'boolean':
+        case 'function':
+          return true;
+        default:return object instanceof Object;
+      }
+    }
+    if (object == null || klass == null || (typeof object !== 'object' && typeof object !== 'function')) {
+      return false;
+    }
+    if (typeof klass === 'function' && object instanceof klass) {
+      return true;
+    }
+    var proto = Object.getPrototypeOf(klass);
+    var constructor = proto != null ? proto.constructor : null;
+    if (constructor != null && '$metadata$' in constructor) {
+      var metadata = constructor.$metadata$;
+      if (metadata.kind === Kotlin.Kind.OBJECT) {
+        return object === klass;
+      }
+    }
+    var klassMetadata = klass.$metadata$;
+    if (klassMetadata == null) {
+      return object instanceof klass;
+    }
+    if (klassMetadata.kind === Kotlin.Kind.INTERFACE && object.constructor != null) {
+      metadata = object.constructor.$metadata$;
+      if (metadata != null) {
+        return isInheritanceFromInterface(metadata, klass);
+      }
+    }
+    return false;
+  };
+  Kotlin.isNumber = function (a) {
+    return typeof a == 'number' || a instanceof Kotlin.Long;
+  };
+  Kotlin.isChar = function (value) {
+    return value instanceof Kotlin.BoxedChar;
+  };
+  Kotlin.isComparable = function (value) {
+    var type = typeof value;
+    return type === 'string' || type === 'boolean' || Kotlin.isNumber(value) || Kotlin.isType(value, Kotlin.kotlin.Comparable);
+  };
+  Kotlin.isCharSequence = function (value) {
+    return typeof value === 'string' || Kotlin.isType(value, Kotlin.kotlin.CharSequence);
+  };
   Kotlin.compareTo = function (a, b) {
     var typeA = typeof a;
     var typeB = typeof a;
@@ -645,6 +768,28 @@
   Kotlin.imulEmulated = imul;
   function imul(a, b) {
     return (a & 4.29490176E9) * (b & 65535) + (a & 65535) * (b | 0) | 0;
+  }
+  if (typeof String.prototype.startsWith === 'undefined') {
+    String.prototype.startsWith = function (searchString, position) {
+      position = position || 0;
+      return this.lastIndexOf(searchString, position) === position;
+    };
+  }
+  if (typeof String.prototype.endsWith === 'undefined') {
+    String.prototype.endsWith = function (searchString, position) {
+      var subjectString = this.toString();
+      if (position === undefined || position > subjectString.length) {
+        position = subjectString.length;
+      }
+      position -= searchString.length;
+      var lastIndex = subjectString.indexOf(searchString, position);
+      return lastIndex !== -1 && lastIndex === position;
+    };
+  }
+  if (typeof ArrayBuffer.isView === 'undefined') {
+    ArrayBuffer.isView = function (a) {
+      return a != null && a.__proto__ != null && a.__proto__.__proto__ === Int8Array.prototype.__proto__;
+    };
   }
   Kotlin.isBooleanArray = function (a) {
     return (Array.isArray(a) || a instanceof Int8Array) && a.$type$ === 'BooleanArray';
@@ -748,151 +893,6 @@
   Kotlin.primitiveArraySort = function (array) {
     array.sort(Kotlin.primitiveCompareTo);
   };
-  if (typeof String.prototype.startsWith === 'undefined') {
-    String.prototype.startsWith = function (searchString, position) {
-      position = position || 0;
-      return this.lastIndexOf(searchString, position) === position;
-    };
-  }
-  if (typeof String.prototype.endsWith === 'undefined') {
-    String.prototype.endsWith = function (searchString, position) {
-      var subjectString = this.toString();
-      if (position === undefined || position > subjectString.length) {
-        position = subjectString.length;
-      }
-      position -= searchString.length;
-      var lastIndex = subjectString.indexOf(searchString, position);
-      return lastIndex !== -1 && lastIndex === position;
-    };
-  }
-  if (typeof ArrayBuffer.isView === 'undefined') {
-    ArrayBuffer.isView = function (a) {
-      return a != null && a.__proto__ != null && a.__proto__.__proto__ === Int8Array.prototype.__proto__;
-    };
-  }
-  Kotlin.getCallableRef = function (name, f) {
-    f.callableName = name;
-    return f;
-  };
-  Kotlin.getPropertyCallableRef = function (name, paramCount, getter, setter) {
-    getter.get = getter;
-    getter.set = setter;
-    getter.callableName = name;
-    return getPropertyRefClass(getter, setter, propertyRefClassMetadataCache[paramCount]);
-  };
-  function getPropertyRefClass(obj, setter, cache) {
-    obj.$metadata$ = getPropertyRefMetadata(typeof setter === 'function' ? cache.mutable : cache.immutable);
-    obj.constructor = obj;
-    return obj;
-  }
-  var propertyRefClassMetadataCache = [{mutable: {value: null, implementedInterface: function () {
-    return Kotlin.kotlin.reflect.KMutableProperty0;
-  }}, immutable: {value: null, implementedInterface: function () {
-    return Kotlin.kotlin.reflect.KProperty0;
-  }}}, {mutable: {value: null, implementedInterface: function () {
-    return Kotlin.kotlin.reflect.KMutableProperty1;
-  }}, immutable: {value: null, implementedInterface: function () {
-    return Kotlin.kotlin.reflect.KProperty1;
-  }}}];
-  function getPropertyRefMetadata(cache) {
-    if (cache.value === null) {
-      cache.value = {interfaces: [cache.implementedInterface()], baseClass: null, functions: {}, properties: {}, types: {}, staticMembers: {}};
-    }
-    return cache.value;
-  }
-  Kotlin.equals = function (obj1, obj2) {
-    if (obj1 == null) {
-      return obj2 == null;
-    }
-    if (obj2 == null) {
-      return false;
-    }
-    if (obj1 !== obj1) {
-      return obj2 !== obj2;
-    }
-    if (typeof obj1 === 'object' && typeof obj1.equals === 'function') {
-      return obj1.equals(obj2);
-    }
-    return obj1 === obj2;
-  };
-  Kotlin.hashCode = function (obj) {
-    if (obj == null) {
-      return 0;
-    }
-    var objType = typeof obj;
-    if ('object' === objType) {
-      return 'function' === typeof obj.hashCode ? obj.hashCode() : getObjectHashCode(obj);
-    }
-    if ('function' === objType) {
-      return getObjectHashCode(obj);
-    }
-    if ('number' === objType) {
-      return numberHashCode(obj);
-    }
-    if ('boolean' === objType) {
-      return Number(obj);
-    }
-    var str = String(obj);
-    return getStringHashCode(str);
-  };
-  var numberHashCode;
-  if (typeof ArrayBuffer === 'function') {
-    var bufferForNumberConversion = new ArrayBuffer(8);
-    var arrayForDoubleConversion = new Float64Array(bufferForNumberConversion);
-    var arrayForIntegerConversion = new Int32Array(bufferForNumberConversion);
-    var lowerIntegerIndex = 0;
-    var upperIntegerIndex = 1;
-    (function () {
-      arrayForDoubleConversion[0] = 1.2;
-      if (arrayForIntegerConversion[0] !== 1072902963) {
-        lowerIntegerIndex = 1;
-        upperIntegerIndex = 0;
-      }
-    }());
-    numberHashCode = function (obj) {
-      if ((obj | 0) === obj) {
-        return obj | 0;
-      }
-       else {
-        arrayForDoubleConversion[0] = obj;
-        return (arrayForIntegerConversion[lowerIntegerIndex] * 31 | 0) + arrayForIntegerConversion[upperIntegerIndex] | 0;
-      }
-    };
-  }
-   else {
-    numberHashCode = function (obj) {
-      return obj | 0;
-    };
-  }
-  Kotlin.toString = function (o) {
-    if (o == null) {
-      return 'null';
-    }
-     else if (Kotlin.isArrayish(o)) {
-      return '[...]';
-    }
-     else {
-      return o.toString();
-    }
-  };
-  var POW_2_32 = 4.294967296E9;
-  var OBJECT_HASH_CODE_PROPERTY_NAME = 'kotlinHashCodeValue$';
-  function getObjectHashCode(obj) {
-    if (!(OBJECT_HASH_CODE_PROPERTY_NAME in obj)) {
-      var hash = Math.random() * POW_2_32 | 0;
-      Object.defineProperty(obj, OBJECT_HASH_CODE_PROPERTY_NAME, {value: hash, enumerable: false});
-    }
-    return obj[OBJECT_HASH_CODE_PROPERTY_NAME];
-  }
-  function getStringHashCode(str) {
-    var hash = 0;
-    for (var i = 0; i < str.length; i++) {
-      var code = str.charCodeAt(i);
-      hash = hash * 31 + code | 0;
-    }
-    return hash;
-  }
-  Kotlin.identityHashCode = getObjectHashCode;
   (function() {
     'use strict';
     function Enum() {
@@ -1665,7 +1665,7 @@
       return this.c;
     };
     BoxedChar.$metadata$ = {kind: Kotlin.Kind.CLASS, simpleName: 'BoxedChar', interfaces: [Comparable]};
-    function concat(args) {
+    var concat = Kotlin.defineInlineFunction('kotlin.concat_2r4q7p$', function (args) {
       var tmp$;
       var typed = Array(args.length);
       tmp$ = args.length - 1 | 0;
@@ -1679,7 +1679,7 @@
         }
       }
       return [].concat.apply([], typed);
-    }
+    });
     function arrayConcat(a, b) {
       var args = arguments;
       var tmp$;
@@ -1759,10 +1759,10 @@
       array.$type$ = type;
       return array;
     }
-    function withType(type, array) {
+    var withType = Kotlin.defineInlineFunction('kotlin.withType', function (type, array) {
       array.$type$ = type;
       return array;
-    }
+    });
     function isWhitespace($receiver) {
       return matches(String.fromCharCode(Kotlin.toBoxedChar($receiver)), '[\\s\\xA0]');
     }
@@ -3156,9 +3156,9 @@
     var jsTypeOf = Kotlin.defineInlineFunction('kotlin.kotlin.js.jsTypeOf_s8jyv4$', function (a) {
       return typeof a;
     });
-    function deleteProperty(obj, property) {
+    var deleteProperty = Kotlin.defineInlineFunction('kotlin.kotlin.js.deleteProperty_dgzutr$', function (obj, property) {
       delete obj[property];
-    }
+    });
     function CoroutineImpl(resultContinuation) {
       this.resultContinuation_0 = resultContinuation;
       this.state_0 = 0;
@@ -3187,12 +3187,12 @@
       var tmp$;
       try {
         var result = this.doResume();
-        if (result !== COROUTINE_SUSPENDED) {
-          (Kotlin.isType(tmp$ = completion, Continuation) ? tmp$ : Kotlin.throwCCE()).resume_11rb$(result);
+        if (result !== _.kotlin.coroutines.experimental.intrinsics.COROUTINE_SUSPENDED) {
+          (Kotlin.isType(tmp$ = completion, _.kotlin.coroutines.experimental.Continuation) ? tmp$ : Kotlin.throwCCE()).resume_11rb$(result);
         }
       }
        catch (t) {
-        if (Kotlin.isType(t, Throwable)) {
+        if (Kotlin.isType(t, Error)) {
           completion.resumeWithException_tcv7n7$(t);
         }
          else
@@ -20544,20 +20544,20 @@
       }
       return dst;
     }
-    function copyArrayType(from, to) {
+    var copyArrayType = Kotlin.defineInlineFunction('kotlin.kotlin.copyArrayType_dgzutr$', function (from, to) {
       if (from.$type$ !== undefined) {
         to.$type$ = from.$type$;
       }
-    }
-    function toSingletonMapOrSelf($receiver) {
+    });
+    var toSingletonMapOrSelf = Kotlin.defineInlineFunction('kotlin.kotlin.toSingletonMapOrSelf_1vp4qn$', function ($receiver) {
       return $receiver;
-    }
-    function toSingletonMap($receiver) {
-      return toMutableMap($receiver);
-    }
-    function copyToArrayOfAny($receiver, isVarargs) {
+    });
+    var toSingletonMap = Kotlin.defineInlineFunction('kotlin.kotlin.toSingletonMap_3imywq$', function ($receiver) {
+      return _.kotlin.collections.toMutableMap_abgq59$($receiver);
+    });
+    var copyToArrayOfAny = Kotlin.defineInlineFunction('kotlin.kotlin.copyToArrayOfAny_e0iprw$', function ($receiver, isVarargs) {
       return isVarargs ? $receiver : $receiver.slice();
-    }
+    });
     function Serializable() {
     }
     Serializable.$metadata$ = {kind: Kotlin.Kind.INTERFACE, simpleName: 'Serializable', interfaces: []};
@@ -20957,18 +20957,18 @@
     var toLowerCase_0 = Kotlin.defineInlineFunction('kotlin.kotlin.text.toLowerCase_pdl1vz$', function ($receiver) {
       return $receiver.toLowerCase();
     });
-    function nativeIndexOf($receiver, str, fromIndex) {
+    var nativeIndexOf = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeIndexOf_qhc31e$', function ($receiver, str, fromIndex) {
       return $receiver.indexOf(str, fromIndex);
-    }
-    function nativeLastIndexOf($receiver, str, fromIndex) {
+    });
+    var nativeLastIndexOf = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeLastIndexOf_qhc31e$', function ($receiver, str, fromIndex) {
       return $receiver.lastIndexOf(str, fromIndex);
-    }
-    function nativeStartsWith($receiver, s, position) {
+    });
+    var nativeStartsWith = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeStartsWith_qhc31e$', function ($receiver, s, position) {
       return $receiver.startsWith(s, position);
-    }
-    function nativeEndsWith($receiver, s) {
+    });
+    var nativeEndsWith = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeEndsWith_7azisw$', function ($receiver, s) {
       return $receiver.endsWith(s);
-    }
+    });
     var substring = Kotlin.defineInlineFunction('kotlin.kotlin.text.substring_6ic1pp$', function ($receiver, startIndex) {
       return $receiver.substring(startIndex);
     });
@@ -20984,15 +20984,15 @@
     var get_size = Kotlin.defineInlineFunction('kotlin.kotlin.text.get_size_gw00vp$', function ($receiver) {
       return $receiver.length;
     });
-    function nativeReplace($receiver, pattern, replacement) {
+    var nativeReplace = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeReplace_qmc7pb$', function ($receiver, pattern, replacement) {
       return $receiver.replace(pattern, replacement);
-    }
-    function nativeIndexOf_0($receiver, ch, fromIndex) {
+    });
+    var nativeIndexOf_0 = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeIndexOf_p4qy6f$', function ($receiver, ch, fromIndex) {
       return $receiver.indexOf(String.fromCharCode(Kotlin.toBoxedChar(ch)), fromIndex);
-    }
-    function nativeLastIndexOf_0($receiver, ch, fromIndex) {
+    });
+    var nativeLastIndexOf_0 = Kotlin.defineInlineFunction('kotlin.kotlin.text.nativeLastIndexOf_p4qy6f$', function ($receiver, ch, fromIndex) {
       return $receiver.lastIndexOf(String.fromCharCode(Kotlin.toBoxedChar(ch)), fromIndex);
-    }
+    });
     function startsWith($receiver, prefix, ignoreCase) {
       if (ignoreCase === void 0)
         ignoreCase = false;
@@ -25585,7 +25585,7 @@
         throw new NoSuchElementException('Key ' + key + ' is missing in the map.');
       }
        else {
-        getOrElseNullable$result = (tmp$ = value) == null || Kotlin.isType(tmp$, Any) ? tmp$ : Kotlin.throwCCE();
+        getOrElseNullable$result = (tmp$ = value) == null || Kotlin.isType(tmp$, Object) ? tmp$ : Kotlin.throwCCE();
       }
       return getOrElseNullable$result;
     }
@@ -25656,7 +25656,7 @@
         getOrElseNullable$result = this.default_0(key);
       }
        else {
-        getOrElseNullable$result = (tmp$ = value) == null || Kotlin.isType(tmp$, Any) ? tmp$ : Kotlin.throwCCE();
+        getOrElseNullable$result = (tmp$ = value) == null || Kotlin.isType(tmp$, Object) ? tmp$ : Kotlin.throwCCE();
       }
       return getOrElseNullable$result;
     };
@@ -25722,7 +25722,7 @@
         getOrElseNullable$result = this.default_0(key);
       }
        else {
-        getOrElseNullable$result = (tmp$ = value) == null || Kotlin.isType(tmp$, Any) ? tmp$ : Kotlin.throwCCE();
+        getOrElseNullable$result = (tmp$ = value) == null || Kotlin.isType(tmp$, Object) ? tmp$ : Kotlin.throwCCE();
       }
       return getOrElseNullable$result;
     };
@@ -25858,16 +25858,16 @@
       var tmp$;
       return (tmp$ = $receiver.get_11rb$(key)) != null ? tmp$ : defaultValue();
     });
-    function getOrElseNullable($receiver, key, defaultValue) {
+    var getOrElseNullable = Kotlin.defineInlineFunction('kotlin.kotlin.collections.getOrElseNullable_e54js$', function ($receiver, key, defaultValue) {
       var tmp$;
       var value = $receiver.get_11rb$(key);
       if (value == null && !$receiver.containsKey_11rb$(key)) {
         return defaultValue();
       }
        else {
-        return (tmp$ = value) == null || Kotlin.isType(tmp$, Any) ? tmp$ : Kotlin.throwCCE();
+        return (tmp$ = value) == null || Kotlin.isType(tmp$, Object) ? tmp$ : Kotlin.throwCCE();
       }
-    }
+    });
     function getValue_1($receiver, key) {
       return getOrImplicitDefault($receiver, key);
     }
@@ -26070,7 +26070,7 @@
       if (tmp$ === 0)
         return emptyMap();
       else if (tmp$ === 1) {
-        return toMutableMap($receiver);
+        return _.kotlin.collections.toMutableMap_abgq59$($receiver);
       }
        else
         return toMutableMap($receiver);
@@ -27308,8 +27308,35 @@
     ContinuationInterceptor.$metadata$ = {kind: Kotlin.Kind.INTERFACE, simpleName: 'ContinuationInterceptor', interfaces: [CoroutineContext$Element]};
     function CoroutineContext() {
     }
+    function CoroutineContext$plus$lambda(acc, element) {
+      var removed = acc.minusKey_ds72xk$(element.key);
+      if (removed === EmptyCoroutineContext_getInstance())
+        return element;
+      else {
+        var interceptor = removed.get_8oh8b3$(ContinuationInterceptor$Key_getInstance());
+        if (interceptor == null)
+          return new CombinedContext(removed, element);
+        else {
+          var left = removed.minusKey_ds72xk$(ContinuationInterceptor$Key_getInstance());
+          return left === EmptyCoroutineContext_getInstance() ? new CombinedContext(element, interceptor) : new CombinedContext(new CombinedContext(left, element), interceptor);
+        }
+      }
+    }
+    CoroutineContext.prototype.plus_dvqyjb$ = function (context) {
+      return context === EmptyCoroutineContext_getInstance() ? this : context.fold_m9u1mr$(this, CoroutineContext$plus$lambda);
+    };
     function CoroutineContext$Element() {
     }
+    CoroutineContext$Element.prototype.get_8oh8b3$ = function (key) {
+      var tmp$;
+      return this.key === key ? Kotlin.isType(tmp$ = this, CoroutineContext$Element) ? tmp$ : Kotlin.throwCCE() : null;
+    };
+    CoroutineContext$Element.prototype.fold_m9u1mr$ = function (initial, operation) {
+      return operation(initial, this);
+    };
+    CoroutineContext$Element.prototype.minusKey_ds72xk$ = function (key) {
+      return this.key === key ? EmptyCoroutineContext_getInstance() : this;
+    };
     CoroutineContext$Element.$metadata$ = {kind: Kotlin.Kind.INTERFACE, simpleName: 'Element', interfaces: [CoroutineContext]};
     function CoroutineContext$Key() {
     }
@@ -27321,19 +27348,6 @@
     Object.defineProperty(AbstractCoroutineContextElement.prototype, 'key', {get: function () {
       return this.key_d52xrr$_0;
     }});
-    AbstractCoroutineContextElement.prototype.get_8oh8b3$ = function (key) {
-      var tmp$;
-      return this.key === key ? Kotlin.isType(tmp$ = this, CoroutineContext$Element) ? tmp$ : Kotlin.throwCCE() : null;
-    };
-    AbstractCoroutineContextElement.prototype.fold_m9u1mr$ = function (initial, operation) {
-      return operation(initial, this);
-    };
-    AbstractCoroutineContextElement.prototype.plus_dvqyjb$ = function (context) {
-      return plusImpl(this, context);
-    };
-    AbstractCoroutineContextElement.prototype.minusKey_ds72xk$ = function (key) {
-      return this.key === key ? EmptyCoroutineContext_getInstance() : this;
-    };
     AbstractCoroutineContextElement.$metadata$ = {kind: Kotlin.Kind.CLASS, simpleName: 'AbstractCoroutineContextElement', interfaces: [CoroutineContext$Element]};
     function EmptyCoroutineContext() {
       EmptyCoroutineContext_instance = this;
@@ -27387,9 +27401,6 @@
     CombinedContext.prototype.fold_m9u1mr$ = function (initial, operation) {
       return operation(this.left.fold_m9u1mr$(initial, operation), this.element);
     };
-    CombinedContext.prototype.plus_dvqyjb$ = function (context) {
-      return plusImpl(this, context);
-    };
     CombinedContext.prototype.minusKey_ds72xk$ = function (key) {
       var tmp$;
       if (this.element.get_8oh8b3$(key) != null) {
@@ -27438,23 +27449,6 @@
       return '[' + this.fold_m9u1mr$('', CombinedContext$toString$lambda) + ']';
     };
     CombinedContext.$metadata$ = {kind: Kotlin.Kind.CLASS, simpleName: 'CombinedContext', interfaces: [CoroutineContext]};
-    function plusImpl$lambda(acc, element) {
-      var removed = acc.minusKey_ds72xk$(element.key);
-      if (removed === EmptyCoroutineContext_getInstance())
-        return element;
-      else {
-        var interceptor = removed.get_8oh8b3$(ContinuationInterceptor$Key_getInstance());
-        if (interceptor == null)
-          return new CombinedContext(removed, element);
-        else {
-          var left = removed.minusKey_ds72xk$(ContinuationInterceptor$Key_getInstance());
-          return left === EmptyCoroutineContext_getInstance() ? new CombinedContext(element, interceptor) : new CombinedContext(new CombinedContext(left, element), interceptor);
-        }
-      }
-    }
-    function plusImpl($receiver, context) {
-      return context === EmptyCoroutineContext_getInstance() ? $receiver : context.fold_m9u1mr$($receiver, plusImpl$lambda);
-    }
     function Continuation() {
     }
     Continuation.$metadata$ = {kind: Kotlin.Kind.INTERFACE, simpleName: 'Continuation', interfaces: []};
@@ -27483,22 +27477,22 @@
     var suspendCoroutine = Kotlin.defineInlineFunction('kotlin.kotlin.coroutines.experimental.suspendCoroutine_z3e1t3$', function (block, continuation) {
       return _.kotlin.coroutines.experimental.suspendCoroutine$f(block)(continuation.facade);
     });
-    function processBareContinuationResume(completion, block) {
+    var processBareContinuationResume = Kotlin.defineInlineFunction('kotlin.kotlin.coroutines.experimental.processBareContinuationResume_xjdw2a$', function (completion, block) {
       var tmp$;
       try {
         var result = block();
-        if (result !== COROUTINE_SUSPENDED) {
-          (Kotlin.isType(tmp$ = completion, Continuation) ? tmp$ : Kotlin.throwCCE()).resume_11rb$(result);
+        if (result !== _.kotlin.coroutines.experimental.intrinsics.COROUTINE_SUSPENDED) {
+          (Kotlin.isType(tmp$ = completion, _.kotlin.coroutines.experimental.Continuation) ? tmp$ : Kotlin.throwCCE()).resume_11rb$(result);
         }
       }
        catch (t) {
-        if (Kotlin.isType(t, Throwable)) {
+        if (Kotlin.isType(t, Error)) {
           completion.resumeWithException_tcv7n7$(t);
         }
          else
           throw t;
       }
-    }
+    });
     function buildSequence$lambda(closure$builderAction) {
       return function () {
         return buildIterator(closure$builderAction);
@@ -31706,6 +31700,7 @@
     package$kotlin.fillFromCollection_40q1uj$ = fillFromCollection;
     package$kotlin.copyArrayType_dgzutr$ = copyArrayType;
     package$kotlin.toSingletonMapOrSelf_1vp4qn$ = toSingletonMapOrSelf;
+    package$collections.toMutableMap_abgq59$ = toMutableMap;
     package$kotlin.toSingletonMap_3imywq$ = toSingletonMap;
     package$kotlin.copyToArrayOfAny_e0iprw$ = copyToArrayOfAny;
     package$kotlin.Serializable = Serializable;
@@ -32143,7 +32138,6 @@
     package$collections.toMap_ah2ab9$ = toMap_3;
     package$collections.toMap_vxlxo8$ = toMap_4;
     package$collections.toMap_abgq59$ = toMap_5;
-    package$collections.toMutableMap_abgq59$ = toMutableMap;
     package$collections.toMap_d6li1s$ = toMap_6;
     package$collections.plus_e8164j$ = plus_42;
     package$collections.plus_cm8adq$ = plus_43;
@@ -32224,6 +32218,7 @@
     package$experimental.CoroutineContext = CoroutineContext;
     package$experimental.AbstractCoroutineContextElement = AbstractCoroutineContextElement;
     Object.defineProperty(package$experimental, 'EmptyCoroutineContext', {get: EmptyCoroutineContext_getInstance});
+    package$experimental.CombinedContext = CombinedContext;
     package$experimental.Continuation = Continuation;
     package$experimental.RestrictsSuspension = RestrictsSuspension;
     package$experimental.startCoroutine_uao1qo$ = startCoroutine;
@@ -32231,12 +32226,12 @@
     package$experimental.createCoroutine_uao1qo$ = createCoroutine;
     package$experimental.createCoroutine_xtwlez$ = createCoroutine_0;
     package$experimental.suspendCoroutine$f = suspendCoroutine$lambda;
-    package$experimental.buildSequence_of7nec$ = buildSequence;
-    package$experimental.buildIterator_of7nec$ = buildIterator;
-    package$experimental.SequenceBuilder = SequenceBuilder;
     Object.defineProperty(package$intrinsics, 'COROUTINE_SUSPENDED', {get: function () {
       return COROUTINE_SUSPENDED;
     }});
+    package$experimental.buildSequence_of7nec$ = buildSequence;
+    package$experimental.buildIterator_of7nec$ = buildIterator;
+    package$experimental.SequenceBuilder = SequenceBuilder;
     package$internal_0.NoInfer = NoInfer;
     package$internal_0.Exact = Exact;
     package$internal_0.LowPriorityInOverloadResolution = LowPriorityInOverloadResolution;
@@ -32384,8 +32379,18 @@
     MapWithDefaultImpl.prototype.getOrDefault_xwzc9p$ = Map.prototype.getOrDefault_xwzc9p$;
     MutableMapWithDefaultImpl.prototype.remove_xwzc9p$ = MutableMap.prototype.remove_xwzc9p$;
     EmptyMap.prototype.getOrDefault_xwzc9p$ = Map.prototype.getOrDefault_xwzc9p$;
-    ComparableRange.prototype.contains_mef7kx$ = ClosedRange.prototype.contains_mef7kx$;
+    ContinuationInterceptor.prototype.get_8oh8b3$ = CoroutineContext$Element.prototype.get_8oh8b3$;
+    ContinuationInterceptor.prototype.fold_m9u1mr$ = CoroutineContext$Element.prototype.fold_m9u1mr$;
+    ContinuationInterceptor.prototype.minusKey_ds72xk$ = CoroutineContext$Element.prototype.minusKey_ds72xk$;
+    ContinuationInterceptor.prototype.plus_dvqyjb$ = CoroutineContext.prototype.plus_dvqyjb$;
+    CoroutineContext$Element.prototype.plus_dvqyjb$ = CoroutineContext.prototype.plus_dvqyjb$;
+    AbstractCoroutineContextElement.prototype.get_8oh8b3$ = CoroutineContext$Element.prototype.get_8oh8b3$;
+    AbstractCoroutineContextElement.prototype.fold_m9u1mr$ = CoroutineContext$Element.prototype.fold_m9u1mr$;
+    AbstractCoroutineContextElement.prototype.minusKey_ds72xk$ = CoroutineContext$Element.prototype.minusKey_ds72xk$;
+    AbstractCoroutineContextElement.prototype.plus_dvqyjb$ = CoroutineContext.prototype.plus_dvqyjb$;
+    CombinedContext.prototype.plus_dvqyjb$ = CoroutineContext.prototype.plus_dvqyjb$;
     ComparableRange.prototype.isEmpty = ClosedRange.prototype.isEmpty;
+    ComparableRange.prototype.contains_mef7kx$ = ClosedRange.prototype.contains_mef7kx$;
     var isNode = typeof process !== 'undefined' && process.versions && !!process.versions.node;
     output = isNode ? new NodeJsOutput(process.stdout) : new BufferedOutputToConsoleLog();
     UNDECIDED = new Any();

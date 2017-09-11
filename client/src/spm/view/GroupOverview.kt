@@ -23,10 +23,10 @@ class GroupOverview(val container: Komponent) : Komponent() {
                     classes += "glyphicon"
 
                     if (group.children.isNotEmpty()) {
-                        if (group.opened) {
-                            classes += "glyphicon-folder-open"
+                        classes += if (group.opened) {
+                            "glyphicon-folder-open"
                         } else {
-                            classes += "glyphicon-folder-close"
+                            "glyphicon-folder-close"
                         }
                     } else {
                         classes += "glyphicon-folder-close"
