@@ -78,6 +78,12 @@ var komp = function (_, Kotlin, $module$kotlinx_html_js) {
     component.element = result;
     Komponent$Companion_getInstance().define_63y3pe$(result, component);
   }
+  function include_2($receiver, component) {
+    var tmp$;
+    var result = component.render_q0cphf$(Kotlin.isType(tmp$ = $receiver.consumer, TagConsumer) ? tmp$ : Kotlin.throwCCE());
+    component.element = result;
+    Komponent$Companion_getInstance().define_63y3pe$(result, component);
+  }
   function Komponent() {
     Komponent$Companion_getInstance();
     this.element = null;
@@ -188,6 +194,7 @@ var komp = function (_, Kotlin, $module$kotlinx_html_js) {
   package$komp.include_uhm0kd$ = include;
   package$komp.include_yzvepg$ = include_0;
   package$komp.include_ly6v3d$ = include_1;
+  package$komp.include_xtia4d$ = include_2;
   Object.defineProperty(Komponent, 'Companion', {
     get: Komponent$Companion_getInstance
   });

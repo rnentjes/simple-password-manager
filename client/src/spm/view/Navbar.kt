@@ -15,25 +15,25 @@ import spm.state.UserState
 class Navbar(val main: Komponent, val container: Komponent): Komponent() {
     var search = UserState.currentSearch
 
-    //language=HTML
-    var test = "<div classes=\"pipo\">\n  <span style=\"color: black;\">Hello world!</span>\n</div>\n"
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
-            unsafe {
-                //language=html
-                +"""
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand" href="#">Simple password manager</a>
-                    </div>
-                """
+            div(classes = "navbar-header") {
+                button(classes = "navbar-toggle collapsed") {
+                    attributes.put("data-toggle", "collapse")
+                    attributes.put("data-target", "#bs-example-navbar-collapse-1")
+                    attributes.put("aria-expanded", "false")
+
+                    span(classes = "sr-only") { + "Toggle navigation" }
+                    span(classes = "icon-bar")
+                    span(classes = "icon-bar")
+                    span(classes = "icon-bar")
+                }
+                a(classes = "navbar-brand") {
+                    href = "#"
+                    + "Simple password manager"
+                }
             }
+
             div(classes = "collapse navbar-collapse") {
                 id = "bs-example-navbar-collapse-1"
                 ul(classes = "nav navbar-nav navbar-right") {

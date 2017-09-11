@@ -4,12 +4,14 @@ import kotlinx.html.*
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import nl.astraeus.komp.Komponent
+import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
+import spm.view.button.PasswordButton
 import stats.view.Modal
 import kotlin.browser.document
 import kotlin.browser.window
@@ -78,25 +80,46 @@ class SearchResult(val container: Komponent) : Komponent() {
                             td { +password.website }
                             td { +password.username }
                             td(classes = "col-md-4") {
-                                passwordButton(consumer, "copy", text = "U&nbsp;", btnClass = "btn-xs btn-default") {
+                                include(PasswordButton(
+                                  "copy",
+                                  text = "U ",
+                                  btnClass = "btn-xs btn-default"
+                                ) {
                                     copyToClipboard(password.username)
 
                                     Notify.show("Copied username to clipboard.", "success")
-                                }
-                                passwordButton(consumer, "copy", text = "P&nbsp;", btnClass = "btn-xs btn-warning", buttonStyle = "margin-left: 5px;") {
+                                })
+                                include(PasswordButton(
+                                  "copy",
+                                  text = "P ",
+                                  btnClass = "btn-xs btn-warning",
+                                  buttonStyle = "margin-left: 5px;"
+                                ) {
                                     copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
 
                                     Notify.show("Copied password to clipboard.", "success")
-                                }
-                                passwordButton(consumer, "copy", text = "U&nbsp;", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
+                                })
+                                include(PasswordButton(
+                                  "copy",
+                                  text = "U ",
+                                  btnClass = "btn-xs btn-default",
+                                  buttonStyle = "margin-left: 5px;") {
                                     copyToClipboard(password.website)
 
                                     Notify.show("Copied password to clipboard.", "success")
-                                }
-                                passwordButton(consumer, "new-window", text = "U&nbsp;", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
+                                })
+                                include(PasswordButton(
+                                  "new-window",
+                                  text = "U ",
+                                  btnClass = "btn-xs btn-default",
+                                  buttonStyle = "margin-left: 5px;") {
                                     window.open(password.website, "_blank")
-                                }
-                                passwordButton(consumer, "folder-open", btnClass = "btn-xs btn-success", buttonStyle = "margin-left: 5px;") {
+                                })
+                                include(PasswordButton(
+                                  "folder-open",
+                                  text = "U ",
+                                  btnClass = "btn-xs btn-success",
+                                  buttonStyle = "margin-left: 5px;") {
                                     val editor = PasswordEditor(password.group, password)
                                     Modal.openModal("Edit password", editor, /*modalSize = "modal-lg", */ok = {
                                         if (editor.validate()) {
@@ -123,8 +146,11 @@ class SearchResult(val container: Komponent) : Komponent() {
                                             false
                                         }
                                     })
-                                }
-                                passwordButton(consumer, "remove", btnClass = "btn-xs btn-danger", buttonStyle = "margin-left: 5px;") {
+                                })
+                                include(PasswordButton(
+                                  "remove",
+                                  btnClass = "btn-xs btn-danger",
+                                  buttonStyle = "margin-left: 5px;") {
                                     Modal.openModal("Remove password",
                                       RemovePasswordConfirm(password),
                                       okButtonClass = "btn-danger",
@@ -135,35 +161,12 @@ class SearchResult(val container: Komponent) : Komponent() {
 
                                           true
                                       })
-                                }
+                                })
                             }
                         }
                     }
                 }
             }
-        }
-    }
-
-    private fun passwordButton(
-      consumer: TagConsumer<HTMLElement>,
-      icon: String,
-      text: String = "",
-      buttonStyle: String = "",
-      btnClass: String = "btn-default",
-      click: (Event) -> Unit = {}) {
-        consumer.button(classes = "btn $btnClass") {
-            type = ButtonType.button
-            if (buttonStyle.isNotBlank()) {
-                style = buttonStyle
-            }
-            attributes["aria-label"] = text
-
-            unsafe { +text }
-            span(classes = "glyphicon glyphicon-$icon") {
-                attributes["aria-hidden"] = "true"
-            }
-
-            onClickFunction = click
         }
     }
 
