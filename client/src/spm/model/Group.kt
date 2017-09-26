@@ -26,7 +26,7 @@ data class Group(
         //console.log("Read group $name", this)
         val numberOfPasswords = tk.next().toInt()
         //println("\t Number of passwords :$numberOfPasswords")
-        for (index in 0..numberOfPasswords - 1) {
+        for (index in 0 until numberOfPasswords) {
             val password = Password(tk, this)
 
             passwords.add(password)

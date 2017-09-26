@@ -1,8 +1,3 @@
-apply plugin: 'kotlin'
-apply plugin: 'application'
-
-mainClassName = 'nl.astraeus.spm.SimplePasswordManagerKt'
-
 dependencies {
   // Libs go there.
   compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"

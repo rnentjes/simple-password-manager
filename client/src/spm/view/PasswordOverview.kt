@@ -14,6 +14,7 @@ import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
 import stats.view.Modal
+import stats.view.Modal.id
 import kotlin.browser.document
 import kotlin.browser.window
 
@@ -316,7 +317,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
         if (ta is HTMLTextAreaElement) {
             val body = document.body ?: throw IllegalStateException("The body was not found!")
 
-            body.append(ta)
+            body.appendChild(ta)
             ta.select()
             document.execCommand("copy")
             body.removeChild(ta)

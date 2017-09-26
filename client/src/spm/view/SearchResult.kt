@@ -2,12 +2,10 @@ package spm.view
 
 import kotlinx.html.*
 import kotlinx.html.js.div
-import kotlinx.html.js.onClickFunction
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
-import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
@@ -177,7 +175,7 @@ class SearchResult(val container: Komponent) : Komponent() {
         if (ta is HTMLTextAreaElement) {
             val body = document.body ?: throw IllegalStateException("The body was not found!")
 
-            body.append(ta)
+            body.appendChild(ta)
             ta.select()
             document.execCommand("copy")
             body.removeChild(ta)

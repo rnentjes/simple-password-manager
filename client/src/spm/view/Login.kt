@@ -12,6 +12,7 @@ import org.w3c.dom.events.KeyboardEvent
 import spm.state.UserState
 import spm.ws.WebSocketConnection
 import stats.view.Modal
+import stats.view.Modal.id
 
 /**
  * Created by rnentjes on 3-4-17.
