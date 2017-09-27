@@ -215,22 +215,22 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                                 td { +password.website }
                                 td { +password.username }
                                 td(classes = "col-md-4") {
-                                    include(PasswordButton("copy", text = "U&nbsp;", btnClass = "btn-xs btn-default") {
+                                    include(PasswordButton("copy", text = "U ", btnClass = "btn-xs btn-default") {
                                         copyToClipboard(password.username)
 
                                         Notify.show("Copied username to clipboard.", "success")
                                     })
-                                    include(PasswordButton( "copy", text = "P&nbsp;", btnClass = "btn-xs btn-warning", buttonStyle = "margin-left: 5px;") {
+                                    include(PasswordButton( "copy", text = "P ", btnClass = "btn-xs btn-warning", buttonStyle = "margin-left: 5px;") {
                                         copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
 
                                         Notify.show("Copied password to clipboard.", "success")
                                     })
-                                    include(PasswordButton("copy", text = "U&nbsp;", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
+                                    include(PasswordButton("copy", text = "U ", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
                                         copyToClipboard(password.website)
 
                                         Notify.show("Copied password to clipboard.", "success")
                                     })
-                                    include(PasswordButton("new-window", text = "U&nbsp;", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
+                                    include(PasswordButton("new-window", text = "U ", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
                                         window.open(password.website, "_blank")
                                     })
                                     include(PasswordButton("folder-open", btnClass = "btn-xs btn-success", buttonStyle = "margin-left: 5px;") {
