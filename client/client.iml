@@ -10,7 +10,6 @@
           <option name="outputFile" value="$MODULE_DIR$/web/js/generated/spm.js" />
           <option name="noStdlib" value="true" />
           <option name="sourceMap" value="true" />
-          <option name="sourceMapPrefix" value="" />
           <option name="sourceMapEmbedSources" value="always" />
           <option name="metaInfo" value="true" />
           <option name="target" value="v5" />
@@ -23,6 +22,7 @@
           <option name="pluginClasspaths">
             <array />
           </option>
+          <option name="verbose" value="true" />
           <option name="suppressWarnings" value="true" />
         </compilerArguments>
       </configuration>

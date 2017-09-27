@@ -129,7 +129,9 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                             span(classes = "glyphicon glyphicon-eye-open") {
                                 attributes["aria-hidden"] = "true"
                             }
-                            onClickFunction = {
+                            onClickFunction = { e ->
+                                e.preventDefault()
+
                                 showPassword = !showPassword
 
                                 refresh()
@@ -138,7 +140,9 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                             span(classes = "glyphicon glyphicon-eye-close") {
                                 attributes["aria-hidden"] = "true"
                             }
-                            onClickFunction = {
+                            onClickFunction = { e ->
+                                e.preventDefault()
+
                                 showPassword = !showPassword
 
                                 refresh()
@@ -183,8 +187,11 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                         span(classes = "glyphicon glyphicon-cog") {
                             attributes["aria-hidden"] = "true"
                         }
-                        onClickFunction = {
+                        onClickFunction = { e ->
+                            e.preventDefault()
+
                             val generator = PasswordGenerator(password)
+
                             Modal.openModal("Generate password", generator, ok = {
                                 password.password1 = generator.generatedPassword
                                 password.password2 = generator.generatedPassword

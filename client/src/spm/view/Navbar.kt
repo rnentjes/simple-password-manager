@@ -63,10 +63,12 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                         }
                     }
                     button(classes = "btn btn-default") {
-                        type = ButtonType.submit
+                        type = ButtonType.button
                         + "Search"
 
-                        onClickFunction = {
+                        onClickFunction = { e ->
+                            e.preventDefault()
+
                             UserState.currentSearch = search
                             UserState.currentGroup = null
 
