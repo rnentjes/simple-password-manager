@@ -9,6 +9,22 @@ import spm.ws.Tokenizer
  * Time: 11:28
  */
 
+data class HistoryEntry(
+  var encryptedPassword: String,
+  var from: String,
+  var until: String
+) {
+
+    constructor(tk: Tokenizer): this(tk.next(), tk.next(), tk.next())
+
+    fun tokenized(): String = Tokenizer.tokenize(
+      encryptedPassword,
+      from,
+      until
+    )
+}
+
+
 data class Password(
   var id: Long,
   var user: String,
@@ -19,22 +35,38 @@ data class Password(
   var encryptedPassword: String,
   var password1: String = "",
   var password2: String = "",
-  var description: String
+  var description: String,
+  var history: MutableList<HistoryEntry> = ArrayList()
 ) {
     constructor(group: Group) : this(nextId(), "", group, "", "", "", "", "", "", "")
 
-    constructor(tk: Tokenizer, group: Group) : this(
-      tk.next().toLong(),
-      tk.next(),
-      group,
-      tk.next(),
-      tk.next(),
-      tk.next(),
-      tk.next(),
-      "",
-      "",
-      tk.next()) {
-        if (id > lastId) { lastId = id }
+    constructor(tk: Tokenizer, group: Group): this(-1, "", group, "", "", "", "", "", "", "") {
+        val first = tk.next()
+
+        if (first == "V2") {
+            id = tk.next().toLong()
+            user = tk.next()
+            title = tk.next()
+            website = tk.next()
+            username = tk.next()
+            encryptedPassword = tk.next()
+            description = tk.next()
+
+            val nrHist = tk.next().toInt()
+
+            for (index in 0 until nrHist) {
+                history.add(HistoryEntry(Tokenizer(tk.next())))
+            }
+        } else {
+            id = first.toLong()
+            user = tk.next()
+            title = tk.next()
+            website = tk.next()
+            username = tk.next()
+            encryptedPassword = tk.next()
+            description = tk.next()
+        }
+
     }
 
     constructor(other: Password) : this(
@@ -49,7 +81,30 @@ data class Password(
       other.password2,
       other.description)
 
-    fun tokenized(): String = Tokenizer.tokenize("$id", user, title, website, username, encryptedPassword, description)
+    fun tokenized(): String {
+        val tk = Tokenizer()
+        val tkHist = StringBuilder()
+
+        for(index in 0 until this.history.size) {
+            if (index > 0) {
+                tkHist.append(tk.seperator)
+            }
+            tkHist.append(Tokenizer.tokenize(this.history[index].tokenized()))
+        }
+
+        return Tokenizer.tokenize(
+          "V2",
+          "$id",
+          user,
+          title,
+          website,
+          username,
+          encryptedPassword,
+          description,
+          "${history.size}",
+          tkHist.toString()
+        )
+    }
 
     fun decrypt() {
         password1 = UserState.decryptPassword(encryptedPassword)
