@@ -115,7 +115,6 @@ class SearchResult(val container: Komponent) : Komponent() {
                                 })
                                 include(PasswordButton(
                                   "folder-open",
-                                  text = "U ",
                                   btnClass = "btn-xs btn-success",
                                   buttonStyle = "margin-left: 5px;") {
                                     val editor = PasswordEditor(password.group, password)

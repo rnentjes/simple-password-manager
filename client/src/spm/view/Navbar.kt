@@ -1,12 +1,12 @@
 package spm.view
 
 import kotlinx.html.*
-import kotlinx.html.js.nav
-import kotlinx.html.js.onClickFunction
-import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.js.*
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
+import org.w3c.dom.events.Event
+import org.w3c.dom.events.KeyboardEvent
 import spm.state.UserState
 
 /**
@@ -51,6 +51,17 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                     }
                 }
                 form(classes = "navbar-form navbar-right") {
+                    fun searchPasswords(e: Event) {
+                        e.preventDefault()
+
+                        UserState.currentSearch = search
+                        UserState.currentGroup = null
+
+                        container.refresh()
+                    }
+
+                    onSubmitFunction = ::searchPasswords
+
                     div(classes = "form-group") {
                         input(classes = "form-control") {
                             type = InputType.text
@@ -63,19 +74,16 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                         }
                     }
                     button(classes = "btn btn-default") {
-                        type = ButtonType.submit
+                        type = ButtonType.button
                         + "Search"
 
-                        onClickFunction = {
-                            UserState.currentSearch = search
-                            UserState.currentGroup = null
 
-                            container.refresh()
-                        }
+                        onClickFunction = ::searchPasswords
                     }
                 }
             }
         }
     }
+
 
 }

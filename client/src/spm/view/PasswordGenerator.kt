@@ -110,7 +110,9 @@ class PasswordGenerator(val password: Password) : Komponent() {
                         span(classes = "glyphicon glyphicon-refresh") {
                             attributes["aria-hidden"] = "true"
                         }
-                        onClickFunction = {
+                        onClickFunction = { e ->
+                            e.preventDefault()
+
                             generatedPassword = generatePassword(passwordLength, includeNumbers, includeSpecial)
 
                             refresh()
