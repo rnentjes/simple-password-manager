@@ -1,40 +1,7 @@
-sourceSets {
-    main.kotlin.srcDirs += 'src'
-    main.java.srcDirs += 'src'
-}
-
-buildscript {
-    repositories {
-        maven {
-            url "http://nexus.astraeus.nl/nexus/content/groups/public"
-        }
-    }
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
-
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    compile "nl.astraeus:fup-lib:0.0.2-SNAPSHOT"
     compile "nl.astraeus:komp:0.0.6-SNAPSHOT"
-}
-
-/*
-libSassParameters {
-    //Type: String Mandatory
-    //File path to compile (normally import other scss files)
-    inputFilePath = "client/web/scss/spm.scss"
-
-    //Type: String Mandatory
-    //Compiled file path
-    outputFilePath = "client/web/css/spm.css"
-}
-*/
-
-repositories {
-    maven {
-        url "http://nexus.astraeus.nl/nexus/content/groups/public"
-    }
 }
 
 compileKotlin2Js {
@@ -42,8 +9,9 @@ compileKotlin2Js {
 
     kotlinOptions.sourceMap = true
     kotlinOptions.sourceMapEmbedSources = "always"
-    kotlinOptions.outputFile = "${projectDir}/web/js/generated/spm.js"
+    kotlinOptions.outputFile = "${projectDir}/generated/friend-password.jsx"
     kotlinOptions.suppressWarnings = true
     kotlinOptions.verbose = true
     //kotlinOptions.moduleKind = "amd"
 }
+

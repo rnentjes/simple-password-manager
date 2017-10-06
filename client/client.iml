@@ -7,10 +7,9 @@
           <option name="additionalArguments" value="-verbose" />
         </compilerSettings>
         <compilerArguments>
-          <option name="outputFile" value="$MODULE_DIR$/web/js/generated/spm.js" />
+          <option name="outputFile" value="$MODULE_DIR$/generated/friend-password.jsx" />
           <option name="noStdlib" value="true" />
           <option name="sourceMap" value="true" />
-          <option name="sourceMapPrefix" value="" />
           <option name="sourceMapEmbedSources" value="always" />
           <option name="metaInfo" value="true" />
           <option name="target" value="v5" />
@@ -33,7 +32,6 @@
     <output-test url="file://$MODULE_DIR$/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
@@ -46,19 +44,22 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: nl.astraeus:fup-lib:0.0.2-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: nl.astraeus:komp:0.0.6-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-js:0.6.4" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.50" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.51" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-common:0.6.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.1.4" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:fup-lib:0.0.2-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:komp:0.0.6-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-js:0.6.4" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.50" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.51" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-common:0.6.4" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.1.4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: nl.astraeus:fup-lib:0.0.2-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: nl.astraeus:komp:0.0.6-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-js:0.6.4" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.50" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-js:1.1.51" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-common:0.6.4" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.1.4" level="project" />
   </component>
