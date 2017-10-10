@@ -24,7 +24,6 @@ data class HistoryEntry(
     )
 }
 
-
 data class Password(
   var id: Long,
   var user: String,
@@ -40,6 +39,19 @@ data class Password(
 ) {
     constructor(group: Group) : this(nextId(), "", group, "", "", "", "", "", "", "")
 
+    constructor(other: Password) : this(
+      other.id,
+      other.user,
+      other.group,
+      other.title,
+      other.website,
+      other.username,
+      other.encryptedPassword,
+      other.password1,
+      other.password2,
+      other.description)
+
+
     constructor(tk: Tokenizer, group: Group): this(-1, "", group, "", "", "", "", "", "", "") {
         val first = tk.next()
 
@@ -52,10 +64,10 @@ data class Password(
             encryptedPassword = tk.next()
             description = tk.next()
 
-            val nrHist = tk.next().toInt()
+            val historyData = Tokenizer(tk.next())
 
-            for (index in 0 until nrHist) {
-                history.add(HistoryEntry(Tokenizer(tk.next())))
+            while(!historyData.done()) {
+                history.add(HistoryEntry(Tokenizer(historyData.next())))
             }
         } else {
             id = first.toLong()
@@ -68,18 +80,6 @@ data class Password(
         }
 
     }
-
-    constructor(other: Password) : this(
-      other.id,
-      other.user,
-      other.group,
-      other.title,
-      other.website,
-      other.username,
-      other.encryptedPassword,
-      other.password1,
-      other.password2,
-      other.description)
 
     fun tokenized(): String {
         val tk = Tokenizer()
@@ -101,7 +101,6 @@ data class Password(
           username,
           encryptedPassword,
           description,
-          "${history.size}",
           tkHist.toString()
         )
     }

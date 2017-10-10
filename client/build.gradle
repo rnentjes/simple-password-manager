@@ -1,6 +1,6 @@
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    compile "nl.astraeus:fup-lib:0.0.2-SNAPSHOT"
+    //compile "nl.astraeus:fup-lib:0.0.2-SNAPSHOT"
     compile "nl.astraeus:komp:0.0.6-SNAPSHOT"
 }
 
@@ -17,7 +17,7 @@ compileKotlin2Js {
 
     kotlinOptions.sourceMap = true
     kotlinOptions.sourceMapEmbedSources = "always"
-    kotlinOptions.outputFile = "${projectDir}/generated/friend-password.jsx"
+    kotlinOptions.outputFile = "${projectDir}/generated/spm.js"
     kotlinOptions.suppressWarnings = true
     kotlinOptions.verbose = true
     //kotlinOptions.moduleKind = "amd"

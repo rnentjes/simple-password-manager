@@ -26,7 +26,7 @@ object WebSocketConnection {
     fun open() {
         close()
 
-        if (window.location.hostname.contains("localhost")) {
+        if (window.location.hostname.contains("localhost") || window.location.hostname.contains("192.168")) {
             websocket = WebSocket("ws://${window.location.hostname}:${window.location.port}/ws")
         } else {
             websocket = WebSocket("wss://${window.location.hostname}/ws")
