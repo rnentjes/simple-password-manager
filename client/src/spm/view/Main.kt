@@ -15,6 +15,7 @@ import spm.ws.Tokenizer
  */
 
 class Main : Komponent() {
+
     init {
         CommandDispatcher.setLoginListener(this::login)
     }
@@ -23,6 +24,10 @@ class Main : Komponent() {
         UserState.encryptedEncryptionKey = tk.next()
         UserState.loggedIn = true
         UserState.loadData(tk.next())
+
+        val blocked = tk.next() == "true"
+
+        console.log("Blocked:", blocked)
 
         refresh()
     }

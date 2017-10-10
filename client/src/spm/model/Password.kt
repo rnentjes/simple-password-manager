@@ -51,7 +51,6 @@ data class Password(
       other.password2,
       other.description)
 
-
     constructor(tk: Tokenizer, group: Group): this(-1, "", group, "", "", "", "", "", "", "") {
         val first = tk.next()
 

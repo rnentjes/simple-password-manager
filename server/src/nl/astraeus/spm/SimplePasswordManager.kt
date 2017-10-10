@@ -3,6 +3,7 @@ package nl.astraeus.spm
 import nl.astraeus.database.SimpleDatabase
 import nl.astraeus.database.jdbc.ConnectionPool
 import nl.astraeus.database.jdbc.ConnectionProvider
+import nl.astraeus.spm.model.LockDao
 import nl.astraeus.spm.sql.DatabaseMigration
 import nl.astraeus.spm.web.SimpleWebSocketServer
 import org.slf4j.LoggerFactory
@@ -88,6 +89,8 @@ fun main(args: Array<String>) {
 
     initDbConnection()
     DatabaseMigration.check()
+
+    LockDao.emptyRows()
 
     server.start(Settings.connectionTimeout, false)
 

@@ -2,6 +2,8 @@ package nl.astraeus.spm.ws
 
 import nl.astraeus.database.transaction
 import nl.astraeus.spm.crypt.PasswordHash
+import nl.astraeus.spm.model.Lock
+import nl.astraeus.spm.model.LockDao
 import nl.astraeus.spm.model.User
 import nl.astraeus.spm.model.UserDao
 import nl.astraeus.spm.util.Tokenizer
@@ -20,11 +22,29 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
     val found = UserDao.findByName(loginName)
 
     if (found != null && PasswordHash.validatePassword(passwordHash, found.password)) {
+        val locks = LockDao.findByUser(found.name)
+        val lock = LockDao.findByUserAndId(found.name, ws.id)
+
+        if (locks.isNotEmpty()) {
+            ws.blocked = true
+            LockDao.insert(Lock(found.name, ws.id, true))
+        } else if (lock != null && lock.wsId != ws.id) {
+            ws.blocked = true
+            LockDao.insert(Lock(found.name, ws.id, true))
+        } else {
+            ws.blocked = false
+            LockDao.insert(Lock(found.name, ws.id, false))
+        }
+
         ws.user = found
-        ws.send("LOGIN", found.encryptedKey, found.getData())
+        ws.send("LOGIN", found.encryptedKey, found.getData(), ws.blocked.toString())
     } else {
         ws.sendAlert("Error", "Unable to authenticate user!")
     }
+}
+
+fun logout(ws: SimpleWebSocket, tk: Tokenizer) {
+    ws.logout()
 }
 
 fun register(ws: SimpleWebSocket, tk: Tokenizer) {
@@ -47,7 +67,6 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
         ws.send("LOGIN", encryptedKey, user.getData())
     }
 }
-
 
 fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
     val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
@@ -72,6 +91,7 @@ object CommandDispatcher {
         commands.put("LOGIN", ::login)
         commands.put("REGISTER", ::register)
         commands.put("SAVEDATA", ::saveData)
+        commands.put("LOGOUT", ::logout)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
@@ -91,7 +111,7 @@ object CommandDispatcher {
                 transaction {
                     command.invoke(ws, tk)
                 }
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 logger.warn(e.message, e)
 
                 ws.sendAlert("Error", "${e.message}")
