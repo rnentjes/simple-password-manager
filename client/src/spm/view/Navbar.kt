@@ -1,12 +1,25 @@
 package spm.view
 
-import kotlinx.html.*
-import kotlinx.html.js.*
+import kotlinx.html.ButtonType
+import kotlinx.html.InputType
+import kotlinx.html.TagConsumer
+import kotlinx.html.a
+import kotlinx.html.button
+import kotlinx.html.div
+import kotlinx.html.form
+import kotlinx.html.id
+import kotlinx.html.input
+import kotlinx.html.js.nav
+import kotlinx.html.js.onClickFunction
+import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.js.onSubmitFunction
+import kotlinx.html.li
+import kotlinx.html.span
+import kotlinx.html.ul
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
-import org.w3c.dom.events.KeyboardEvent
 import spm.state.UserState
 
 /**
@@ -14,6 +27,21 @@ import spm.state.UserState
  */
 class Navbar(val main: Komponent, val container: Komponent): Komponent() {
     var search = UserState.currentSearch
+
+    fun searchPasswords(e: Event) {
+        e.preventDefault()
+
+        UserState.currentSearch = search
+        UserState.currentGroup = null
+
+        container.refresh()
+    }
+
+    fun logout(e: Event) {
+        UserState.clear()
+
+        main.refresh()
+    }
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
@@ -42,25 +70,14 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                             href = "#"
                             + "Logout"
 
-                            onClickFunction = {
-                                UserState.clear()
-
-                                main.refresh()
-                            }
+                            onClickFunction = this@Navbar::logout
                         }
                     }
                 }
                 form(classes = "navbar-form navbar-right") {
-                    fun searchPasswords(e: Event) {
-                        e.preventDefault()
 
-                        UserState.currentSearch = search
-                        UserState.currentGroup = null
 
-                        container.refresh()
-                    }
-
-                    onSubmitFunction = ::searchPasswords
+                    onSubmitFunction = this@Navbar::searchPasswords
 
                     div(classes = "form-group") {
                         input(classes = "form-control") {
@@ -78,7 +95,7 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                         + "Search"
 
 
-                        onClickFunction = ::searchPasswords
+                        onClickFunction = this@Navbar::searchPasswords
                     }
                 }
             }
