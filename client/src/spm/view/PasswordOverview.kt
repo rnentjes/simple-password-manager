@@ -129,30 +129,33 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                         }
                     }
                 }
-                div(classes = "col-md-6") {
-                    style = "margin-top: 20px;"
-                    a(classes = "btn btn-success btn-sm") {
-                        +"Rename"
-                        onClickFunction = {
-                            rename(cg)
+
+                if (!UserState.readOnly) {
+                    div(classes = "col-md-6") {
+                        style = "margin-top: 20px;"
+                        a(classes = "btn btn-success btn-sm") {
+                            +"Rename"
+                            onClickFunction = {
+                                rename(cg)
+                            }
                         }
-                    }
-                    a(classes = "btn btn-primary btn-sm") {
-                        style = "margin-left:5px;"
-                        +"Add subgroup"
-                        onClickFunction = {
-                            addSubgroup(cg)
+                        a(classes = "btn btn-primary btn-sm") {
+                            style = "margin-left:5px;"
+                            +"Add subgroup"
+                            onClickFunction = {
+                                addSubgroup(cg)
+                            }
                         }
-                    }
-                    a(classes = "btn btn-danger btn-sm") {
-                        style = "margin-left:5px;"
-                        if (cg.children.isNotEmpty() || cg.passwords.isNotEmpty() || cg.parent == null) {
-                            attributes["disabled"] = "disabled"
-                        }
-                        +"Remove group"
-                        onClickFunction = {
-                            if (cg.children.isEmpty() && cg.passwords.isEmpty() && cg.parent != null) {
-                                removeGroup(cg)
+                        a(classes = "btn btn-danger btn-sm") {
+                            style = "margin-left:5px;"
+                            if (cg.children.isNotEmpty() || cg.passwords.isNotEmpty() || cg.parent == null) {
+                                attributes["disabled"] = "disabled"
+                            }
+                            +"Remove group"
+                            onClickFunction = {
+                                if (cg.children.isEmpty() && cg.passwords.isEmpty() && cg.parent != null) {
+                                    removeGroup(cg)
+                                }
                             }
                         }
                     }
@@ -166,35 +169,36 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                 div(classes = "page-header") {
                     div(classes = "btn-toolbar pull-right") {
                         div(classes = "button-group") {
-                            a(classes = "btn btn-success btn-sm") {
-                                +"Add"
-                                onClickFunction = {
-                                    val editor = PasswordEditor(cg)
-                                    editor.password.group = cg
-                                    Modal.openModal("Edit password",
-                                      editor,
-                                      okText = "Save",
-                                      okButtonClass = "btn-success",
-                                      ok = {
-                                          if (editor.validate()) {
-                                              if (editor.originalPassword == null) {
-                                                  editor.password.encryptedPassword = UserState.encryptPassword(editor.password.password1)
-                                                  editor.password.group.passwords.add(editor.password)
+                            if (!UserState.readOnly) {
+                                a(classes = "btn btn-success btn-sm") {
+                                    +"Add"
+                                    onClickFunction = {
+                                        val editor = PasswordEditor(cg)
+                                        editor.password.group = cg
+                                        Modal.openModal("Edit password",
+                                          editor,
+                                          okText = "Save",
+                                          okButtonClass = "btn-success",
+                                          ok = {
+                                              if (editor.validate()) {
+                                                  if (editor.originalPassword == null) {
+                                                      editor.password.encryptedPassword = UserState.encryptPassword(editor.password.password1)
+                                                      editor.password.group.passwords.add(editor.password)
+                                                  } else {
+                                                      throw IllegalStateException("Add button modal has existing password!?")
+                                                  }
+                                                  UserState.saveData()
+                                                  container.refresh()
+
+                                                  true
                                               } else {
-                                                  throw IllegalStateException("Add button modal has existing password!?")
+
+                                                  false
                                               }
-                                              UserState.saveData()
-                                              container.refresh()
-
-                                              true
-                                          } else {
-
-                                              false
-                                          }
-                                      })
+                                          })
+                                    }
                                 }
                             }
-
                         }
                     }
                     h4 {
@@ -210,77 +214,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                             th { +"" }
                         }
                         for (password in cg.passwords) {
-                            tr {
-                                td { +password.title }
-                                td { +password.website }
-                                td { +password.username }
-                                td(classes = "col-md-4") {
-                                    include(PasswordButton("copy", text = "U ", btnClass = "btn-xs btn-default") {
-                                        copyToClipboard(password.username)
-
-                                        Notify.show("Copied username to clipboard.", "success")
-                                    })
-                                    include(PasswordButton( "copy", text = "P ", btnClass = "btn-xs btn-warning", buttonStyle = "margin-left: 5px;") {
-                                        copyToClipboard(UserState.decryptPassword(password.encryptedPassword))
-
-                                        Notify.show("Copied password to clipboard.", "success")
-                                    })
-                                    include(PasswordButton("copy", text = "U ", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
-                                        copyToClipboard(password.website)
-
-                                        Notify.show("Copied password to clipboard.", "success")
-                                    })
-                                    include(PasswordButton("new-window", text = "U ", btnClass = "btn-xs btn-default", buttonStyle = "margin-left: 5px;") {
-                                        window.open(password.website, "_blank")
-                                    })
-                                    include(PasswordButton("folder-open", btnClass = "btn-xs btn-success", buttonStyle = "margin-left: 5px;") {
-                                        val editor = PasswordEditor(cg, password)
-                                        Modal.openModal("Edit password", editor, /*modalSize = "modal-lg", */ok = {
-                                            if (editor.validate()) {
-                                                if (editor.originalPassword != null) {
-                                                    editor.originalPassword.title = editor.password.title
-                                                    editor.originalPassword.website = editor.password.website
-                                                    editor.originalPassword.username = editor.password.username
-                                                    editor.originalPassword.description = editor.password.description
-
-                                                    if (editor.originalPassword.group != editor.password.group) {
-                                                        editor.password.group.passwords.add(editor.originalPassword)
-                                                        editor.originalPassword.group.passwords.remove(editor.originalPassword)
-                                                        editor.originalPassword.group = editor.password.group
-                                                    }
-
-                                                    if (editor.password.password1.isNotBlank()) {
-                                                        editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
-                                                    } else {
-                                                        //console.log("blank pwd: ", password)
-                                                    }
-                                                } else {
-                                                    throw IllegalStateException("Edit button doesn't have original password!?")
-                                                }
-
-                                                UserState.saveData()
-                                                container.refresh()
-
-                                                true
-                                            } else {
-                                                false
-                                            }
-                                        })
-                                    })
-                                    include(PasswordButton("remove", btnClass = "btn-xs btn-danger", buttonStyle = "margin-left: 5px;") {
-                                        Modal.openModal("Remove password",
-                                          RemovePasswordConfirm(password),
-                                          okButtonClass = "btn-danger",
-                                          ok = {
-                                              password.delete()
-                                              UserState.saveData()
-                                              refresh()
-
-                                              true
-                                          })
-                                    })
-                                }
-                            }
+                            this@table.include(PasswordOverviewRow(password))
                         }
                     }
                 }

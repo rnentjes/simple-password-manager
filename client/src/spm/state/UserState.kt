@@ -27,6 +27,8 @@ object UserState {
     var topGroup: Group? = null
     var currentSearch: String = ""
 
+    var readOnly: Boolean = true
+
     private var decryptPassphraseHash: String? = null
 
     fun clear() {
@@ -37,6 +39,7 @@ object UserState {
         topGroup = null
         currentGroup = null
         loggedIn = false
+        readOnly = true
     }
 
     fun decryptPassword(password: String): String {
@@ -97,20 +100,30 @@ object UserState {
     }
 
     fun saveData() {
-        val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
-        val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
+        if (!readOnly) {
+            val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
+            val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
 
-        val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
-        val tg = topGroup
+            val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
+            val tg = topGroup
 
-        if (tg != null) {
-            val export = tg.export()
+            if (tg != null) {
+                val export = tg.export()
 
-            //console.log("EXPORT: ", export)
+                //console.log("EXPORT: ", export)
 
-            val data = Aes.encrypt(export, decryptedEncryptionKey).toString()
+                val data = Aes.encrypt(export, decryptedEncryptionKey).toString()
 
-            WebSocketConnection.send("SAVEDATA", data)
+                WebSocketConnection.send("SAVEDATA", data)
+            }
+        } else {
+            throw IllegalStateException("Can't save in readOnly mode!")
         }
+    }
+
+    fun logout() {
+        WebSocketConnection.send("LOGOUT")
+
+        clear()
     }
 }

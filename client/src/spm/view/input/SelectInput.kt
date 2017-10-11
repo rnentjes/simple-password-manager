@@ -22,6 +22,7 @@ class SelectInput(
   var placeholderText: String = "",
   var error: String = "",
   var label: String = "",
+  var readOnly: Boolean = false,
   var blur: (Event) -> Unit = {},
   var change: (Event) -> Unit = {}
 ): Komponent() {
@@ -40,6 +41,8 @@ class SelectInput(
             select(classes = "form-control") {
                 id = inputId
                 name = inputId
+                readOnly = this@SelectInput.readOnly
+                disabled = this@SelectInput.readOnly
 
                 for (option in options) {
                     option {

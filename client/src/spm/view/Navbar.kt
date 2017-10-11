@@ -1,21 +1,10 @@
 package spm.view
 
-import kotlinx.html.ButtonType
-import kotlinx.html.InputType
-import kotlinx.html.TagConsumer
-import kotlinx.html.a
-import kotlinx.html.button
-import kotlinx.html.div
-import kotlinx.html.form
-import kotlinx.html.id
-import kotlinx.html.input
+import kotlinx.html.*
 import kotlinx.html.js.nav
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.html.js.onSubmitFunction
-import kotlinx.html.li
-import kotlinx.html.span
-import kotlinx.html.ul
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -38,13 +27,16 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
     }
 
     fun logout(e: Event) {
-        UserState.clear()
+        UserState.logout()
 
         main.refresh()
     }
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
+            if (UserState.readOnly) {
+                style = "background-color: #fffdab"
+            }
             div(classes = "navbar-header") {
                 button(classes = "navbar-toggle collapsed") {
                     attributes.put("data-toggle", "collapse")
@@ -58,7 +50,11 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                 }
                 a(classes = "navbar-brand") {
                     href = "#"
-                    + "Simple password manager"
+                    if (UserState.readOnly) {
+                        +"Simple password manager (read only)"
+                    } else {
+                        +"Simple password manager"
+                    }
                 }
             }
 

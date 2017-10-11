@@ -43,6 +43,17 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
         return true
     }
 
+    private fun updateGroup(e: Event) {
+        val target = e.target
+
+        if (target is HTMLSelectElement) {
+            val group = UserState.topGroup?.findById(target.value.toLong()) ?:
+              throw IllegalStateException("Group with id ${target.value} not found!")
+
+            password.group = group
+        }
+    }
+
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-12") {
         val pwType = if (showPassword) {
             InputType.text
@@ -57,20 +68,12 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
               label = "Group",
               inputValue = "${password.group.id}",
               options = UserState.topGroup?.getGroups() ?: ArrayList(),
-              change = { e ->
-                  val target = e.target
-
-                  if (target is HTMLSelectElement) {
-                      val group = UserState.topGroup?.findById(target.value.toLong()) ?:
-                        throw IllegalStateException("Group with id ${target.value} not found!")
-
-                      console.log("Update group", group)
-                      password.group = group
-                  }
-              }
+              readOnly = UserState.readOnly,
+              change = this@PasswordEditor::updateGroup
             ))
 
             include(TextInput("password_title", "Title", password.title,
+              readOnly = UserState.readOnly,
               blur = { e ->
                   password.title = (e.target as HTMLInputElement).value
               },
@@ -79,6 +82,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
               }))
 
             include(TextInput("password_url", "Url", password.website,
+              readOnly = UserState.readOnly,
               blur = { e ->
                   password.website = (e.target as HTMLInputElement).value
               },
@@ -86,6 +90,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                   password.website = (e.target as HTMLInputElement).value
               }))
             include(TextInput("password_username", "Username", password.username,
+              readOnly = UserState.readOnly,
               blur = { e ->
                   password.username = (e.target as HTMLInputElement).value
               },
@@ -106,6 +111,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                         name = "password_password1"
                         type = pwType
                         value = password.password1
+                        readonly = UserState.readOnly
 
                         fun changePwd1(e: Event) {
                             password.password1 = (e.target as HTMLInputElement).value
@@ -165,6 +171,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                         name = "password_password2"
                         type = pwType
                         value = password.password2
+                        readonly = UserState.readOnly
 
                         fun changePwd2(e: Event) {
                             password.password2 = (e.target as HTMLInputElement).value
@@ -181,24 +188,26 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                 }
 
                 div(classes = "col-md-2") {
-                    button(classes = "btn btn-default") {
-                        type = ButtonType.button
-                        attributes["aria-label"] = "Show"
-                        span(classes = "glyphicon glyphicon-cog") {
-                            attributes["aria-hidden"] = "true"
-                        }
-                        onClickFunction = { e ->
-                            e.preventDefault()
+                    if (!UserState.readOnly) {
+                        button(classes = "btn btn-default") {
+                            type = ButtonType.button
+                            attributes["aria-label"] = "Show"
+                            span(classes = "glyphicon glyphicon-cog") {
+                                attributes["aria-hidden"] = "true"
+                            }
+                            onClickFunction = { e ->
+                                e.preventDefault()
 
-                            val generator = PasswordGenerator(password)
+                                val generator = PasswordGenerator(password)
 
-                            Modal.openModal("Generate password", generator, ok = {
-                                password.password1 = generator.generatedPassword
-                                password.password2 = generator.generatedPassword
+                                Modal.openModal("Generate password", generator, ok = {
+                                    password.password1 = generator.generatedPassword
+                                    password.password2 = generator.generatedPassword
 
-                                refresh()
-                                true
-                            })
+                                    refresh()
+                                    true
+                                })
+                            }
                         }
                     }
                 }
@@ -215,6 +224,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                     textArea(classes = "form-control") {
                         id = "password_notes"
                         rows = "4"
+                        readonly = UserState.readOnly
 
                         +password.description
                     }

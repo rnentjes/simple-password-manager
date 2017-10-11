@@ -2,6 +2,7 @@ package nl.astraeus.spm.web
 
 import fi.iki.elonen.NanoHTTPD
 import fi.iki.elonen.NanoWSD
+import nl.astraeus.database.transaction
 import nl.astraeus.spm.model.LockDao
 import nl.astraeus.spm.model.User
 import nl.astraeus.spm.util.Tokenizer
@@ -18,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Time: 11:28
  */
 
-class SimpleWebSocketServer(port: Int): NanoWSD(port) {
+class SimpleWebSocketServer(port: Int) : NanoWSD(port) {
     val dir: File = File("web")
 
     companion object {
@@ -61,7 +62,7 @@ class SimpleWebSocketServer(port: Int): NanoWSD(port) {
                     }
                 }
             }
-        } catch(e: Exception) {
+        } catch (e: Exception) {
             logger.warn(e.message, e)
         } finally {
             STATS.info("Uri ${session?.uri} took ${(System.nanoTime() - start) * 1000000f}ms")
@@ -76,10 +77,12 @@ val connections: MutableMap<Long, SimpleWebSocket> = ConcurrentHashMap()
 var wsId: Long = 0
 
 fun getNextWSId(): Long {
-    return ++wsId
+    synchronized(wsId) {
+        return ++wsId
+    }
 }
 
-class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPSession?): NanoWSD.WebSocket(handshake) {
+class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPSession?) : NanoWSD.WebSocket(handshake) {
     val id = getNextWSId()
     val logger = LoggerFactory.getLogger(SimpleWebSocket::class.java)
     var user: User? = null
@@ -117,25 +120,33 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
 
     fun logout() {
         user?.apply {
-            LockDao.findByUserAndId(this.name, id).apply {
-                val locked = this.locked
+            val lock = LockDao.findByUserAndId(this.name, this@SimpleWebSocket.id)
 
-                LockDao.delete(this)
+            if (lock != null) {
+                transaction {
+                    val locked = lock.locked
 
-                if (locked) {
-                    val otherUsers = LockDao.where("user = ? ORDER BY wsId", user)
+                    LockDao.delete(lock)
 
-                    if (otherUsers.isNotEmpty()) {
-                        val other = otherUsers[0]
+                    if (!locked) {
+                        val otherUsers = LockDao.where("user = ? ORDER BY wsId", this.name)
 
-                        connections[other.id]?.send("UNLOCK")
+                        if (otherUsers.isNotEmpty()) {
+                            val other = otherUsers[0]
+
+                            other.locked = false
+
+                            connections[other.wsId]?.send("UNLOCK")
+
+                            LockDao.update(other)
+                        }
                     }
                 }
             }
         }
 
         user = null
-        connections.remove(id)
+        connections.remove(this@SimpleWebSocket.id)
     }
 
     fun send(vararg args: String) {

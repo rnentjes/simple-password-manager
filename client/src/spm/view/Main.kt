@@ -24,10 +24,7 @@ class Main : Komponent() {
         UserState.encryptedEncryptionKey = tk.next()
         UserState.loggedIn = true
         UserState.loadData(tk.next())
-
-        val blocked = tk.next() == "true"
-
-        console.log("Blocked:", blocked)
+        UserState.readOnly = tk.next() == "true"
 
         refresh()
     }

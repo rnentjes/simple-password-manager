@@ -40,4 +40,6 @@ object LockDao: SimpleDao<Lock>(Lock::class.java) {
         }
     }
 
+    fun findAll() = where("1=1")
+
 }

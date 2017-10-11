@@ -25,10 +25,9 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
         val locks = LockDao.findByUser(found.name)
         val lock = LockDao.findByUserAndId(found.name, ws.id)
 
-        if (locks.isNotEmpty()) {
-            ws.blocked = true
-            LockDao.insert(Lock(found.name, ws.id, true))
-        } else if (lock != null && lock.wsId != ws.id) {
+        if (lock != null) {
+            ws.blocked = lock.locked
+        } else if (locks.isNotEmpty()) {
             ws.blocked = true
             LockDao.insert(Lock(found.name, ws.id, true))
         } else {

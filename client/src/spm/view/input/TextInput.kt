@@ -20,6 +20,7 @@ class TextInput(
   var inputType: InputType = InputType.text,
   var placeholderText: String = "",
   var error: String = "",
+  var readOnly: Boolean = false,
   var blur: (Event) -> Unit = {},
   var change: (Event) -> Unit = {}
 ): Komponent() {
@@ -40,6 +41,7 @@ class TextInput(
                 name = inputId
                 type = InputType.text
                 value = inputValue
+                readonly = this@TextInput.readOnly
             }
             if (placeholderText.isNotBlank()) {
                 attributes["placeholder"] = placeholderText
