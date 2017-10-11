@@ -11,8 +11,10 @@ import kotlin.browser.document
  * Time: 12:24
  */
 
+val mainComponent = Main()
+
 fun main(args: Array<String>) {
-    Komponent.create(document.body!!, Main())
+    Komponent.create(document.body!!, mainComponent)
 
     WebSocketConnection.open()
 }

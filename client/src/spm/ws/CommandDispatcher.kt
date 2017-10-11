@@ -1,14 +1,13 @@
 package spm.ws
 
 import org.w3c.dom.WebSocket
+import spm.mainComponent
+import spm.state.UserState
 import stats.view.Modal
 
 /**
  * Created by rnentjes on 7-6-16.
  */
-
-//language=JSON
-val html = ""
 
 object CommandDispatcher {
     val commands: MutableMap<String, (ws: org.w3c.dom.WebSocket, tk: spm.ws.Tokenizer) -> Unit> = HashMap()
@@ -17,6 +16,11 @@ object CommandDispatcher {
     init {
         commands.put("LOGIN", this::login)
         commands.put("ALERT", { ws, tk -> Modal.showAlert(tk.next(), tk.next()) })
+        commands.put("UNLOCK", { ws, tk ->
+            UserState.readOnly = false
+
+            mainComponent.refresh()
+        })
     }
 
     fun login(ws: WebSocket, tk: Tokenizer) {

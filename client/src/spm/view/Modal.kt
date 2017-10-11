@@ -138,10 +138,11 @@ object Modal {
       body: Komponent,
       confirmText: String = "Yes",
       denyText: String = "No",
+      showCancel: Boolean = false,
       disabledConfirm: Boolean = false,
       confirm: () -> Boolean = { true }
     ) {
-        openModal(title, body, okText = confirmText, cancelText = denyText, disabledOk = disabledConfirm, ok = { confirm(); })
+        openModal(title, body, okText = confirmText, cancelText = denyText, disabledOk = disabledConfirm, ok = { confirm(); }, showCancel = showCancel)
     }
 
     private fun attachHideEvent(id: String, context: dynamic) {

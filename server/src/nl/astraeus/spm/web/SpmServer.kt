@@ -98,6 +98,7 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
         logger.info("Websocket close: $code")
 
         logout()
+        connections.remove(this@SimpleWebSocket.id)
     }
 
     override fun onPong(pong: NanoWSD.WebSocketFrame?) {
@@ -114,8 +115,6 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
 
     override fun onException(exception: IOException?) {
         logger.info("Websocket exception: $exception")
-
-        logout()
     }
 
     fun logout() {
@@ -146,7 +145,6 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
         }
 
         user = null
-        connections.remove(this@SimpleWebSocket.id)
     }
 
     fun send(vararg args: String) {
