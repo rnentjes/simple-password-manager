@@ -47,11 +47,6 @@ class ChangePassword : Komponent() {
               change = { e ->
                   newPassword2 = (e.target as HTMLInputElement).value
               }))
-            div(classes = "col-md-offset-4 col-md-8") {
-                span(classes = "help-block") {
-                    + "To update the passphrase all passwords have to be deccrypted and encrypted. This will take a while."
-                }
-            }
 
         }
     }

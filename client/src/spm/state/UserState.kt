@@ -4,6 +4,7 @@ import spm.crypt.Aes
 import spm.model.Group
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
+import stats.view.Modal
 
 /**
  * User: rnentjes
@@ -70,22 +71,47 @@ object UserState {
         decryptPassphraseHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"
     }
 
-    private fun getLoginPasswordHash(password: String): String {
+    fun updatePassword(currentPassword: String, newPassword1: String, newPassword2: String): Boolean {
         val crypto = js("CryptoJS")
 
-        val sha256 = crypto.SHA256(password)
-        val sha512 = crypto.SHA512(password)
+        val sha256 = crypto.SHA256(currentPassword)
+        val sha512 = crypto.SHA512(currentPassword)
 
-        return "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}"
-    }
+        val currentPasswordHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}"
 
-    private fun getDecryptPasswordHash(password: String): String {
-        val crypto = js("CryptoJS")
+        if (!currentPasswordHash.equals(loginPasswordHash)) {
+            Modal.showAlert("Fail", "Wrong passphrase entered")
 
-        val sha256 = crypto.SHA256(password)
-        val sha512 = crypto.SHA512(password)
+            return false
+        }
 
-        return "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"
+        if (newPassword1.isEmpty() || !newPassword1.equals(newPassword2)) {
+            Modal.showAlert("Fail", "New passphrases don't match")
+
+            return false
+        }
+
+        WebSocketConnection.loadingWork {
+            val pp: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
+            val eek: String = encryptedEncryptionKey ?: throw IllegalStateException("passphraseHash is not set")
+
+            val decryptedEncryptionKey = Aes.decrypt(eek, pp).toString()
+
+            setPassword(newPassword1)
+
+            val newPP: String = decryptPassphraseHash ?: throw IllegalStateException("passphraseHash is not set")
+
+            val newEEK = Aes.encrypt(decryptedEncryptionKey, newPP)
+            encryptedEncryptionKey = newEEK.toString()
+
+            WebSocketConnection.send("UPDATE_PASSWORD",
+              UserState.loginname ?: throw IllegalStateException("Whut!"),
+              UserState.loginPasswordHash ?: throw IllegalStateException("Whut!"),
+              newEEK.toString()
+            )
+        }
+
+        return true
     }
 
     /** create encryption key and return encrypted encryption key */
@@ -143,14 +169,5 @@ object UserState {
         WebSocketConnection.send("LOGOUT")
 
         clear()
-    }
-
-    fun updatePassword(currentPassword: String, newPassword1: String, newPassword2: String) {
-        WebSocketConnection.loadingWork {
-
-
-        }
-
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

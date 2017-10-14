@@ -38,7 +38,7 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
 
         Modal.openModal(
           "Change passprase",
-          ChangePassword(),
+          changePassword,
           okText = "Update passphrase",
           showCancel = true,
           ok = {
@@ -47,6 +47,7 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                 changePassword.newPassword1,
                 changePassword.newPassword2
               )
+
               true
           })
 

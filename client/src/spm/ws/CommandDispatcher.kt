@@ -3,6 +3,8 @@ package spm.ws
 import org.w3c.dom.WebSocket
 import spm.mainComponent
 import spm.state.UserState
+import spm.ws.CommandDispatcher.commands
+import spm.ws.CommandDispatcher.loginListener
 import stats.view.Modal
 
 /**
@@ -21,6 +23,10 @@ object CommandDispatcher {
 
             mainComponent.refresh()
         })
+        commands.put(
+          "PASSWORD_UPDATED",
+          { ws, tk -> Modal.showAlert("Success", "Password successfully updated!") }
+        )
     }
 
     fun login(ws: WebSocket, tk: Tokenizer) {

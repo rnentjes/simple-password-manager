@@ -78,6 +78,28 @@ fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
     }
 }
 
+fun updatePassword(ws: SimpleWebSocket, tk: Tokenizer) {
+    val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
+    val name = tk.next()
+    val password = tk.next()
+    val encryptedEncryptionKey = tk.next()
+
+    if (name.equals(user.name)) {
+        val passwordHash = PasswordHash.createHash(password)
+
+        transaction {
+            user.encryptedKey = encryptedEncryptionKey
+            user.password = passwordHash
+            user.updated = Date()
+
+            UserDao.update(user)
+
+            ws.send("PASSWORD_UPDATED")
+        }
+    } else {
+        ws.sendAlert("Error", "Wrong user send to server!?")
+    }
+}
 
 object CommandDispatcher {
     val logger = LoggerFactory.getLogger(CommandDispatcher::class.java)
@@ -91,6 +113,7 @@ object CommandDispatcher {
         commands.put("REGISTER", ::register)
         commands.put("SAVEDATA", ::saveData)
         commands.put("LOGOUT", ::logout)
+        commands.put("UPDATE_PASSWORD", ::updatePassword)
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
