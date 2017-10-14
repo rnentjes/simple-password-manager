@@ -10,6 +10,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.state.UserState
+import stats.view.Modal
 
 /**
  * Created by rnentjes on 3-4-17.
@@ -30,6 +31,25 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
         UserState.logout()
 
         main.refresh()
+    }
+
+    fun settings(e: Event) {
+        val changePassword = ChangePassword()
+
+        Modal.openModal(
+          "Change passprase",
+          ChangePassword(),
+          okText = "Update passphrase",
+          showCancel = true,
+          ok = {
+              UserState.updatePassword(
+                changePassword.currentPassword,
+                changePassword.newPassword1,
+                changePassword.newPassword2
+              )
+              true
+          })
+
     }
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
@@ -64,7 +84,18 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                     li {
                         a {
                             href = "#"
-                            + "Logout"
+                            style = "font-size: large;"
+                            span(classes = "glyphicon glyphicon-cog")
+
+                            onClickFunction = this@Navbar::settings
+                        }
+                    }
+
+                    li {
+                        a {
+                            href = "#"
+                            style = "font-size: large;"
+                            span(classes = "glyphicon glyphicon-off")
 
                             onClickFunction = this@Navbar::logout
                         }

@@ -15,6 +15,7 @@ import org.w3c.dom.events.Event
 class PasswordButton(
    val icon: String,
    val text: String = "",
+   val tooltip: String? = null,
    val buttonStyle: String = "",
    val btnClass: String = "btn-default",
    val click: (Event) -> Unit = {}
@@ -26,6 +27,9 @@ class PasswordButton(
             style = buttonStyle
         }
         attributes["aria-label"] = text
+        if (tooltip != null) {
+            title = tooltip
+        }
 
         + text
 

@@ -33,6 +33,7 @@ class PasswordOverviewRow(
             include(PasswordButton(
               "copy",
               text = "U ",
+              tooltip = "Copy username",
               btnClass = "btn-xs btn-default"
             ) {
                 copyToClipboard(password.username)
@@ -42,6 +43,7 @@ class PasswordOverviewRow(
             include(PasswordButton(
               "copy",
               text = "P ",
+              tooltip = "Copy password",
               btnClass = "btn-xs btn-warning",
               buttonStyle = "margin-left: 5px;"
             ) {
@@ -52,6 +54,7 @@ class PasswordOverviewRow(
             include(PasswordButton(
               "copy",
               text = "U ",
+              tooltip = "Copy url",
               btnClass = "btn-xs btn-default",
               buttonStyle = "margin-left: 5px;") {
                 copyToClipboard(password.website)
@@ -61,12 +64,14 @@ class PasswordOverviewRow(
             include(PasswordButton(
               "new-window",
               text = "U ",
+              tooltip = "Open url in a new window",
               btnClass = "btn-xs btn-default",
               buttonStyle = "margin-left: 5px;") {
                 window.open(password.website, "_blank")
             })
             include(PasswordButton(
               "folder-open",
+              tooltip = "Edit password entry",
               btnClass = "btn-xs btn-success",
               buttonStyle = "margin-left: 5px;") {
                 val editor = PasswordEditor(password.group, password)
@@ -103,6 +108,7 @@ class PasswordOverviewRow(
             if (!UserState.readOnly) {
                 include(PasswordButton(
                   "remove",
+                  tooltip = "Remove password entry",
                   btnClass = "btn-xs btn-danger",
                   buttonStyle = "margin-left: 5px;") {
                     Modal.openModal("Remove password",

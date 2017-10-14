@@ -21,6 +21,7 @@ class TextInput(
   var placeholderText: String = "",
   var error: String = "",
   var readOnly: Boolean = false,
+  val labelWidth: Int = 3,
   var blur: (Event) -> Unit = {},
   var change: (Event) -> Unit = {}
 ): Komponent() {
@@ -30,16 +31,16 @@ class TextInput(
             classes += "has-error"
         }
         if (label.isNotBlank()) {
-            label(classes = "col-md-3") {
+            label(classes = "col-md-${labelWidth}") {
                 for_ = inputId
                 +label
             }
         }
-        div(classes = "col-md-9") {
+        div(classes = "col-md-${12 - labelWidth}") {
             input(classes = "form-control") {
                 id = inputId
                 name = inputId
-                type = InputType.text
+                type = inputType
                 value = inputValue
                 readonly = this@TextInput.readOnly
             }

@@ -66,8 +66,26 @@ object UserState {
         val sha256 = crypto.SHA256(password)
         val sha512 = crypto.SHA512(password)
 
-        loginPasswordHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}";
+        loginPasswordHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}"
         decryptPassphraseHash = "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"
+    }
+
+    private fun getLoginPasswordHash(password: String): String {
+        val crypto = js("CryptoJS")
+
+        val sha256 = crypto.SHA256(password)
+        val sha512 = crypto.SHA512(password)
+
+        return "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 500 });")}"
+    }
+
+    private fun getDecryptPasswordHash(password: String): String {
+        val crypto = js("CryptoJS")
+
+        val sha256 = crypto.SHA256(password)
+        val sha512 = crypto.SHA512(password)
+
+        return "${js("CryptoJS.PBKDF2(sha256, sha512, { keySize: 256 / 32, iterations: 750 });")}"
     }
 
     /** create encryption key and return encrypted encryption key */
@@ -125,5 +143,14 @@ object UserState {
         WebSocketConnection.send("LOGOUT")
 
         clear()
+    }
+
+    fun updatePassword(currentPassword: String, newPassword1: String, newPassword2: String) {
+        WebSocketConnection.loadingWork {
+
+
+        }
+
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -157,5 +157,5 @@ object Modal {
 
     fun hideModal(id: String) = js("$('#' + id).modal('hide')")
 
-    fun showModal(id: String) = js("$('#' + id).modal('show')")
+    fun showModal(id: String) = js("$('#' + id).modal({ backdrop: 'static', keyboard: false })")
 }
