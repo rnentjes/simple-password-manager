@@ -56,5 +56,5 @@ task zipDist(type: Zip, dependsOn: [':server:jar', ':client:compileKotlin2Js'] )
   }
 
   archiveName 'spm-${version}.zip'
-  destinationDir(file('build'))
+  destinationDir(file('reseases'))
 }
