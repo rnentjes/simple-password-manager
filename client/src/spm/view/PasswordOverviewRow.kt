@@ -44,7 +44,7 @@ class PasswordOverviewRow(
         trimmed(consumer, password.title, 12)
         trimmed(consumer, password.website, 24)
         trimmed(consumer, password.username, 12)
-        td(classes = "col-md-4") {
+        td(classes = "col-md-4 nowrap") {
             include(PasswordButton(
               "copy",
               text = "U ",
