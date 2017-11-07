@@ -53,7 +53,9 @@ class ModalComponent(
                             type = ButtonType.button
                             attributes["data-dismiss"] = "modal"
                             +cancelText
-                            onClickFunction = {
+                            onClickFunction = { e ->
+                                e.preventDefault()
+
                                 cancel()
                             }
                         }
@@ -62,7 +64,9 @@ class ModalComponent(
                         type = ButtonType.button
                         +okText
                         disabled = disabledOk
-                        onClickFunction = {
+                        onClickFunction = { e ->
+                            e.preventDefault()
+
                             ok()
                         }
                     }

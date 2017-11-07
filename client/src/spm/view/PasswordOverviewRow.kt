@@ -2,13 +2,14 @@ package spm.view
 
 import kotlinx.html.TagConsumer
 import kotlinx.html.td
+import kotlinx.html.title
 import kotlinx.html.tr
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
-import spm.state.UserState
 import spm.model.Password
+import spm.state.UserState
 import spm.view.button.PasswordButton
 import stats.view.Modal
 import kotlin.browser.document
@@ -21,14 +22,28 @@ import kotlin.browser.window
  */
 
 class PasswordOverviewRow(
-  val password: Password
+  val password: Password,
+  val container: Komponent,
+  val showGroup: Boolean = false
 ) : Komponent() {
+
+    fun trimmed(consumer: TagConsumer<HTMLElement>, str: String, length: Int) = consumer.td {
+        if (str.length > length) {
+            title = str
+            + "${str.substring(0 until length - 3)}..."
+        } else {
+            + str
+        }
+    }
+
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.tr {
 
-        td { +password.group.name }
-        td { +password.title }
-        td { +password.website }
-        td { +password.username }
+        if (showGroup) {
+            trimmed(consumer, password.group.name, 8)
+        }
+        trimmed(consumer, password.title, 12)
+        trimmed(consumer, password.website, 24)
+        trimmed(consumer, password.username, 12)
         td(classes = "col-md-4") {
             include(PasswordButton(
               "copy",
@@ -84,6 +99,13 @@ class PasswordOverviewRow(
                                 editor.originalPassword.username = editor.password.username
                                 editor.originalPassword.description = editor.password.description
 
+                                val originalGroup = editor.originalPassword.group
+                                val newGroup = editor.password.group
+
+                                originalGroup.passwords.remove(editor.originalPassword)
+                                newGroup.passwords.add(editor.originalPassword)
+                                editor.originalPassword.group = editor.password.group
+
                                 if (editor.password.password1.isNotBlank()) {
                                     editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
                                 } else {
@@ -94,7 +116,7 @@ class PasswordOverviewRow(
                             }
 
                             UserState.saveData()
-                            refresh()
+                            container.refresh()
 
                             true
                         } else {
@@ -117,7 +139,7 @@ class PasswordOverviewRow(
                       ok = {
                           password.delete()
                           UserState.saveData()
-                          refresh()
+                          container.refresh()
 
                           true
                       })

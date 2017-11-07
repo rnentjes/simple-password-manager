@@ -92,7 +92,7 @@ fun main(args: Array<String>) {
 
     LockDao.emptyRows()
 
-    server.start(Settings.connectionTimeout, false)
+    logger.info("Starting server on port ${Settings.port}.")
 
-    logger.info("Started server on port ${Settings.port}.")
+    server.start(Settings.connectionTimeout, false)
 }

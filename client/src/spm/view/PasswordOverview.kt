@@ -14,11 +14,8 @@ import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import spm.view.button.PasswordButton
 import stats.view.Modal
-import stats.view.Modal.id
 import kotlin.browser.document
-import kotlin.browser.window
 
 /**
  * Created by rnentjes on 4-4-17.
@@ -51,6 +48,8 @@ class GroupNameEdit(var groupname: String = "") : Komponent() {
                         value = groupname
 
                         fun changeName(e: Event) {
+                            e.preventDefault()
+
                             groupname = (e.target as HTMLInputElement).value
                         }
 
@@ -105,7 +104,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
     fun removeGroup(group: Group) {
         val removeSubGroup = RemoveGroupConfirm(group.name)
         Modal.openModal("Remove group", removeSubGroup, okText = "Remove", okButtonClass = "btn-danger", ok = {
-            group.parent?.children?.remove(group);
+            group.parent?.children?.remove(group)
 
             UserState.saveData()
             container.refresh()
@@ -214,7 +213,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                             th { +"" }
                         }
                         for (password in cg.passwords) {
-                            this@table.include(PasswordOverviewRow(password))
+                            this@table.include(PasswordOverviewRow(password, container))
                         }
                     }
                 }

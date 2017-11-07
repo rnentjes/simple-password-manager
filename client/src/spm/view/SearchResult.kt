@@ -9,10 +9,7 @@ import org.w3c.dom.HTMLTextAreaElement
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import spm.view.button.PasswordButton
-import stats.view.Modal
 import kotlin.browser.document
-import kotlin.browser.window
 
 /**
  * Created by rnentjes on 4-4-17.
@@ -72,7 +69,7 @@ class SearchResult(val container: Komponent) : Komponent() {
                         th { +"" }
                     }
                     for (password in searchResult) {
-                        this@table.include(PasswordOverviewRow(password))
+                        this@table.include(PasswordOverviewRow(password, container, true))
                     }
                 }
             }
