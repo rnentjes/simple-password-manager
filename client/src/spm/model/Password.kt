@@ -1,7 +1,9 @@
 package spm.model
 
 import spm.state.UserState
+import spm.util.formatted
 import spm.ws.Tokenizer
+import kotlin.js.Date
 
 /**
  * User: rnentjes
@@ -35,9 +37,10 @@ data class Password(
   var password1: String = "",
   var password2: String = "",
   var description: String,
+  var created: String,
   var history: MutableList<HistoryEntry> = ArrayList()
 ) {
-    constructor(group: Group) : this(nextId(), "", group, "", "", "", "", "", "", "")
+    constructor(group: Group) : this(nextId(), "", group, "", "", "", "", "", "", "", Date().formatted())
 
     constructor(other: Password) : this(
       other.id,
@@ -49,33 +52,53 @@ data class Password(
       other.encryptedPassword,
       other.password1,
       other.password2,
-      other.description)
+      other.description,
+      Date().formatted())
 
-    constructor(tk: Tokenizer, group: Group): this(-1, "", group, "", "", "", "", "", "", "") {
+    constructor(tk: Tokenizer, group: Group): this(-1, "", group, "", "", "", "", "", "", "", Date().formatted()) {
         val first = tk.next()
 
-        if (first == "V2") {
-            id = tk.next().toLong()
-            user = tk.next()
-            title = tk.next()
-            website = tk.next()
-            username = tk.next()
-            encryptedPassword = tk.next()
-            description = tk.next()
+        when (first) {
+            "V3" -> {
+                id = tk.next().toLong()
+                user = tk.next()
+                title = tk.next()
+                website = tk.next()
+                username = tk.next()
+                encryptedPassword = tk.next()
+                description = tk.next()
+                created = tk.next()
 
-            val historyData = Tokenizer(tk.next())
+                val historyData = Tokenizer(tk.next())
 
-            while(!historyData.done()) {
-                history.add(HistoryEntry(Tokenizer(historyData.next())))
+                while(!historyData.done()) {
+                    history.add(HistoryEntry(Tokenizer(historyData.next())))
+                }
             }
-        } else {
-            id = first.toLong()
-            user = tk.next()
-            title = tk.next()
-            website = tk.next()
-            username = tk.next()
-            encryptedPassword = tk.next()
-            description = tk.next()
+            "V2" -> {
+                id = tk.next().toLong()
+                user = tk.next()
+                title = tk.next()
+                website = tk.next()
+                username = tk.next()
+                encryptedPassword = tk.next()
+                description = tk.next()
+
+                val historyData = Tokenizer(tk.next())
+
+                while(!historyData.done()) {
+                    history.add(HistoryEntry(Tokenizer(historyData.next())))
+                }
+            }
+            else -> {
+                id = first.toLong()
+                user = tk.next()
+                title = tk.next()
+                website = tk.next()
+                username = tk.next()
+                encryptedPassword = tk.next()
+                description = tk.next()
+            }
         }
 
     }
@@ -92,7 +115,7 @@ data class Password(
         }
 
         return Tokenizer.tokenize(
-          "V2",
+          "V3",
           "$id",
           user,
           title,
@@ -100,6 +123,7 @@ data class Password(
           username,
           encryptedPassword,
           description,
+          created,
           tkHist.toString()
         )
     }
@@ -116,9 +140,7 @@ data class Password(
     companion object {
         private var lastId = 0L
 
-        fun nextId(): Long {
-            return ++lastId
-        }
+        fun nextId(): Long = ++lastId
     }
 
     fun search(value: String): Boolean {
@@ -129,9 +151,8 @@ data class Password(
     }
 
     fun archivePassword() {
-        console.log("ARCHIVE", this)
         history.add(HistoryEntry(
-          encryptedPassword, "", ""
+          encryptedPassword, created, Date().formatted()
         ))
 
         while(history.size > 3) {

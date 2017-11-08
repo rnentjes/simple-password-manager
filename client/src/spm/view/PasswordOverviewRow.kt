@@ -2,19 +2,19 @@ package spm.view
 
 import kotlinx.html.TagConsumer
 import kotlinx.html.td
-import kotlinx.html.title
 import kotlinx.html.tr
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
-import org.w3c.dom.HTMLTextAreaElement
 import spm.model.Password
 import spm.state.UserState
 import spm.util.copyToClipboard
+import spm.util.formatted
+import spm.util.trimmed
 import spm.view.button.PasswordButton
 import stats.view.Modal
-import kotlin.browser.document
 import kotlin.browser.window
+import kotlin.js.Date
 
 /**
  * User: rnentjes
@@ -27,15 +27,6 @@ class PasswordOverviewRow(
   val container: Komponent,
   val showGroup: Boolean = false
 ) : Komponent() {
-
-    fun trimmed(consumer: TagConsumer<HTMLElement>, str: String, length: Int) = consumer.td {
-        if (str.length > length) {
-            title = str
-            + "${str.substring(0 until length - 3)}..."
-        } else {
-            + str
-        }
-    }
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.tr {
 
@@ -103,15 +94,18 @@ class PasswordOverviewRow(
                                 val originalGroup = editor.originalPassword.group
                                 val newGroup = editor.password.group
 
-                                originalGroup.passwords.remove(editor.originalPassword)
-                                newGroup.passwords.add(editor.originalPassword)
-                                editor.originalPassword.group = editor.password.group
+                                if (originalGroup != newGroup) {
+                                    originalGroup.passwords.remove(editor.originalPassword)
+                                    newGroup.passwords.add(editor.originalPassword)
+                                    editor.originalPassword.group = editor.password.group
+                                }
 
                                 if (editor.password.password1.isNotBlank()) {
                                     val oldPassword = UserState.decryptPassword(editor.originalPassword.encryptedPassword)
                                     if (oldPassword != editor.password.password1) {
                                         editor.originalPassword.archivePassword()
                                         editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
+                                        editor.originalPassword.created = Date().formatted()
                                     }
                                 } else {
                                     //console.log("blank pwd: ", password)

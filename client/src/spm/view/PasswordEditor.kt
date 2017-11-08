@@ -54,7 +54,6 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
     }
 
     fun validate(): Boolean {
-        console.log("validating: ", password)
         return true
     }
 
@@ -300,13 +299,13 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                     for (history in originalPassword.history) {
                         tr {
                             td(classes = "col-md-5") {
-                                history.encryptedPassword
+                                + "********"
                             }
                             td(classes = "col-md-3 nowrap") {
-                                history.from
+                                + history.from
                             }
                             td(classes = "col-md-3 nowrap") {
-                                history.until
+                                + history.until
                             }
                             td(classes = "col-md-1 nowrap") {
                                 include(PasswordButton(
@@ -316,7 +315,10 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                                   btnClass = "btn-xs btn-warning",
                                   buttonStyle = "margin-left: 5px;"
                                 ) {
-                                    copyToClipboard(UserState.decryptPassword(history.encryptedPassword))
+                                    copyToClipboard(
+                                      UserState.decryptPassword(history.encryptedPassword),
+                                      this@PasswordEditor.element as HTMLElement
+                                    )
 
                                     Notify.show("Copied password to clipboard.", "success")
                                 })
