@@ -50,7 +50,6 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
 
               true
           })
-
     }
 
     override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {

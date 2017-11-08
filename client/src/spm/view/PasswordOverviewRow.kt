@@ -10,6 +10,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
 import spm.model.Password
 import spm.state.UserState
+import spm.util.copyToClipboard
 import spm.view.button.PasswordButton
 import stats.view.Modal
 import kotlin.browser.document
@@ -107,7 +108,11 @@ class PasswordOverviewRow(
                                 editor.originalPassword.group = editor.password.group
 
                                 if (editor.password.password1.isNotBlank()) {
-                                    editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
+                                    val oldPassword = UserState.decryptPassword(editor.originalPassword.encryptedPassword)
+                                    if (oldPassword != editor.password.password1) {
+                                        editor.originalPassword.archivePassword()
+                                        editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
+                                    }
                                 } else {
                                     //console.log("blank pwd: ", password)
                                 }
@@ -145,20 +150,6 @@ class PasswordOverviewRow(
                       })
                 })
             }
-        }
-    }
-
-    fun copyToClipboard(text: String) {
-        val ta = document.createElement("textarea")
-        ta.innerHTML = text
-
-        if (ta is HTMLTextAreaElement) {
-            val body = document.body ?: throw IllegalStateException("The body was not found!")
-
-            body.appendChild(ta)
-            ta.select()
-            document.execCommand("copy")
-            body.removeChild(ta)
         }
     }
 

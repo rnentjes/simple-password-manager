@@ -12,8 +12,11 @@ import org.w3c.dom.HTMLSelectElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
 import spm.model.Group
+import spm.model.HistoryEntry
 import spm.model.Password
 import spm.state.UserState
+import spm.util.copyToClipboard
+import spm.view.button.PasswordButton
 import spm.view.input.SelectInput
 import spm.view.input.TextInput
 import stats.view.Modal
@@ -23,6 +26,18 @@ import stats.view.Modal
  * Date: 5-4-17
  * Time: 9:46
  */
+
+class RemoveHistoryEntryConfirm(val history: HistoryEntry) : Komponent() {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+        +"Are you sure you want to remove the history entry from '${history.from}' until '${history.until}?"
+    }
+}
+
+class ClearHistoryConfirm : Komponent() {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+        +"Are you sure you want to clear the history for this password?"
+    }
+}
 
 class PasswordEditor(val group: Group, val originalPassword: Password? = null) : Komponent() {
     val password: Password
@@ -241,6 +256,90 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
 
                 onBlurFunction = ::updateNotes
                 onKeyUpFunction = ::updateNotes
+            }
+        }
+
+        if (originalPassword?.hasHistory() == true) {
+            div(classes = "row") {
+                div(classes = "col-md-10") {
+                    h5 {
+                        +"Password history"
+                    }
+                }
+                div(classes = "col-md-2") {
+                    button(classes = "btn btn-danger btn-xs") {
+                        type = ButtonType.button
+                        attributes["aria-label"] = "Clear history"
+                        title = "Clear password history"
+
+                        +"Clear"
+
+                        onClickFunction = {
+                            Modal.openModal("Remove password",
+                              ClearHistoryConfirm(),
+                              okButtonClass = "btn-danger",
+                              ok = {
+                                  originalPassword.history.clear()
+                                  UserState.saveData()
+                                  refresh()
+
+                                  true
+                              })
+                        }
+                    }
+                }
+            }
+            div(classes = "row") {
+                table(classes = "table table-striped table-condensed table-hover") {
+                    tr {
+                        th { +"Password" }
+                        th { +"From" }
+                        th { +"Until" }
+                        th { +"" }
+                    }
+                    for (history in originalPassword.history) {
+                        tr {
+                            td(classes = "col-md-5") {
+                                history.encryptedPassword
+                            }
+                            td(classes = "col-md-3 nowrap") {
+                                history.from
+                            }
+                            td(classes = "col-md-3 nowrap") {
+                                history.until
+                            }
+                            td(classes = "col-md-1 nowrap") {
+                                include(PasswordButton(
+                                  "copy",
+                                  text = "P ",
+                                  tooltip = "Copy password",
+                                  btnClass = "btn-xs btn-warning",
+                                  buttonStyle = "margin-left: 5px;"
+                                ) {
+                                    copyToClipboard(UserState.decryptPassword(history.encryptedPassword))
+
+                                    Notify.show("Copied password to clipboard.", "success")
+                                })
+                                include(PasswordButton(
+                                  "remove",
+                                  tooltip = "Remove history entry",
+                                  btnClass = "btn-xs btn-danger",
+                                  buttonStyle = "margin-left: 5px;") {
+                                    Modal.openModal("Remove password",
+                                      RemoveHistoryEntryConfirm(history),
+                                      okButtonClass = "btn-danger",
+                                      ok = {
+                                          originalPassword.history.remove(history)
+                                          UserState.saveData()
+                                          refresh()
+
+                                          true
+                                      })
+                                })
+                            }
+                        }
+                    }
+                }
             }
         }
     }

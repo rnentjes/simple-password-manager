@@ -127,4 +127,17 @@ data class Password(
           website.toLowerCase().contains(value) ||
           description.toLowerCase().contains(value)
     }
+
+    fun archivePassword() {
+        console.log("ARCHIVE", this)
+        history.add(HistoryEntry(
+          encryptedPassword, "", ""
+        ))
+
+        while(history.size > 3) {
+            history.removeAt(0)
+        }
+    }
+
+    fun hasHistory() = history.isNotEmpty()
 }
