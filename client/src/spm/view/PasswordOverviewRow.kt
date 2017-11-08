@@ -36,6 +36,29 @@ class PasswordOverviewRow(
         trimmed(consumer, password.title, 12)
         trimmed(consumer, password.website, 24)
         trimmed(consumer, password.username, 12)
+        td {
+            if (password.history.isNotEmpty()) {
+                include(PasswordButton(
+                  "",
+                  text = "${password.history.size} ",
+                  tooltip = "Clear history",
+                  btnClass = "btn-xs btn-danger"
+                ) {
+                    Modal.openModal("Remove password",
+                      ClearHistoryConfirm(),
+                      okButtonClass = "btn-danger",
+                      ok = {
+                          password.history.clear()
+                          UserState.saveData()
+                          refresh()
+
+                          true
+                      })
+                })
+            } else {
+                + "none"
+            }
+        }
         td(classes = "col-md-4 nowrap") {
             include(PasswordButton(
               "copy",

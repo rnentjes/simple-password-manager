@@ -66,6 +66,7 @@ class SearchResult(val container: Komponent) : Komponent() {
                         th { +"Title" }
                         th { +"Url" }
                         th { +"Username" }
+                        th { +"Hist" }
                         th { +"" }
                     }
                     for (password in searchResult) {

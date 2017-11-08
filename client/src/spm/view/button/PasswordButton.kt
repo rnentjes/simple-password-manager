@@ -33,8 +33,10 @@ class PasswordButton(
 
         + text
 
-        span(classes = "glyphicon glyphicon-$icon") {
-            attributes["aria-hidden"] = "true"
+        if (icon.isNotBlank()) {
+            span(classes = "glyphicon glyphicon-$icon") {
+                attributes["aria-hidden"] = "true"
+            }
         }
 
         onClickFunction = click
