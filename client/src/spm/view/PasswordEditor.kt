@@ -298,7 +298,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                     }
                     for (history in originalPassword.history) {
                         tr {
-                            td(classes = "col-md-5") {
+                            td(classes = "col-md-4") {
                                 + "********"
                             }
                             td(classes = "col-md-3 nowrap") {
@@ -307,7 +307,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                             td(classes = "col-md-3 nowrap") {
                                 + history.until
                             }
-                            td(classes = "col-md-1 nowrap") {
+                            td(classes = "col-md-2 nowrap") {
                                 include(PasswordButton(
                                   "copy",
                                   text = "P ",

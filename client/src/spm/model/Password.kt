@@ -154,10 +154,6 @@ data class Password(
         history.add(HistoryEntry(
           encryptedPassword, created, Date().formatted()
         ))
-
-        while(history.size > 3) {
-            history.removeAt(0)
-        }
     }
 
     fun hasHistory() = history.isNotEmpty()
