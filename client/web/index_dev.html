@@ -11,6 +11,33 @@
     <link href="css/spm.css" rel="stylesheet">
 </head>
 <body>
+<div id="splash">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-md-offset-3"><h2 style="text-align: center; margin-top: 40px;">Simple password
+                manager</h2></div>
+            <div class="col-md-6 col-md-offset-3" style="margin-top: 50px;">
+                <ul class="nav nav-tabs nav-justified">
+                    <li class="active" role="presentation"><a>Login</a></li>
+                    <li role="presentation"><a>Register</a></li>
+                </ul>
+                <div class="row">&nbsp;</div>
+                <div class="form-horizontal">
+                    <div class="form-group"><label class="col-md-4" for="login_name">Login name</label>
+                        <div class="col-md-8"><input class="form-control" id="login_name" type="text"></div>
+                    </div>
+                    <div class="form-group"><label class="col-md-4" for="login_password">Passphrase</label>
+                        <div class="col-md-8"><input class="form-control" id="login_password" type="password"></div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-8"><a class="btn btn-success">Login</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loading" id="loading_div">Loading&amp;8230;</div>
+</div>
 
 <script src="js/cryptojs/core-min.js"></script>
 <script src="js/cryptojs/x64-core-min.js"></script>

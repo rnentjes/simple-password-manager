@@ -23,7 +23,7 @@ object Settings {
     var port                = 3456
     var connectionTimeout   = 30000
 
-    var jdbcDriver          = "org.h2.Driver" // "nl.astraeus.jdbc.Driver"
+    var jdbcDriver          = "org.h2.Driver" // "nl.astraeus.jdbc.Driver"mail
     var jdbcConnectionUrl   = "jdbc:h2:file:" // "jdbc:stats::jdbc:h2:file:"
     var jdbcUser            = "sa"
     var jdbcPassword        = ""

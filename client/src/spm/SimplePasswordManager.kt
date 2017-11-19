@@ -14,6 +14,10 @@ import kotlin.browser.document
 val mainComponent = Main()
 
 fun main(args: Array<String>) {
+    val splash = document.getElementById("splash")
+
+    splash?.parentElement?.removeChild(splash)
+
     Komponent.create(document.body!!, mainComponent)
 
     WebSocketConnection.open()
