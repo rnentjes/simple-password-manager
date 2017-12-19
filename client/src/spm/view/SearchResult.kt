@@ -19,9 +19,10 @@ class SearchResult(val container: Komponent) : Komponent() {
 
     fun findPasswords(group: Group): ArrayList<Password> {
         val result = ArrayList<Password>()
+        val searchValue = UserState.currentSearch.trim().toLowerCase()
 
         for (password in group.passwords) {
-            if (password.search(UserState.currentSearch)) {
+            if (password.search(searchValue)) {
                 result.add(password)
             }
         }
