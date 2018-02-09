@@ -16,8 +16,15 @@ compileKotlin2Js {
 
     kotlinOptions.sourceMap = true
     kotlinOptions.sourceMapEmbedSources = "always"
-    kotlinOptions.outputFile = "${projectDir}/web/js/generated/spm.js"
     kotlinOptions.suppressWarnings = true
     kotlinOptions.verbose = true
-    //kotlinOptions.moduleKind = "amd"
+    kotlinOptions.outputFile = "build/kotlin-js-min/main/spm.js"
+}
+
+runDceKotlinJs.doLast {
+    copy {
+        from("build/kotlin-js-min/main")
+
+        into("web/js/generated")
+    }
 }

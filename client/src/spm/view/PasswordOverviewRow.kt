@@ -55,8 +55,6 @@ class PasswordOverviewRow(
                           true
                       })
                 })
-            } else {
-                + "none"
             }
         }
         td(classes = "col-md-4 nowrap") {
@@ -124,10 +122,14 @@ class PasswordOverviewRow(
                                 }
 
                                 if (editor.password.password1.isNotBlank()) {
-                                    val oldPassword = UserState.decryptPassword(editor.originalPassword.encryptedPassword)
+                                    val oldPassword = UserState.decryptPassword(
+                                        editor.originalPassword.encryptedPassword
+                                    )
                                     if (oldPassword != editor.password.password1) {
                                         editor.originalPassword.archivePassword()
-                                        editor.originalPassword.encryptedPassword = UserState.encryptPassword(editor.password.password1)
+                                        editor.originalPassword.encryptedPassword = UserState.encryptPassword(
+                                            editor.password.password1
+                                        )
                                         editor.originalPassword.created = Date().formatted()
                                     }
                                 } else {
