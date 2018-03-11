@@ -19,7 +19,7 @@ import spm.util.copyToClipboard
 import spm.view.button.PasswordButton
 import spm.view.input.SelectInput
 import spm.view.input.TextInput
-import stats.view.Modal
+import spm.view.Modal
 
 /**
  * User: rnentjes

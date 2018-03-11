@@ -12,7 +12,7 @@ import spm.util.copyToClipboard
 import spm.util.formatted
 import spm.util.trimmed
 import spm.view.button.PasswordButton
-import stats.view.Modal
+import spm.view.Modal
 import kotlin.browser.window
 import kotlin.js.Date
 

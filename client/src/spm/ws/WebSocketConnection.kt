@@ -8,7 +8,7 @@ import org.w3c.dom.MessageEvent
 import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import spm.state.UserState
-import stats.view.Modal
+import spm.view.Modal
 import kotlin.browser.document
 import kotlin.browser.window
 

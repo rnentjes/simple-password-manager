@@ -4,7 +4,7 @@ import spm.crypt.Aes
 import spm.model.Group
 import spm.ws.Tokenizer
 import spm.ws.WebSocketConnection
-import stats.view.Modal
+import spm.view.Modal
 
 /**
  * User: rnentjes

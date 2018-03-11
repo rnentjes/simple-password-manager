@@ -1,8 +1,16 @@
-package stats.view
+package spm.view
 
-import kotlinx.html.*
+import kotlinx.html.ButtonType
+import kotlinx.html.TagConsumer
+import kotlinx.html.button
+import kotlinx.html.div
+import kotlinx.html.h4
+import kotlinx.html.id
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.role
+import kotlinx.html.span
+import kotlinx.html.tabIndex
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement

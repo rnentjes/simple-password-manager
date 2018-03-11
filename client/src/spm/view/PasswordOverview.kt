@@ -14,7 +14,7 @@ import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import stats.view.Modal
+import spm.view.Modal
 import kotlin.browser.document
 
 /**

@@ -10,7 +10,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.state.UserState
-import stats.view.Modal
+import spm.view.Modal
 
 /**
  * Created by rnentjes on 3-4-17.

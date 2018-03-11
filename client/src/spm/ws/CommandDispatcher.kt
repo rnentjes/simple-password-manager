@@ -3,9 +3,7 @@ package spm.ws
 import org.w3c.dom.WebSocket
 import spm.mainComponent
 import spm.state.UserState
-import spm.ws.CommandDispatcher.commands
-import spm.ws.CommandDispatcher.loginListener
-import stats.view.Modal
+import spm.view.Modal
 
 /**
  * Created by rnentjes on 7-6-16.
