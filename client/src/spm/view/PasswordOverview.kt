@@ -1,20 +1,31 @@
 package spm.view
 
-import kotlinx.html.*
-import kotlinx.html.js.div
+import kotlinx.html.a
+import kotlinx.html.div
+import kotlinx.html.form
+import kotlinx.html.h3
+import kotlinx.html.h4
+import kotlinx.html.hr
+import kotlinx.html.id
+import kotlinx.html.input
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.label
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.table
+import kotlinx.html.th
+import kotlinx.html.tr
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
 import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import spm.view.Modal
 import kotlin.browser.document
 
 /**
@@ -22,20 +33,20 @@ import kotlin.browser.document
  */
 
 class RemovePasswordConfirm(val password: Password) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: KompConsumer) = consumer.span {
         +"Are you sure you want to remove password '${password.title}'?"
     }
 }
 
 class RemoveGroupConfirm(val groupName: String) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: KompConsumer) = consumer.span {
         +"Are you sure you want to remove group '$groupName'?"
     }
 }
 
 class GroupNameEdit(var groupname: String = "") : Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "") {
         form(classes = "form form-horizontal") {
             div(classes = "form-group") {
                 label(classes = "col-md-3") {
@@ -113,7 +124,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
         })
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-9") {
         val cg = UserState.currentGroup
         //console.log("Currentgroup: ", cg)
         if (cg != null) {

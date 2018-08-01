@@ -1,18 +1,16 @@
 package spm.view
 
-import kotlinx.html.TagConsumer
 import kotlinx.html.td
 import kotlinx.html.tr
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
-import org.w3c.dom.HTMLElement
 import spm.model.Password
 import spm.state.UserState
 import spm.util.copyToClipboard
 import spm.util.formatted
 import spm.util.trimmed
 import spm.view.button.PasswordButton
-import spm.view.Modal
 import kotlin.browser.window
 import kotlin.js.Date
 
@@ -28,7 +26,7 @@ class PasswordOverviewRow(
   val showGroup: Boolean = false
 ) : Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.tr {
+    override fun render(consumer: KompConsumer) = consumer.tr {
 
         if (showGroup) {
             trimmed(consumer, password.group.name, 8)

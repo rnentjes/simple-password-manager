@@ -1,10 +1,16 @@
 package spm.view
 
-import kotlinx.html.*
-import kotlinx.html.js.div
+import kotlinx.html.a
+import kotlinx.html.classes
+import kotlinx.html.div
+import kotlinx.html.h4
 import kotlinx.html.js.onClickFunction
+import kotlinx.html.li
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.ul
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
-import org.w3c.dom.HTMLElement
 import spm.model.Group
 import spm.state.UserState
 import spm.state.UserState.topGroup
@@ -15,7 +21,7 @@ import spm.state.UserState.topGroup
 
 class GroupOverview(val container: Komponent) : Komponent() {
 
-    private fun createGroup(consumer: TagConsumer<HTMLElement>, topGroup: Group, group: Group) {
+    private fun createGroup(consumer: KompConsumer, topGroup: Group, group: Group) {
         consumer.ul(classes = "tree") {
             li {
                 span {
@@ -77,7 +83,7 @@ class GroupOverview(val container: Komponent) : Komponent() {
         }
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-3") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-3") {
         div(classes = "row") {
             div(classes = "col-md-12") {
                 h4 {

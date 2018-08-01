@@ -1,10 +1,10 @@
 package spm.view
 
-import kotlinx.html.*
-import kotlinx.html.js.div
+import kotlinx.html.div
+import kotlinx.html.form
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import spm.view.input.TextInput
 
@@ -19,7 +19,7 @@ class ChangePassword : Komponent() {
     var newPassword1 = ""
     var newPassword2 = ""
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-12") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-12") {
 
         form(classes = "form form-horizontal") {
 

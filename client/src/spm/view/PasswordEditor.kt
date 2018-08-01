@@ -1,9 +1,25 @@
 package spm.view
 
-import kotlinx.html.*
+import kotlinx.html.ButtonType
+import kotlinx.html.InputType
+import kotlinx.html.button
+import kotlinx.html.div
+import kotlinx.html.form
+import kotlinx.html.h5
+import kotlinx.html.id
+import kotlinx.html.input
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.label
+import kotlinx.html.span
+import kotlinx.html.table
+import kotlinx.html.td
+import kotlinx.html.textArea
+import kotlinx.html.th
+import kotlinx.html.title
+import kotlinx.html.tr
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -19,7 +35,6 @@ import spm.util.copyToClipboard
 import spm.view.button.PasswordButton
 import spm.view.input.SelectInput
 import spm.view.input.TextInput
-import spm.view.Modal
 
 /**
  * User: rnentjes
@@ -28,13 +43,13 @@ import spm.view.Modal
  */
 
 class RemoveHistoryEntryConfirm(val history: HistoryEntry) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: KompConsumer) = consumer.span {
         +"Are you sure you want to remove the history entry from '${history.from}' until '${history.until}?"
     }
 }
 
 class ClearHistoryConfirm : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: KompConsumer) = consumer.span {
         +"Are you sure you want to clear the history for this password?"
     }
 }
@@ -68,7 +83,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
         }
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-12") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-12") {
         val pwType = if (showPassword) {
             InputType.text
         } else {

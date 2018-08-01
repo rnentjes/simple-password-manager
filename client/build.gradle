@@ -1,6 +1,6 @@
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    compile "nl.astraeus:komp:0.0.7-SNAPSHOT"
+    compile "nl.astraeus:komp:0.1.0-SNAPSHOT"
 }
 
 sourceSets {
@@ -12,12 +12,9 @@ sourceSets {
 }
 
 compileKotlin2Js {
-    kotlinOptions.metaInfo = true
-
     kotlinOptions.sourceMap = true
     kotlinOptions.sourceMapEmbedSources = "always"
-    kotlinOptions.suppressWarnings = true
-    kotlinOptions.verbose = true
+
     kotlinOptions.outputFile = "build/kotlin-js-min/main/spm.js"
 }
 

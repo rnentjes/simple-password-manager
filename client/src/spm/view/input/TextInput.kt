@@ -1,10 +1,16 @@
 package spm.view.input
 
-import kotlinx.html.*
+import kotlinx.html.InputType
+import kotlinx.html.classes
+import kotlinx.html.div
+import kotlinx.html.id
+import kotlinx.html.input
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.label
+import kotlinx.html.span
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
 
 /**
@@ -26,7 +32,7 @@ class TextInput(
   var change: (Event) -> Unit = {}
 ): Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "form-group") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "form-group") {
         if (error.isNotBlank()) {
             classes += "has-error"
         }

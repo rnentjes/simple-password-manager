@@ -1,11 +1,19 @@
 package spm.view
 
-import kotlinx.html.*
+import kotlinx.html.ButtonType
+import kotlinx.html.InputType
+import kotlinx.html.button
+import kotlinx.html.div
+import kotlinx.html.form
+import kotlinx.html.id
+import kotlinx.html.input
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
+import kotlinx.html.label
+import kotlinx.html.span
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.model.Password
@@ -29,7 +37,7 @@ class PasswordGenerator(val password: Password) : Komponent() {
     var includeSpecial = true
     var generatedPassword = UserState.decryptPassword(password.encryptedPassword)
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-12") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-12") {
         form(classes = "form form-horizontal") {
             div(classes = "form-group") {
                 label(classes = "col-md-3") {

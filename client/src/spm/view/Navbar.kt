@@ -1,16 +1,26 @@
 package spm.view
 
-import kotlinx.html.*
-import kotlinx.html.js.nav
+import kotlinx.html.ButtonType
+import kotlinx.html.InputType
+import kotlinx.html.a
+import kotlinx.html.button
+import kotlinx.html.div
+import kotlinx.html.form
+import kotlinx.html.id
+import kotlinx.html.input
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.html.js.onSubmitFunction
+import kotlinx.html.li
+import kotlinx.html.nav
+import kotlinx.html.span
+import kotlinx.html.style
+import kotlinx.html.ul
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.state.UserState
-import spm.view.Modal
 
 /**
  * Created by rnentjes on 3-4-17.
@@ -52,7 +62,7 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
           })
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
+    override fun render(consumer: KompConsumer) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
             if (UserState.readOnly) {
                 style = "background-color: #fffdab"
