@@ -23,6 +23,7 @@ import kotlin.js.Date
 class PasswordOverviewRow(
   val password: Password,
   val container: Komponent,
+  val passwordOverview: Komponent,
   val showGroup: Boolean = false
 ) : Komponent() {
 

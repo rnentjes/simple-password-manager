@@ -23,78 +23,85 @@ import kotlin.browser.document
 
 class SearchResult(val container: Komponent) : Komponent() {
 
-    fun findPasswords(group: Group): ArrayList<Password> {
-        val result = ArrayList<Password>()
-        val searchValue = UserState.currentSearch.trim().toLowerCase()
+  fun findPasswords(group: Group): ArrayList<Password> {
+    val result = ArrayList<Password>()
+    val searchValue = UserState.currentSearch.trim().toLowerCase()
 
-        for (password in group.passwords) {
-            if (password.search(searchValue)) {
-                result.add(password)
-            }
-        }
-
-        for (child in group.children) {
-            result.addAll(findPasswords(child))
-        }
-
-        return result
+    for (password in group.passwords) {
+      if (password.search(searchValue)) {
+        result.add(password)
+      }
     }
 
-    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-9") {
-        val topGroup = UserState.topGroup
-        var searchResult = ArrayList<Password>()
-        if (topGroup != null) {
-            searchResult = findPasswords(topGroup)
-        }
-        div(classes = "row") {
-            div(classes = "col-md-6") {
-                h3 {
-                    // background-color: #f8f8f8;
-                    style = "text-align: center; padding: 10px; margin: 5px"
-
-                    + "Search result for '${UserState.currentSearch}'"
-                }
-            }
-        }
-        div(classes = "row") {
-            hr {}
-        }
-        div {
-            //id = "passwords_overview"
-            div(classes = "page-header") {
-                h4 {
-                    +"Found passwords"
-                }
-            }
-            div(classes = "row") {
-                table(classes = "table table-striped table-condensed table-hover") {
-                    tr {
-                        th { +"Group" }
-                        th { +"Title" }
-                        th { +"Url" }
-                        th { +"Username" }
-                        th { +"Hist" }
-                        th { +"" }
-                    }
-                    for (password in searchResult) {
-                        this@table.include(PasswordOverviewRow(password, container, true))
-                    }
-                }
-            }
-        }
+    for (child in group.children) {
+      result.addAll(findPasswords(child))
     }
 
-    fun copyToClipboard(text: String) {
-        val ta = document.createElement("textarea")
-        ta.innerHTML = text
+    return result
+  }
 
-        if (ta is HTMLTextAreaElement) {
-            val body = document.body ?: throw IllegalStateException("The body was not found!")
-
-            body.appendChild(ta)
-            ta.select()
-            document.execCommand("copy")
-            body.removeChild(ta)
-        }
+  override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-9") {
+    val topGroup = UserState.topGroup
+    var searchResult = ArrayList<Password>()
+    if (topGroup != null) {
+      searchResult = findPasswords(topGroup)
     }
+    div(classes = "row") {
+      div(classes = "col-md-6") {
+        h3 {
+          // background-color: #f8f8f8;
+          style = "text-align: center; padding: 10px; margin: 5px"
+
+          +"Search result for '${UserState.currentSearch}'"
+        }
+      }
+    }
+    div(classes = "row") {
+      hr {}
+    }
+    div {
+      //id = "passwords_overview"
+      div(classes = "page-header") {
+        h4 {
+          +"Found passwords"
+        }
+      }
+      div(classes = "row") {
+        table(classes = "table table-striped table-condensed table-hover") {
+          tr {
+            th { +"Group" }
+            th { +"Title" }
+            th { +"Url" }
+            th { +"Username" }
+            th { +"Hist" }
+            th { +"" }
+          }
+          for (password in searchResult) {
+            this@table.include(
+                PasswordOverviewRow(
+                    password,
+                    container,
+                    this@SearchResult,
+                    true
+                )
+            )
+          }
+        }
+      }
+    }
+  }
+
+  fun copyToClipboard(text: String) {
+    val ta = document.createElement("textarea")
+    ta.innerHTML = text
+
+    if (ta is HTMLTextAreaElement) {
+      val body = document.body ?: throw IllegalStateException("The body was not found!")
+
+      body.appendChild(ta)
+      ta.select()
+      document.execCommand("copy")
+      body.removeChild(ta)
+    }
+  }
 }

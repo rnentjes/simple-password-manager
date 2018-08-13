@@ -1,6 +1,7 @@
 package spm.model
 
 import spm.ws.Tokenizer
+import kotlin.js.Math.random
 
 /**
  * User: rnentjes
@@ -126,7 +127,17 @@ data class Group(
         return result
     }
 
-    companion object {
+    fun randomGroup(): Group? {
+        return if (children.isEmpty()) {
+            this
+        } else {
+            val index = (random() * children.size).toInt()
+
+            children[index]
+        }
+    }
+
+  companion object {
         private var lastId = 0L
 
         fun nextId(): Long {

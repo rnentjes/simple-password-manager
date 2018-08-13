@@ -4,9 +4,7 @@
     <facet type="kotlin-language" name="Kotlin">
       <configuration version="3" platform="JavaScript " useProjectSettings="false">
         <testOutputPath>$MODULE_DIR$/../../../client/build/classes/kotlin/test/client_test.js</testOutputPath>
-        <compilerSettings>
-          <option name="additionalArguments" value="-verbose" />
-        </compilerSettings>
+        <compilerSettings />
         <compilerArguments>
           <option name="outputFile" value="$MODULE_DIR$/../../../build/kotlin-js-min/main/spm.js" />
           <option name="noStdlib" value="true" />
@@ -23,7 +21,6 @@
           <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="suppressWarnings" value="true" />
         </compilerArguments>
       </configuration>
     </facet>
