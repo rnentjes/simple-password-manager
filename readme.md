@@ -1,7 +1,7 @@
 # Simple password manager
 
 Self hosted online password manager (needs a proxy for ssl). See a demo in action 
-[here](https://www.simple-password-manager.xyz)
+[here](https://www.simple-password-manager.nl)
 
 The hashed passphrase (SHA256 + PBKDF2) is used as the key to encrypt/decrypt 
 the password data on the client (with AES). There is no way for 
