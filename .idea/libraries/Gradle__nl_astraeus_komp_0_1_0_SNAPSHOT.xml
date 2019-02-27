@@ -2,6 +2,7 @@
   <library name="Gradle: nl.astraeus:komp:0.1.0-SNAPSHOT" type="kotlin.js">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus/komp/0.1.0-SNAPSHOT/19132dbf9f4aee79b90087f18bb1dae46990fc86/komp-0.1.0-SNAPSHOT.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus/komp/0.1.0-SNAPSHOT/9a3c2ce9cd6d19d64a2554c9dc630b2a9faf279f/komp-0.1.0-SNAPSHOT.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
