@@ -2,6 +2,7 @@ package spm.view.button
 
 import kotlinx.html.*
 import kotlinx.html.js.onClickFunction
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
@@ -21,7 +22,7 @@ class PasswordButton(
    val click: (Event) -> Unit = {}
 ): Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.button(classes = "btn $btnClass") {
+    override fun render(consumer: KompConsumer) = consumer.button(classes = "btn $btnClass") {
         type = ButtonType.button
         if (buttonStyle.isNotBlank()) {
             style = buttonStyle

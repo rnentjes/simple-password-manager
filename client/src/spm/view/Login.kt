@@ -5,6 +5,7 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.onKeyDownFunction
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -74,7 +75,7 @@ class Login : Komponent() {
         }
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "container") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "container") {
         div(classes = "row") {
             div(classes = "col-md-6 col-md-offset-3") {
                 h2 {
@@ -115,7 +116,7 @@ class Login : Komponent() {
                     }
                 }
 
-                div(classes = "row") { unsafe { +"&nbsp;" } }
+                div(classes = "row") { unsafe { +"<span>&nbsp;</span>" } }
 
                 if (activeTab == LoginTab.LOGIN) {
                     div(classes = "form-horizontal") {

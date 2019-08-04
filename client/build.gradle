@@ -1,6 +1,6 @@
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
-    compile "nl.astraeus:komp:0.0.7-SNAPSHOT"
+    compile "nl.astraeus:komp:0.1.5"
 }
 
 sourceSets {

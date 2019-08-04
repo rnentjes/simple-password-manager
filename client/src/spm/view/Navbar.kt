@@ -5,6 +5,7 @@ import kotlinx.html.js.nav
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
 import kotlinx.html.js.onSubmitFunction
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -52,7 +53,7 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
           })
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
+    override fun render(consumer: KompConsumer) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
             if (UserState.readOnly) {
                 style = "background-color: #fffdab"

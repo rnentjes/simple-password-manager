@@ -5,6 +5,7 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
+import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -22,20 +23,20 @@ import kotlin.browser.document
  */
 
 class RemovePasswordConfirm(val password: Password) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: KompConsumer) = consumer.span {
         +"Are you sure you want to remove password '${password.title}'?"
     }
 }
 
 class RemoveGroupConfirm(val groupName: String) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: KompConsumer) = consumer.span {
         +"Are you sure you want to remove group '$groupName'?"
     }
 }
 
 class GroupNameEdit(var groupname: String = "") : Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "") {
         form(classes = "form form-horizontal") {
             div(classes = "form-group") {
                 label(classes = "col-md-3") {
@@ -113,7 +114,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
         })
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
+    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-9") {
         val cg = UserState.currentGroup
         //console.log("Currentgroup: ", cg)
         if (cg != null) {

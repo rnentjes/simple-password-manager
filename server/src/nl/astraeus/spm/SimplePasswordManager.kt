@@ -92,7 +92,9 @@ fun main(args: Array<String>) {
 
     LockDao.emptyRows()
 
-    logger.info("Starting server on port ${Settings.port}.")
+    logger.info("Server should start in client directory.")
+    logger.info("Starting server in directory: ${File(".").canonicalPath}")
+    logger.info("Starting server on port: ${Settings.port}")
 
     server.start(Settings.connectionTimeout, false)
 }
