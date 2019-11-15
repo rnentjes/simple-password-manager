@@ -8,7 +8,7 @@
         </compilerSettings>
         <compilerArguments>
           <option name="destination" value="$MODULE_DIR$/../../../server/build/classes/kotlin/main" />
-          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-database-kotlin/2.0.3/68289a5d8ce502ca2d898b2b9f4aee71bf5b8890/simple-database-kotlin-2.0.3.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.41/e24bd38de28a326cce8b1f0d61e809e9a92dad6a/kotlin-stdlib-1.3.41.jar:/home/rnentjes/.m2/repository/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-jdbc-stats/1.5.6/43375e0adec902c30741ab66f3ff7a5f9a140de7/simple-jdbc-stats-1.5.6.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-database/2.0.3/fea076b695ac9190f6f62a5e9dca822bb4290247/simple-database-2.0.3.jar:/home/rnentjes/.m2/repository/nl/astraeus/web/simple-web/0.3/simple-web-0.3.jar:/home/rnentjes/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:/home/rnentjes/.m2/repository/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.nanohttpd/nanohttpd-websocket/2.3.1/f2cfb09cee12469ff64f0d698b13de19903bb4f7/nanohttpd-websocket-2.3.1.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.nanohttpd/nanohttpd/2.3.1/a8d54d1ca554a77f377eff6bf9e16ca8383c8f6c/nanohttpd-2.3.1.jar:/home/rnentjes/.m2/repository/com/h2database/h2/1.4.195/h2-1.4.195.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.41/2ecf4aa059427d7186312fd1736afedf7972e7f7/kotlin-stdlib-common-1.3.41.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar:/home/rnentjes/.m2/repository/nl/astraeus/template/very-simple-templates/1.3/very-simple-templates-1.3.jar" />
+          <option name="classpath" value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-database-kotlin/2.0.3/68289a5d8ce502ca2d898b2b9f4aee71bf5b8890/simple-database-kotlin-2.0.3.jar:/home/rnentjes/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib/1.3.50/kotlin-stdlib-1.3.50.jar:/home/rnentjes/.m2/repository/ch/qos/logback/logback-classic/1.2.3/logback-classic-1.2.3.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-jdbc-stats/1.5.6/43375e0adec902c30741ab66f3ff7a5f9a140de7/simple-jdbc-stats-1.5.6.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/nl.astraeus/simple-database/2.0.3/fea076b695ac9190f6f62a5e9dca822bb4290247/simple-database-2.0.3.jar:/home/rnentjes/.m2/repository/nl/astraeus/web/simple-web/0.3/simple-web-0.3.jar:/home/rnentjes/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar:/home/rnentjes/.m2/repository/ch/qos/logback/logback-core/1.2.3/logback-core-1.2.3.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.nanohttpd/nanohttpd-websocket/2.3.1/f2cfb09cee12469ff64f0d698b13de19903bb4f7/nanohttpd-websocket-2.3.1.jar:/home/rnentjes/.gradle/caches/modules-2/files-2.1/org.nanohttpd/nanohttpd/2.3.1/a8d54d1ca554a77f377eff6bf9e16ca8383c8f6c/nanohttpd-2.3.1.jar:/home/rnentjes/.m2/repository/com/h2database/h2/1.4.195/h2-1.4.195.jar:/home/rnentjes/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.3.50/kotlin-stdlib-common-1.3.50.jar:/home/rnentjes/.m2/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/home/rnentjes/.m2/repository/nl/astraeus/template/very-simple-templates/1.3/very-simple-templates-1.3.jar" />
           <option name="noStdlib" value="true" />
           <option name="noReflect" value="true" />
           <option name="moduleName" value="server" />
@@ -19,14 +19,14 @@
           </option>
           <option name="pluginClasspaths">
             <array>
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.3.41/8fb58b8954661de666e321478bf4178c18ce8018/kotlin-reflect-1.3.41.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/1.3.41/bcc3380041bbba171119c22d7024961b60da69e0/kotlin-script-runtime-1.3.41.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/1.3.41/f5200923717f821267ed450728e13680b9065f2e/kotlin-scripting-common-1.3.41.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/1.3.41/5fe615a9cf0ae74bd99f302c2cdc92556ea960ea/kotlin-scripting-jvm-1.3.41.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.3.41/2ecf4aa059427d7186312fd1736afedf7972e7f7/kotlin-stdlib-common-1.3.41.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.3.41/e24bd38de28a326cce8b1f0d61e809e9a92dad6a/kotlin-stdlib-1.3.41.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core/1.1.1/3d2b7321cdef9ebf9cb7729ea4f75a6f6457df86/kotlinx-coroutines-core-1.1.1.jar" />
-              <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/annotations/13.0/annotations-13.0.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-reflect/1.3.50/kotlin-reflect-1.3.50.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-script-runtime/1.3.50/kotlin-script-runtime-1.3.50.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-scripting-common/1.3.50/kotlin-scripting-common-1.3.50.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-scripting-jvm/1.3.50/kotlin-scripting-jvm-1.3.50.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib-common/1.3.50/kotlin-stdlib-common-1.3.50.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlin/kotlin-stdlib/1.3.50/kotlin-stdlib-1.3.50.jar" />
+              <option value="$MAVEN_REPOSITORY$/org/jetbrains/kotlinx/kotlinx-coroutines-core/1.1.1/kotlinx-coroutines-core-1.1.1.jar" />
             </array>
           </option>
           <option name="errors">
@@ -53,7 +53,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: nl.astraeus:simple-database-kotlin:2.0.3" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.41" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.50" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: nl.astraeus:simple-database:2.0.3" level="project" />
@@ -63,11 +63,11 @@
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.nanohttpd:nanohttpd-websocket:2.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.nanohttpd:nanohttpd:2.3.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: com.h2database:h2:1.4.195" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.41" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Gradle: nl.astraeus.template:very-simple-templates:1.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:simple-database-kotlin:2.0.3" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.41" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.50" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.6" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus:simple-database:2.0.3" level="project" />
@@ -77,13 +77,13 @@
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.nanohttpd:nanohttpd-websocket:2.3.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.nanohttpd:nanohttpd:2.3.1" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: com.h2database:h2:1.4.195" level="project" />
-    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.41" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Gradle: nl.astraeus.template:very-simple-templates:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: nl.astraeus:simple-database-kotlin:2.0.3" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test-junit:1.3.41" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test:1.3.41" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.41" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test-junit:1.3.50" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test:1.3.50" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.3.50" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: nl.astraeus:simple-jdbc-stats:1.5.6" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: nl.astraeus:simple-database:2.0.3" level="project" />
@@ -93,9 +93,9 @@
     <orderEntry type="library" scope="TEST" name="Gradle: org.nanohttpd:nanohttpd-websocket:2.3.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.nanohttpd:nanohttpd:2.3.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: com.h2database:h2:1.4.195" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test-annotations-common:1.3.41" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test-common:1.3.41" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.41" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test-annotations-common:1.3.50" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-test-common:1.3.50" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-common:1.3.50" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: org.jetbrains:annotations:13.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: nl.astraeus.template:very-simple-templates:1.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: junit:junit:4.12" level="project" />
