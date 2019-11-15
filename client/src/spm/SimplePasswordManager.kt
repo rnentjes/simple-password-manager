@@ -13,10 +13,13 @@ import kotlin.browser.document
 
 val mainComponent = Main()
 
-fun main(args: Array<String>) {
+fun main() {
     val splash = document.getElementById("splash")
 
     splash?.parentElement?.removeChild(splash)
+
+    Komponent.logRenderEvent = true
+    Komponent.logReplaceEvent = true
 
     Komponent.create(document.body!!, mainComponent)
 

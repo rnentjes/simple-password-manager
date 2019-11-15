@@ -4,7 +4,6 @@ import kotlinx.html.*
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
@@ -30,7 +29,7 @@ class PasswordGenerator(val password: Password) : Komponent() {
     var includeSpecial = true
     var generatedPassword = UserState.decryptPassword(password.encryptedPassword)
 
-    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-12") {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-12") {
         form(classes = "form form-horizontal") {
             div(classes = "form-group") {
                 label(classes = "col-md-3") {

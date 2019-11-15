@@ -4,7 +4,6 @@ import kotlinx.html.*
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -29,13 +28,13 @@ import spm.view.Modal
  */
 
 class RemoveHistoryEntryConfirm(val history: HistoryEntry) : Komponent() {
-    override fun render(consumer: KompConsumer) = consumer.span {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
         +"Are you sure you want to remove the history entry from '${history.from}' until '${history.until}?"
     }
 }
 
 class ClearHistoryConfirm : Komponent() {
-    override fun render(consumer: KompConsumer) = consumer.span {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
         +"Are you sure you want to clear the history for this password?"
     }
 }
@@ -69,7 +68,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
         }
     }
 
-    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-12") {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-12") {
         val pwType = if (showPassword) {
             InputType.text
         } else {

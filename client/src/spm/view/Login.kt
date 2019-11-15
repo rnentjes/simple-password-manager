@@ -5,15 +5,12 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onInputFunction
 import kotlinx.html.js.onKeyDownFunction
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
 import spm.state.UserState
 import spm.ws.WebSocketConnection
-import spm.view.Modal
-import spm.view.Modal.id
 
 /**
  * Created by rnentjes on 3-4-17.
@@ -75,7 +72,7 @@ class Login : Komponent() {
         }
     }
 
-    override fun render(consumer: KompConsumer) = consumer.div(classes = "container") {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "container") {
         div(classes = "row") {
             div(classes = "col-md-6 col-md-offset-3") {
                 h2 {

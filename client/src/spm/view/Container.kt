@@ -3,7 +3,6 @@ package spm.view
 import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.js.div
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -19,7 +18,7 @@ class Container(main: Komponent): Komponent() {
     val passwordOverview = PasswordOverview(this)
     val searchResult = SearchResult(this)
 
-    override fun render(consumer: KompConsumer) = consumer.div {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div {
         include(navbar)
 
         div(classes = "container") {

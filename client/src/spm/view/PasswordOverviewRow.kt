@@ -3,7 +3,6 @@ package spm.view
 import kotlinx.html.TagConsumer
 import kotlinx.html.td
 import kotlinx.html.tr
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -29,7 +28,7 @@ class PasswordOverviewRow(
   val showGroup: Boolean = false
 ) : Komponent() {
 
-    override fun render(consumer: KompConsumer) = consumer.tr {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.tr {
 
         if (showGroup) {
             trimmed(consumer, password.group.name, 8)

@@ -11,7 +11,6 @@ import kotlinx.html.js.onClickFunction
 import kotlinx.html.role
 import kotlinx.html.span
 import kotlinx.html.tabIndex
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -34,7 +33,7 @@ class ModalComponent(
   var ok: () -> Unit = {},
   var cancel: () -> Unit = {}) : Komponent() {
 
-    override fun render(consumer: KompConsumer) = consumer.div(classes = "modal fade") {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "modal fade") {
         id = modalId
         tabIndex = "1"
         role = "dialog"
@@ -87,7 +86,7 @@ class ModalComponent(
 
 class AlertComponent(val message: String): Komponent() {
 
-    override fun render(consumer: KompConsumer) = consumer.div {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div {
         println("render AlertComponent $message")
         span {
             + message
@@ -135,7 +134,7 @@ object Modal {
 
         Komponent.create(document.body ?: throw IllegalStateException("Document.body not found!"), modal)
 
-        attachHideEvent(id, Komponent)
+        attachHideEvent(id, modal)
 
         showModal(id)
 
@@ -158,12 +157,10 @@ object Modal {
         openModal(title, body, okText = confirmText, cancelText = denyText, disabledOk = disabledConfirm, ok = { confirm(); }, showCancel = showCancel)
     }
 
-    private fun attachHideEvent(id: String, context: dynamic) {
+    private fun attachHideEvent(id: String, komponent: Komponent) {
         js("""
             $('#' + id).on('hidden.bs.modal', function (event) {
-                var element = event.currentTarget
-                context.remove(element)
-                element.parentElement.removeChild(element)
+                komponent.remove()
             })
         """)
     }

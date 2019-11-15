@@ -3,7 +3,6 @@ package spm.util
 import kotlinx.html.TagConsumer
 import kotlinx.html.td
 import kotlinx.html.title
-import nl.astraeus.komp.KompConsumer
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLTextAreaElement
 import kotlin.browser.document
@@ -14,7 +13,7 @@ import kotlin.browser.document
  * Time: 17:44
  */
 
-fun trimmed(consumer: KompConsumer, str: String, length: Int) = consumer.td {
+fun trimmed(consumer: TagConsumer<HTMLElement>, str: String, length: Int) = consumer.td {
     if (str.length > length) {
         title = str
         + "${str.substring(0 until length - 3)}..."

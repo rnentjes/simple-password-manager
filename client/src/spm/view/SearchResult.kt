@@ -2,7 +2,6 @@ package spm.view
 
 import kotlinx.html.*
 import kotlinx.html.js.div
-import nl.astraeus.komp.KompConsumer
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -35,7 +34,7 @@ class SearchResult(val container: Komponent) : Komponent() {
         return result
     }
 
-    override fun render(consumer: KompConsumer) = consumer.div(classes = "col-md-9") {
+    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
         val topGroup = UserState.topGroup
         var searchResult = ArrayList<Password>()
         if (topGroup != null) {

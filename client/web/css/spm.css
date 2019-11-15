@@ -121,16 +121,17 @@ ul ul {
   padding-left: 20px; }
 
 li a {
-  padding: 2px 5px;
-  color: #444444; }
+  padding: 4px 8px;
+  color: #444444;
+}
 
 li a.selected {
   color: #444444;
-  background-color: #faf066;
-  border: 1px dotted #444444; }
+  background-color: #FFEB91;
+}
 
 li a.found {
-  background-color: #faf066; }
+  background-color: #FFEB91; }
 
 li > .badge {
   float: right;
