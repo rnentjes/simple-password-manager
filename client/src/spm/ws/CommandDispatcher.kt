@@ -17,9 +17,10 @@ object CommandDispatcher {
         commands.put("LOGIN", this::login)
         commands.put("ALERT", { ws, tk -> Modal.showAlert(tk.next(), tk.next()) })
         commands.put("UNLOCK", { ws, tk ->
-            UserState.readOnly = false
+            Modal.showAlert("Locking", "Editing user just logged out, logout en re-login to edit.")
+            //UserState.readOnly = false
 
-            mainComponent.refresh()
+            //mainComponent.refresh()
         })
         commands.put(
           "PASSWORD_UPDATED",
