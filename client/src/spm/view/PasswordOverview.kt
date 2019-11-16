@@ -5,16 +5,15 @@ import kotlinx.html.js.div
 import kotlinx.html.js.onBlurFunction
 import kotlinx.html.js.onClickFunction
 import kotlinx.html.js.onKeyUpFunction
+import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
-import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.HTMLTextAreaElement
 import org.w3c.dom.events.Event
-import spm.model.Group
 import spm.model.Password
 import spm.state.UserState
-import spm.view.Modal
+import spm.view.table.Table
 import kotlin.browser.document
 
 /**
@@ -22,20 +21,20 @@ import kotlin.browser.document
  */
 
 class RemovePasswordConfirm(val password: Password) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: HtmlBuilder) = consumer.span {
         +"Are you sure you want to remove password '${password.title}'?"
     }
 }
 
 class RemoveGroupConfirm(val groupName: String) : Komponent() {
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.span {
+    override fun render(consumer: HtmlBuilder) = consumer.span {
         +"Are you sure you want to remove group '$groupName'?"
     }
 }
 
 class GroupNameEdit(var groupname: String = "") : Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "") {
+    override fun render(consumer: HtmlBuilder) = consumer.div(classes = "") {
         form(classes = "form form-horizontal") {
             div(classes = "form-group") {
                 label(classes = "col-md-3") {
@@ -65,55 +64,7 @@ class GroupNameEdit(var groupname: String = "") : Komponent() {
 
 class PasswordOverview(val container: Komponent) : Komponent() {
 
-    fun rename(group: Group) {
-        val renameSubgroup = GroupNameEdit(group.name)
-        Modal.openModal("Add group", renameSubgroup, okText = "Save", okButtonClass = "btn-success", ok = {
-
-            if (renameSubgroup.groupname.isBlank()) {
-                //Notify.show("Group name can not be blank!", "error")
-                Modal.showAlert("Error", "Group name can not be blank")
-            } else {
-                group.name = renameSubgroup.groupname
-                UserState.saveData()
-                container.refresh()
-            }
-
-            true
-        })
-    }
-
-    fun addSubgroup(group: Group) {
-        val addSubgroup = GroupNameEdit()
-        Modal.openModal("Add group", addSubgroup, okText = "Save", okButtonClass = "btn-success", ok = {
-
-            if (addSubgroup.groupname.isBlank()) {
-                //Notify.show("Group name can not be blank!", "error")
-                Modal.showAlert("Error", "Group name can not be blank")
-            } else {
-                val newGroup = Group(addSubgroup.groupname, group)
-                group.children.add(newGroup)
-
-                UserState.saveData()
-                container.refresh()
-            }
-
-            true
-        })
-    }
-
-    fun removeGroup(group: Group) {
-        val removeSubGroup = RemoveGroupConfirm(group.name)
-        Modal.openModal("Remove group", removeSubGroup, okText = "Remove", okButtonClass = "btn-danger", ok = {
-            group.parent?.children?.remove(group)
-
-            UserState.saveData()
-            container.refresh()
-
-            true
-        })
-    }
-
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
+    override fun render(consumer: HtmlBuilder) = consumer.div(classes = "col-md-9") {
         val cg = UserState.currentGroup
         //console.log("Currentgroup: ", cg)
         if (cg != null) {
@@ -130,39 +81,10 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                 }
 
                 if (!UserState.readOnly) {
-                    div(classes = "col-md-6") {
-                        style = "margin-top: 20px;"
-                        a(classes = "btn btn-success btn-sm") {
-                            +"Rename"
-                            onClickFunction = {
-                                rename(cg)
-                            }
-                        }
-                        a(classes = "btn btn-primary btn-sm") {
-                            style = "margin-left:5px;"
-                            +"Add subgroup"
-                            onClickFunction = {
-                                addSubgroup(cg)
-                            }
-                        }
-                        a(classes = "btn btn-danger btn-sm") {
-                            style = "margin-left:5px;"
-                            if (cg.children.isNotEmpty() || cg.passwords.isNotEmpty() || cg.parent == null) {
-                                attributes["disabled"] = "disabled"
-                            }
-                            +"Remove group"
-                            onClickFunction = {
-                                if (cg.children.isEmpty() && cg.passwords.isEmpty() && cg.parent != null) {
-                                    removeGroup(cg)
-                                }
-                            }
-                        }
-                    }
+                    include(GroupCommands(cg, container))
                 }
             }
-            div(classes = "row") {
-                hr {}
-            }
+            hr {}
             div {
                 //id = "passwords_overview"
                 div(classes = "page-header") {
@@ -205,17 +127,8 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                     }
                 }
                 div(classes = "row") {
-                    table(classes = "table table-striped table-condensed table-hover") {
-                        tr {
-                            th { +"Title" }
-                            th { +"Url" }
-                            th { +"Username" }
-                            th { +"Hist" }
-                            th { +"" }
-                        }
-                        for (password in cg.passwords) {
-                            this@table.include(PasswordOverviewRow(password, container))
-                        }
+                    div(classes = "col-md-12") {
+                        passwordTable(cg.passwords, container)
                     }
                 }
             }

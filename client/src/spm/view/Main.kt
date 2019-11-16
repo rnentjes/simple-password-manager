@@ -3,6 +3,7 @@ package spm.view
 import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.js.div
+import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -16,6 +17,7 @@ import spm.ws.Tokenizer
  */
 
 class Main : Komponent() {
+    val navbar = Navbar(this, this)
 
     init {
         CommandDispatcher.setLoginListener(this::login)
@@ -30,10 +32,11 @@ class Main : Komponent() {
         refresh()
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div {
+    override fun render(consumer: HtmlBuilder) = consumer.div {
         if (!UserState.loggedIn) {
             include(Login())
         } else {
+            include(navbar)
             include(Container(this@Main))
         }
     }

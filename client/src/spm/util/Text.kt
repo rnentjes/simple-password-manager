@@ -1,5 +1,6 @@
 package spm.util
 
+import kotlinx.html.Tag
 import kotlinx.html.TagConsumer
 import kotlinx.html.td
 import kotlinx.html.title
@@ -13,12 +14,12 @@ import kotlin.browser.document
  * Time: 17:44
  */
 
-fun trimmed(consumer: TagConsumer<HTMLElement>, str: String, length: Int) = consumer.td {
+fun Tag.trimmed(str: String, length: Int) = consumer.td {
     if (str.length > length) {
         title = str
-        + "${str.substring(0 until length - 3)}..."
+        +"${str.substring(0 until length - 3)}..."
     } else {
-        + str
+        +str
     }
 }
 

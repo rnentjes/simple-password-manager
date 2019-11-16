@@ -2,6 +2,7 @@ package spm.view
 
 import kotlinx.html.*
 import kotlinx.html.js.div
+import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -34,7 +35,7 @@ class SearchResult(val container: Komponent) : Komponent() {
         return result
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-9") {
+    override fun render(consumer: HtmlBuilder) = consumer.div(classes = "col-md-9") {
         val topGroup = UserState.topGroup
         var searchResult = ArrayList<Password>()
         if (topGroup != null) {
@@ -50,9 +51,7 @@ class SearchResult(val container: Komponent) : Komponent() {
                 }
             }
         }
-        div(classes = "row") {
-            hr {}
-        }
+        hr {}
         div {
             //id = "passwords_overview"
             div(classes = "page-header") {
@@ -61,34 +60,10 @@ class SearchResult(val container: Komponent) : Komponent() {
                 }
             }
             div(classes = "row") {
-                table(classes = "table table-striped table-condensed table-hover") {
-                    tr {
-                        th { +"Group" }
-                        th { +"Title" }
-                        th { +"Url" }
-                        th { +"Username" }
-                        th { +"Hist" }
-                        th { +"" }
-                    }
-                    for (password in searchResult) {
-                        this@table.include(PasswordOverviewRow(password, container, true))
-                    }
+                div(classes = "col-md-12") {
+                  passwordTable(searchResult, container, true)
                 }
             }
-        }
-    }
-
-    fun copyToClipboard(text: String) {
-        val ta = document.createElement("textarea")
-        ta.innerHTML = text
-
-        if (ta is HTMLTextAreaElement) {
-            val body = document.body ?: throw IllegalStateException("The body was not found!")
-
-            body.appendChild(ta)
-            ta.select()
-            document.execCommand("copy")
-            body.removeChild(ta)
         }
     }
 }

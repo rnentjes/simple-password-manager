@@ -3,6 +3,7 @@ package spm.view
 import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.js.div
+import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -13,14 +14,11 @@ import spm.state.UserState
  */
 
 class Container(main: Komponent): Komponent() {
-    val navbar = Navbar(main, this)
     val groupOverview = GroupOverview(this)
     val passwordOverview = PasswordOverview(this)
     val searchResult = SearchResult(this)
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div {
-        include(navbar)
-
+    override fun render(consumer: HtmlBuilder) = consumer.div {
         div(classes = "container") {
             include(groupOverview)
             if (UserState.currentSearch.isBlank()) {

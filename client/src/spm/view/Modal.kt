@@ -11,6 +11,7 @@ import kotlinx.html.js.onClickFunction
 import kotlinx.html.role
 import kotlinx.html.span
 import kotlinx.html.tabIndex
+import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
 import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
@@ -33,7 +34,7 @@ class ModalComponent(
   var ok: () -> Unit = {},
   var cancel: () -> Unit = {}) : Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "modal fade") {
+    override fun render(consumer: HtmlBuilder) = consumer.div(classes = "modal fade") {
         id = modalId
         tabIndex = "1"
         role = "dialog"
@@ -86,7 +87,7 @@ class ModalComponent(
 
 class AlertComponent(val message: String): Komponent() {
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div {
+    override fun render(consumer: HtmlBuilder) = consumer.div {
         println("render AlertComponent $message")
         span {
             + message

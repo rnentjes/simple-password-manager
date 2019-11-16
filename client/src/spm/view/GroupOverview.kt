@@ -3,7 +3,9 @@ package spm.view
 import kotlinx.html.*
 import kotlinx.html.js.div
 import kotlinx.html.js.onClickFunction
+import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
+import nl.astraeus.komp.include
 import org.w3c.dom.HTMLElement
 import spm.model.Group
 import spm.state.UserState
@@ -12,6 +14,10 @@ import spm.state.UserState.topGroup
 /**
  * Created by rnentjes on 4-4-17.
  */
+
+fun HtmlBlockTag.groupOverview(container: Komponent) {
+    include(GroupOverview(container))
+}
 
 class GroupOverview(val container: Komponent) : Komponent() {
 
@@ -77,7 +83,7 @@ class GroupOverview(val container: Komponent) : Komponent() {
         }
     }
 
-    override fun render(consumer: TagConsumer<HTMLElement>) = consumer.div(classes = "col-md-3") {
+    override fun render(consumer: HtmlBuilder) = consumer.div(classes = "col-md-3") {
         div(classes = "row") {
             div(classes = "col-md-12") {
                 h4 {

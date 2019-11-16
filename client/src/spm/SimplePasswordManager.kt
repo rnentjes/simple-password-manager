@@ -18,8 +18,8 @@ fun main() {
 
     splash?.parentElement?.removeChild(splash)
 
-    Komponent.logRenderEvent = true
-    Komponent.logReplaceEvent = true
+    Komponent.logRenderEvent = false
+    Komponent.logReplaceEvent = false
 
     Komponent.create(document.body!!, mainComponent)
 
