@@ -100,10 +100,6 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
     override fun onClose(code: NanoWSD.WebSocketFrame.CloseCode?, reason: String?, initiatedByRemote: Boolean) {
         logger.info("Websocket close: $code")
 
-        user?.let {
-            unlock(this, Tokenizer(""))
-        }
-
         logout()
         connections.remove(this@SimpleWebSocket.id)
     }
@@ -126,7 +122,7 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
 
     fun logout() {
         user?.let {
-            userLock[it.id]?.compareAndSet(this, null)
+            unlock(this, Tokenizer(""))
         }
         user = null
     }

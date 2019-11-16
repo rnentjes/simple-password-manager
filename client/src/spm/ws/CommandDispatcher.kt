@@ -21,18 +21,18 @@ object CommandDispatcher {
     // BLOCKED, unable to get lock
     // UNLOCKED, nobody has lock
     init {
-        commands.put("LOGIN", this::login)
-        commands.put("ALERT") { ws, tk -> Modal.showAlert(tk.next(), tk.next()) }
-        commands.put("RESPONSE") { ws, tk ->
+        commands["LOGIN"] = this::login
+        commands["ALERT"] = { ws, tk -> Modal.showAlert(tk.next(), tk.next()) }
+        commands["RESPONSE"] = { ws, tk ->
             val callbackId = tk.next()
 
             callbacks[callbackId]?.invoke(ws, tk)
             callbacks.remove(callbackId)
         }
-        commands.put("PASSWORD_UPDATED") { ws, tk ->
+        commands["PASSWORD_UPDATED"] = { ws, tk ->
             Modal.showAlert("Success", "Password successfully updated!")
         }
-        commands.put("UNLOCKED") { ws, tk ->
+        commands["UNLOCKED"] = { ws, tk ->
             UserState.readOnly = false
             UserState.obtainedLock = false
 
@@ -44,7 +44,7 @@ object CommandDispatcher {
 
             mainComponent.refresh()
         }
-        commands.put("BLOCKED") { ws, tk ->
+        commands["BLOCKED"] = { ws, tk ->
             UserState.readOnly = true
             UserState.obtainedLock = false
 

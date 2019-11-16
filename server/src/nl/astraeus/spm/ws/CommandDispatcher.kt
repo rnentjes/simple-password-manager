@@ -89,14 +89,18 @@ fun unlock(ws: SimpleWebSocket, tk: Tokenizer) {
             for ((_, cws) in connections) {
                 if (cws.user == it) {
                     cws.user?.let { user ->
-                        val foundUser = UserDao.find(user.id)
-                        cws.send("UNLOCKED", foundUser.getData())
-                        cws.user = foundUser
+                        if (cws.isOpen) {
+                            val foundUser = UserDao.find(user.id)
+                            cws.send("UNLOCKED", foundUser.getData())
+                            cws.user = foundUser
+                        }
                     }
                 }
             }
         } else {
-            ws.send("BLOCKED")
+            if (ws.isOpen) {
+                ws.send("BLOCKED")
+            }
         }
     }
 }
