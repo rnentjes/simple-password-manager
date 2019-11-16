@@ -13,6 +13,7 @@ import spm.util.formatted
 import spm.util.trimmed
 import spm.view.button.PasswordButton
 import spm.view.table.Table
+import spm.ws.WebSocketConnection
 import kotlin.browser.window
 import kotlin.js.Date
 
@@ -58,6 +59,88 @@ class PasswordOverviewRow(
     val container: Komponent,
     val showGroup: Boolean = false
 ) : Komponent() {
+
+  private fun editPassword(password: Password) {
+    val editor = PasswordEditor(password.group, password)
+    Modal.openModal(
+        "Edit password",
+        editor,
+        /*modalSize = "modal-lg", */
+        ok = {
+          if (!UserState.readOnly) {
+            if (editor.validate()) {
+              if (editor.originalPassword != null) {
+                editor.originalPassword.title = editor.password.title
+                editor.originalPassword.website = editor.password.website
+                editor.originalPassword.username = editor.password.username
+                editor.originalPassword.description = editor.password.description
+
+                val originalGroup = editor.originalPassword.group
+                val newGroup = editor.password.group
+
+                if (originalGroup != newGroup) {
+                  originalGroup.passwords.remove(editor.originalPassword)
+                  newGroup.passwords.add(editor.originalPassword)
+                  editor.originalPassword.group = editor.password.group
+                }
+
+                if (editor.password.password1.isNotBlank()) {
+                  val oldPassword = UserState.decryptPassword(
+                      editor.originalPassword.encryptedPassword
+                  )
+                  if (oldPassword != editor.password.password1) {
+                    editor.originalPassword.archivePassword()
+                    editor.originalPassword.encryptedPassword = UserState.encryptPassword(
+                        editor.password.password1
+                    )
+                    editor.originalPassword.created = Date().formatted()
+                  }
+                } else {
+                  //console.log("blank pwd: ", password)
+                }
+              } else {
+                throw IllegalStateException("Edit button doesn't have original password!?")
+              }
+
+              UserState.saveData()
+              container.refresh()
+
+              true
+            } else {
+              false
+            }
+          } else {
+            true
+          }
+        }
+    )
+  }
+
+  private fun removePassword(password: Password) {
+    WebSocketConnection.lock { ws, tk ->
+      val response = tk.next()
+
+      if (response == "LOCKED") {
+        Modal.openModal(
+            "Remove password",
+            RemovePasswordConfirm(password),
+            okButtonClass = "btn-danger",
+            ok = {
+              password.delete()
+              UserState.saveData()
+              container.refresh()
+
+              true
+            },
+            cancel = {
+              ws.send("UNLOCK")
+            }
+        )
+      } else {
+        Modal.showAlert("Blocked", "Unable to obtain modify lock.")
+      }
+    }
+  }
 
   override fun render(consumer: HtmlBuilder) = consumer.tr {
 
@@ -139,54 +222,7 @@ class PasswordOverviewRow(
           btnClass = "btn-xs btn-success",
           buttonStyle = "margin-left: 5px;"
       ) {
-        val editor = PasswordEditor(password.group, password)
-        Modal.openModal("Edit password", editor, /*modalSize = "modal-lg", */ok = {
-          if (!UserState.readOnly) {
-            if (editor.validate()) {
-              if (editor.originalPassword != null) {
-                editor.originalPassword.title = editor.password.title
-                editor.originalPassword.website = editor.password.website
-                editor.originalPassword.username = editor.password.username
-                editor.originalPassword.description = editor.password.description
-
-                val originalGroup = editor.originalPassword.group
-                val newGroup = editor.password.group
-
-                if (originalGroup != newGroup) {
-                  originalGroup.passwords.remove(editor.originalPassword)
-                  newGroup.passwords.add(editor.originalPassword)
-                  editor.originalPassword.group = editor.password.group
-                }
-
-                if (editor.password.password1.isNotBlank()) {
-                  val oldPassword = UserState.decryptPassword(
-                      editor.originalPassword.encryptedPassword
-                  )
-                  if (oldPassword != editor.password.password1) {
-                    editor.originalPassword.archivePassword()
-                    editor.originalPassword.encryptedPassword = UserState.encryptPassword(
-                        editor.password.password1
-                    )
-                    editor.originalPassword.created = Date().formatted()
-                  }
-                } else {
-                  //console.log("blank pwd: ", password)
-                }
-              } else {
-                throw IllegalStateException("Edit button doesn't have original password!?")
-              }
-
-              UserState.saveData()
-              container.refresh()
-
-              true
-            } else {
-              false
-            }
-          } else {
-            true
-          }
-        })
+        editPassword(password)
       })
       if (!UserState.readOnly) {
         include(PasswordButton(
@@ -195,18 +231,7 @@ class PasswordOverviewRow(
             btnClass = "btn-xs btn-danger",
             buttonStyle = "margin-left: 5px;"
         ) {
-          Modal.openModal(
-              "Remove password",
-              RemovePasswordConfirm(password),
-              okButtonClass = "btn-danger",
-              ok = {
-                password.delete()
-                UserState.saveData()
-                container.refresh()
-
-                true
-              }
-          )
+          removePassword(password)
         })
       }
     }

@@ -8,8 +8,11 @@ import nl.astraeus.spm.model.User
 import nl.astraeus.spm.model.UserDao
 import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.web.SimpleWebSocket
+import nl.astraeus.spm.web.connections
+import nl.astraeus.spm.web.userLock
 import org.slf4j.LoggerFactory
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * Created by rnentjes on 7-6-16.
@@ -22,21 +25,11 @@ fun login(ws: SimpleWebSocket, tk: Tokenizer) {
     val found = UserDao.findByName(loginName)
 
     if (found != null && PasswordHash.validatePassword(passwordHash, found.password)) {
-        val locks = LockDao.findByUser(found.name)
-        val lock = LockDao.findByUserAndId(found.name, ws.id)
-
-        if (lock != null) {
-            ws.blocked = lock.locked
-        } else if (locks.isNotEmpty()) {
-            ws.blocked = true
-            LockDao.insert(Lock(found.name, ws.id, true))
-        } else {
-            ws.blocked = false
-            LockDao.insert(Lock(found.name, ws.id, false))
-        }
-
         ws.user = found
-        ws.send("LOGIN", found.encryptedKey, found.getData(), ws.blocked.toString())
+        ws.send("LOGIN", found.encryptedKey, found.getData(), (userLock[found.id]?.get() == ws).toString())
+        if (userLock[ws.user?.id]?.get() != null) {
+            ws.send("BLOCKED")
+        }
     } else {
         ws.sendAlert("Error", "Unable to authenticate user!")
     }
@@ -67,6 +60,48 @@ fun register(ws: SimpleWebSocket, tk: Tokenizer) {
     }
 }
 
+fun lock(ws: SimpleWebSocket, tk: Tokenizer) {
+    val responseId = tk.next()
+
+    ws.user?.let {
+        userLock.computeIfAbsent(it.id) {
+            _ -> AtomicReference(null)
+        }
+        if (userLock[it.id]?.compareAndSet(null, ws) == true) {
+            for ((_, cws) in connections) {
+                if (cws.user == it && cws != ws) {
+                    cws.send("BLOCKED")
+                }
+            }
+
+            ws.send("RESPONSE", responseId, "LOCKED")
+        } else {
+            ws.send("RESPONSE", responseId, "LOCK_FAILED")
+        }
+    }
+}
+
+fun unlock(ws: SimpleWebSocket, tk: Tokenizer) {
+    ws.user?.let {
+        userLock.computeIfAbsent(it.id) { _ ->
+            AtomicReference(null)
+        }
+        if (userLock[it.id]?.compareAndSet(ws, null) == true) {
+            for ((_, cws) in connections) {
+                if (cws.user == it) {
+                    cws.user?.let { user ->
+                        val foundUser = UserDao.find(user.id)
+                        cws.send("UNLOCKED", foundUser.getData())
+                        cws.user = foundUser
+                    }
+                }
+            }
+        } else {
+            ws.send("BLOCKED")
+        }
+    }
+}
+
 fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
     val user = ws.user ?: throw IllegalAccessException("No loggedin user found!")
     val data = tk.next()
@@ -76,6 +111,8 @@ fun saveData(ws: SimpleWebSocket, tk: Tokenizer) {
         user.updated = Date()
         UserDao.update(user)
     }
+
+    unlock(ws, tk)
 }
 
 fun updatePassword(ws: SimpleWebSocket, tk: Tokenizer) {
@@ -110,6 +147,8 @@ object CommandDispatcher {
     init {
         commands.put("OK", ::ok)
         commands.put("LOGIN", ::login)
+        commands.put("LOCK", ::lock)
+        commands.put("UNLOCK", ::unlock)
         commands.put("REGISTER", ::register)
         commands.put("SAVEDATA", ::saveData)
         commands.put("LOGOUT", ::logout)

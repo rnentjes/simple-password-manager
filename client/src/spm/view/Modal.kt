@@ -35,6 +35,7 @@ class ModalComponent(
   var cancel: () -> Unit = {}) : Komponent() {
 
     override fun render(consumer: HtmlBuilder) = consumer.div(classes = "modal fade") {
+        attributes["data-backkdrop"] = "true"
         id = modalId
         tabIndex = "1"
         role = "dialog"
@@ -49,6 +50,9 @@ class ModalComponent(
                         span {
                             attributes["aria-hidden"] = "true"
                             +"×"
+                        }
+                        onClickFunction = {
+                            cancel()
                         }
                     }
                     h4(classes = "modal-title") { + modalTitle }

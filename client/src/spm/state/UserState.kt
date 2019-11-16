@@ -29,6 +29,7 @@ object UserState {
     var currentSearch: String = ""
 
     var readOnly: Boolean = true
+    var obtainedLock: Boolean = false
 
     private var decryptPassphraseHash: String? = null
 
@@ -137,9 +138,9 @@ object UserState {
         } else {
             val tk = Tokenizer(decryptedData)
             topGroup = Group(tk)
-            while (!tk.done()) {
+            //while (!tk.done()) {
                 //println("!DONE: ${tk.next()}")
-            }
+            //}
         }
     }
 

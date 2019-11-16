@@ -6,63 +6,118 @@ import kotlinx.html.js.onClickFunction
 import kotlinx.html.style
 import nl.astraeus.komp.HtmlBuilder
 import nl.astraeus.komp.Komponent
+import spm.main
+import spm.mainComponent
 import spm.model.Group
 import spm.state.UserState
+import spm.ws.WebSocketConnection
 
 class GroupCommands(
     val cg: Group,
     val refreshContainer: Komponent
-): Komponent() {
+) : Komponent() {
 
   fun rename(group: Group) {
-    val renameSubgroup = GroupNameEdit(group.name)
-    Modal.openModal("Add group", renameSubgroup, okText = "Save", okButtonClass = "btn-success", ok = {
+    WebSocketConnection.lock { ws, tk ->
+      val response = tk.next()
 
-      if (renameSubgroup.groupname.isBlank()) {
-        //Notify.show("Group name can not be blank!", "error")
-        Modal.showAlert("Error", "Group name can not be blank")
+      if (response == "LOCKED") {
+        val renameSubgroup = GroupNameEdit(group.name)
+        UserState.readOnly = false
+        UserState.obtainedLock = true
+        mainComponent.refresh()
+        Modal.openModal(
+            "Add group",
+            renameSubgroup,
+            okText = "Save",
+            okButtonClass = "btn-success",
+            ok = {
+              if (renameSubgroup.groupname.isBlank()) {
+                //Notify.show("Group name can not be blank!", "error")
+                Modal.showAlert("Error", "Group name can not be blank")
+              } else {
+                group.name = renameSubgroup.groupname
+                UserState.saveData()
+                refreshContainer.refresh()
+              }
+
+              true
+            },
+            cancel = {
+              ws.send("UNLOCK")
+            }
+        )
       } else {
-        group.name = renameSubgroup.groupname
-        UserState.saveData()
-        refreshContainer.refresh()
+        Modal.showAlert("Blocked", "Unable to obtain modify lock.")
       }
-
-      true
-    })
+    }
   }
 
   fun addSubgroup(group: Group) {
-    val addSubgroup = GroupNameEdit()
-    Modal.openModal("Add group", addSubgroup, okText = "Save", okButtonClass = "btn-success", ok = {
+    WebSocketConnection.lock { ws, tk ->
+      val response = tk.next()
 
-      if (addSubgroup.groupname.isBlank()) {
-        //Notify.show("Group name can not be blank!", "error")
-        Modal.showAlert("Error", "Group name can not be blank")
+      if (response == "LOCKED") {
+        val addSubgroup = GroupNameEdit()
+        Modal.openModal(
+            "Add group",
+            addSubgroup,
+            okText = "Save",
+            okButtonClass = "btn-success",
+            ok = {
+              if (addSubgroup.groupname.isBlank()) {
+                //Notify.show("Group name can not be blank!", "error")
+                Modal.showAlert("Error", "Group name can not be blank")
+              } else {
+                val newGroup = Group(addSubgroup.groupname, group)
+                group.children.add(newGroup)
+
+                UserState.saveData()
+                refreshContainer.refresh()
+              }
+
+              true
+            },
+            cancel = {
+              ws.send("UNLOCK")
+            }
+        )
       } else {
-        val newGroup = Group(addSubgroup.groupname, group)
-        group.children.add(newGroup)
-
-        UserState.saveData()
-        refreshContainer.refresh()
+        Modal.showAlert("Blocked", "Unable to obtain modify lock.")
       }
-
-      true
-    })
+    }
   }
 
   fun removeGroup(group: Group) {
-    val removeSubGroup = RemoveGroupConfirm(group.name)
-    Modal.openModal("Remove group", removeSubGroup, okText = "Remove", okButtonClass = "btn-danger", ok = {
-      group.parent?.children?.remove(group)
+    WebSocketConnection.lock { ws, tk ->
+      val response = tk.next()
 
-      UserState.saveData()
-      refreshContainer.refresh()
+      if (response == "LOCKED") {
+        val removeSubGroup = RemoveGroupConfirm(group.name)
+        Modal.openModal(
+            "Remove group",
+            removeSubGroup,
+            okText = "Remove",
+            okButtonClass = "btn-danger",
+            ok = {
+              group.parent?.children?.remove(group)
 
-      true
-    })
+              UserState.saveData()
+              refreshContainer.refresh()
+
+              true
+            },
+            cancel = {
+              ws.send("UNLOCK")
+            }
+        )
+      } else {
+        Modal.showAlert("Blocked", "Unable to obtain modify lock.")
+      }
+    }
   }
 
-  override fun render(consumer: HtmlBuilder) =  consumer.div(classes = "col-md-6") {
+  override fun render(consumer: HtmlBuilder) = consumer.div(classes = "col-md-6") {
     style = "margin-top: 20px;"
     a(classes = "btn btn-success btn-sm") {
       +"Rename"

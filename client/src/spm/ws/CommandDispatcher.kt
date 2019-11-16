@@ -9,23 +9,47 @@ import spm.view.Modal
  * Created by rnentjes on 7-6-16.
  */
 
+private var nextCallbackId = 0L
+fun nextCallbackId(): Long = ++nextCallbackId;
+
 object CommandDispatcher {
     val commands: MutableMap<String, (ws: org.w3c.dom.WebSocket, tk: spm.ws.Tokenizer) -> Unit> = HashMap()
     var loginListener: ((WebSocket, Tokenizer) -> Unit)? = null
+    val callbacks: MutableMap<String, (WebSocket, Tokenizer) -> Unit> = mutableMapOf()
 
+    // LOCKED, obtained lock
+    // BLOCKED, unable to get lock
+    // UNLOCKED, nobody has lock
     init {
         commands.put("LOGIN", this::login)
-        commands.put("ALERT", { ws, tk -> Modal.showAlert(tk.next(), tk.next()) })
-        commands.put("UNLOCK", { ws, tk ->
-            Modal.showAlert("Locking", "Editing user just logged out, logout en re-login to edit.")
-            //UserState.readOnly = false
+        commands.put("ALERT") { ws, tk -> Modal.showAlert(tk.next(), tk.next()) }
+        commands.put("RESPONSE") { ws, tk ->
+            val callbackId = tk.next()
 
-            //mainComponent.refresh()
-        })
-        commands.put(
-          "PASSWORD_UPDATED",
-          { ws, tk -> Modal.showAlert("Success", "Password successfully updated!") }
-        )
+            callbacks[callbackId]?.invoke(ws, tk)
+            callbacks.remove(callbackId)
+        }
+        commands.put("PASSWORD_UPDATED") { ws, tk ->
+            Modal.showAlert("Success", "Password successfully updated!")
+        }
+        commands.put("UNLOCKED") { ws, tk ->
+            UserState.readOnly = false
+            UserState.obtainedLock = false
+
+            val currentGroupId: Long? = UserState.currentGroup?.id
+            UserState.loadData(tk.next())
+            currentGroupId?.let { id ->
+                UserState.currentGroup = UserState.topGroup?.findById(id)
+            }
+
+            mainComponent.refresh()
+        }
+        commands.put("BLOCKED") { ws, tk ->
+            UserState.readOnly = true
+            UserState.obtainedLock = false
+
+            mainComponent.refresh()
+        }
     }
 
     fun login(ws: WebSocket, tk: Tokenizer) {

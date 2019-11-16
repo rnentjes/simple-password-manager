@@ -7,11 +7,14 @@ import nl.astraeus.spm.model.LockDao
 import nl.astraeus.spm.model.User
 import nl.astraeus.spm.util.Tokenizer
 import nl.astraeus.spm.ws.CommandDispatcher
+import nl.astraeus.spm.ws.unlock
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.atomic.AtomicReference
 
 /**
  * User: rnentjes
@@ -74,6 +77,7 @@ class SimpleWebSocketServer(port: Int) : NanoWSD(port) {
 }
 
 val connections: MutableMap<Long, SimpleWebSocket> = ConcurrentHashMap()
+val userLock: MutableMap<Long, AtomicReference<SimpleWebSocket?>> = ConcurrentHashMap()
 var wsId: Long = 0
 
 fun getNextWSId(): Long {
@@ -86,7 +90,6 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
     val id = getNextWSId()
     val logger = LoggerFactory.getLogger(SimpleWebSocket::class.java)
     var user: User? = null
-    var blocked: Boolean = false
 
     override fun onOpen() {
         logger.info("Websocket opened")
@@ -96,6 +99,10 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
 
     override fun onClose(code: NanoWSD.WebSocketFrame.CloseCode?, reason: String?, initiatedByRemote: Boolean) {
         logger.info("Websocket close: $code")
+
+        user?.let {
+            unlock(this, Tokenizer(""))
+        }
 
         logout()
         connections.remove(this@SimpleWebSocket.id)
@@ -118,32 +125,9 @@ class SimpleWebSocket(server: SimpleWebSocketServer, handshake: NanoHTTPD.IHTTPS
     }
 
     fun logout() {
-        user?.apply {
-            val lock = LockDao.findByUserAndId(this.name, this@SimpleWebSocket.id)
-
-            if (lock != null) {
-                transaction {
-                    val locked = lock.locked
-
-                    LockDao.delete(lock)
-
-                    if (!locked) {
-                        val otherUsers = LockDao.where("user = ? ORDER BY wsId", this.name)
-
-                        if (otherUsers.isNotEmpty()) {
-                            val other = otherUsers[0]
-
-                            other.locked = false
-
-                            connections[other.wsId]?.send("UNLOCK")
-
-                            LockDao.update(other)
-                        }
-                    }
-                }
-            }
+        user?.let {
+            userLock[it.id]?.compareAndSet(this, null)
         }
-
         user = null
     }
 

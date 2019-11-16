@@ -55,7 +55,9 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
 
     override fun render(consumer: HtmlBuilder) = consumer.nav(classes="navbar navbar-default navbar-static-top") {
         div(classes = "container-fluid") {
-            if (UserState.readOnly) {
+            if (UserState.obtainedLock) {
+                style = "background-color: #ffabab"
+            } else if (UserState.readOnly) {
                 style = "background-color: #fffdab"
             }
             div(classes = "navbar-header") {

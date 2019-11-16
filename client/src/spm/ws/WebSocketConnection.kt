@@ -125,6 +125,12 @@ object WebSocketConnection {
         send(Tokenizer.tokenize(*args))
     }
 
+    fun lock(callback: (WebSocket, Tokenizer) -> Unit) {
+        val nextId = "${nextCallbackId()}"
+        CommandDispatcher.callbacks[nextId] = callback
+        send(Tokenizer.tokenize("LOCK", nextId))
+    }
+
     fun getLoadingDiv(): HTMLElement {
         var result = document.getElementById("loading_div")
 
