@@ -64,9 +64,8 @@ fun lock(ws: SimpleWebSocket, tk: Tokenizer) {
     val responseId = tk.next()
 
     ws.user?.let {
-        userLock.computeIfAbsent(it.id) {
-            _ -> AtomicReference(null)
-        }
+        userLock.putIfAbsent(it.id, AtomicReference(null))
+
         if (userLock[it.id]?.compareAndSet(null, ws) == true) {
             for ((_, cws) in connections) {
                 if (cws.user == it && cws != ws) {
@@ -145,14 +144,14 @@ object CommandDispatcher {
     val commands: MutableMap<String, (ws: SimpleWebSocket, tk: Tokenizer) -> Unit> = HashMap()
 
     init {
-        commands.put("OK", ::ok)
-        commands.put("LOGIN", ::login)
-        commands.put("LOCK", ::lock)
-        commands.put("UNLOCK", ::unlock)
-        commands.put("REGISTER", ::register)
-        commands.put("SAVEDATA", ::saveData)
-        commands.put("LOGOUT", ::logout)
-        commands.put("UPDATE_PASSWORD", ::updatePassword)
+        commands["OK"] = ::ok
+        commands["LOGIN"] = ::login
+        commands["LOCK"] = ::lock
+        commands["UNLOCK"] = ::unlock
+        commands["REGISTER"] = ::register
+        commands["SAVEDATA"] = ::saveData
+        commands["LOGOUT"] = ::logout
+        commands["UPDATE_PASSWORD"] = ::updatePassword
     }
 
     fun handle(ws: SimpleWebSocket, msg: String) {
