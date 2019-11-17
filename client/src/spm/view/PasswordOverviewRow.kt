@@ -61,6 +61,22 @@ class PasswordOverviewRow(
 ) : Komponent() {
 
   private fun editPassword(password: Password) {
+    if (UserState.readOnly) {
+      openEditPasswordModal(password)
+    } else {
+      WebSocketConnection.lock { ws, tk ->
+        val response = tk.next()
+
+        if (response == "LOCKED") {
+          openEditPasswordModal(password, true)
+        } else {
+          Modal.showAlert("Blocked", "Unable to obtain modify lock.")
+        }
+      }
+    }
+  }
+
+  private fun openEditPasswordModal(password: Password, locked: Boolean = false) {
     val editor = PasswordEditor(password.group, password)
     Modal.openModal(
         "Edit password",
@@ -102,8 +118,10 @@ class PasswordOverviewRow(
                 throw IllegalStateException("Edit button doesn't have original password!?")
               }
 
-              UserState.saveData()
-              container.refresh()
+              if (locked) {
+                UserState.saveData()
+                container.refresh()
+              }
 
               true
             } else {
@@ -112,6 +130,11 @@ class PasswordOverviewRow(
           } else {
             true
           }
+        },
+        cancel = if (locked) {
+          { WebSocketConnection.send("UNLOCK") }
+        } else {
+          {}
         }
     )
   }

@@ -267,24 +267,26 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                     }
                 }
                 div(classes = "col-md-2") {
-                    button(classes = "btn btn-danger btn-xs") {
-                        type = ButtonType.button
-                        attributes["aria-label"] = "Clear history"
-                        title = "Clear password history"
+                    if (!UserState.readOnly) {
+                        button(classes = "btn btn-danger btn-xs") {
+                            type = ButtonType.button
+                            attributes["aria-label"] = "Clear history"
+                            title = "Clear password history"
 
-                        +"Clear"
+                            +"Clear"
 
-                        onClickFunction = {
-                            Modal.openModal("Remove password",
-                              ClearHistoryConfirm(),
-                              okButtonClass = "btn-danger",
-                              ok = {
-                                  originalPassword.history.clear()
-                                  UserState.saveData()
-                                  refresh()
+                            onClickFunction = {
+                                Modal.openModal("Remove password",
+                                                ClearHistoryConfirm(),
+                                                okButtonClass = "btn-danger",
+                                                ok = {
+                                                    originalPassword.history.clear()
+                                                    UserState.saveData()
+                                                    refresh()
 
-                                  true
-                              })
+                                                    true
+                                                })
+                            }
                         }
                     }
                 }
@@ -323,22 +325,25 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
 
                                     Notify.show("Copied password to clipboard.", "success")
                                 })
-                                include(PasswordButton(
-                                  "remove",
-                                  tooltip = "Remove history entry",
-                                  btnClass = "btn-xs btn-danger",
-                                  buttonStyle = "margin-left: 5px;") {
-                                    Modal.openModal("Remove password",
-                                      RemoveHistoryEntryConfirm(history),
-                                      okButtonClass = "btn-danger",
-                                      ok = {
-                                          originalPassword.history.remove(history)
-                                          UserState.saveData()
-                                          refresh()
+                                if (!UserState.readOnly) {
+                                    include(PasswordButton(
+                                        "remove",
+                                        tooltip = "Remove history entry",
+                                        btnClass = "btn-xs btn-danger",
+                                        buttonStyle = "margin-left: 5px;"
+                                    ) {
+                                        Modal.openModal("Remove password",
+                                                        RemoveHistoryEntryConfirm(history),
+                                                        okButtonClass = "btn-danger",
+                                                        ok = {
+                                                            originalPassword.history.remove(history)
+                                                            UserState.saveData()
+                                                            refresh()
 
-                                          true
-                                      })
-                                })
+                                                            true
+                                                        })
+                                    })
+                                }
                             }
                         }
                     }
