@@ -11,16 +11,21 @@ pipeline {
                 sh './gradlew build'
             }
         }
-        stage('Tar') {
+        stage('Minify') {
             steps {
-                sh 'tar -czf simple-password-manager.tar.gz client/web server/build/distributions'
+                sh './gradlew minifyJs -b minimize.gradle'
+            }
+        }
+        stage('Zip') {
+            steps {
+                sh './gradlew zipDist'
             }
         }
     }
 
     post {
         success {
-            archiveArtifacts artifacts: 'simple-password-manager.tar.gz', fingerprint: true
+            archiveArtifacts artifacts: 'releases/*.zip', fingerprint: true
         }
     }
 }
