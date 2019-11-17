@@ -11,6 +11,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.Event
 import spm.state.UserState
+import spm.util.Version
 import spm.view.Modal
 
 /**
@@ -77,6 +78,9 @@ class Navbar(val main: Komponent, val container: Komponent): Komponent() {
                         +"Simple password manager (read only)"
                     } else {
                         +"Simple password manager"
+                    }
+                    span(classes = "version") {
+                        + Version.version
                     }
                 }
             }

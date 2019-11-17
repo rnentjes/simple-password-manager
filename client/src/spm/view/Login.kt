@@ -11,6 +11,7 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLInputElement
 import org.w3c.dom.events.KeyboardEvent
 import spm.state.UserState
+import spm.util.Version
 import spm.ws.WebSocketConnection
 
 /**
@@ -79,6 +80,9 @@ class Login : Komponent() {
                 h2 {
                     style = "text-align: center; margin-top: 40px;"
                     +"Simple password manager"
+                    span(classes = "version") {
+                        + Version.version
+                    }
                 }
             }
             div(classes = "col-md-6 col-md-offset-3") {
