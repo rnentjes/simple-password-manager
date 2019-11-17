@@ -52,6 +52,8 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
         } else {
             password = Password(group)
         }
+
+        style("nowrap", Styles.nowrap)
     }
 
     fun validate(): Boolean {
@@ -155,7 +157,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
 
                                 showPassword = !showPassword
 
-                                refresh()
+                                update()
                             }
                         } else {
                             span(classes = "glyphicon glyphicon-eye-close") {
@@ -166,7 +168,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
 
                                 showPassword = !showPassword
 
-                                refresh()
+                                update()
                             }
                         }
                     }
@@ -219,7 +221,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                                     password.password1 = generator.generatedPassword
                                     password.password2 = generator.generatedPassword
 
-                                    refresh()
+                                    update()
                                     true
                                 })
                             }
@@ -282,7 +284,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                                                 ok = {
                                                     originalPassword.history.clear()
                                                     UserState.saveData()
-                                                    refresh()
+                                                    update()
 
                                                     true
                                                 })
@@ -338,7 +340,7 @@ class PasswordEditor(val group: Group, val originalPassword: Password? = null) :
                                                         ok = {
                                                             originalPassword.history.remove(history)
                                                             UserState.saveData()
-                                                            refresh()
+                                                            update()
 
                                                             true
                                                         })

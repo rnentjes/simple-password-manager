@@ -25,7 +25,7 @@ class GroupCommands(
         val renameSubgroup = GroupNameEdit(group.name)
         UserState.readOnly = false
         UserState.obtainedLock = true
-        mainComponent.refresh()
+        mainComponent.update()
         Modal.openModal(
             "Add group",
             renameSubgroup,
@@ -38,7 +38,7 @@ class GroupCommands(
               } else {
                 group.name = renameSubgroup.groupname
                 UserState.saveData()
-                refreshContainer.refresh()
+                refreshContainer.update()
               }
 
               true
@@ -73,7 +73,7 @@ class GroupCommands(
                 group.children.add(newGroup)
 
                 UserState.saveData()
-                refreshContainer.refresh()
+                refreshContainer.update()
               }
 
               true
@@ -103,7 +103,7 @@ class GroupCommands(
               group.parent?.children?.remove(group)
 
               UserState.saveData()
-              refreshContainer.refresh()
+              refreshContainer.update()
 
               true
             },

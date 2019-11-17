@@ -4,7 +4,7 @@
   z-index: 999;
   height: 2em;
   width: 2em;
-  overflow: show;
+  overflow: visible;
   margin: auto;
   top: 0;
   left: 0;
@@ -125,14 +125,6 @@ li a {
   color: #444444;
 }
 
-li a.selected {
-  color: #444444;
-  background-color: #FFEB91;
-}
-
-li a.found {
-  background-color: #FFEB91; }
-
 li > .badge {
   float: right;
   margin-right: 12px;
@@ -151,12 +143,3 @@ li > .badge {
 .glyphicon-none :before {
   content: "\2122";
   color: transparent !important; }
-
-.nowrap {
-  white-space: nowrap;
-}
-
-.version {
-  margin-left: 15px;
-  font-size: 12px;
-}

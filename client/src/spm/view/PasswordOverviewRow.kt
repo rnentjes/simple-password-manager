@@ -60,6 +60,10 @@ class PasswordOverviewRow(
     val showGroup: Boolean = false
 ) : Komponent() {
 
+  init {
+    style("nowrap", Styles.nowrap)
+  }
+
   private fun editPassword(password: Password) {
     if (UserState.readOnly) {
       openEditPasswordModal(password)
@@ -120,7 +124,7 @@ class PasswordOverviewRow(
 
               if (locked) {
                 UserState.saveData()
-                container.refresh()
+                container.update()
               }
 
               true
@@ -151,7 +155,7 @@ class PasswordOverviewRow(
             ok = {
               password.delete()
               UserState.saveData()
-              container.refresh()
+              container.update()
 
               true
             },
@@ -189,7 +193,7 @@ class PasswordOverviewRow(
               ok = {
                 password.history.clear()
                 UserState.saveData()
-                refresh()
+                update()
 
                 true
               }

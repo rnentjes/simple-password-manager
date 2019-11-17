@@ -33,6 +33,13 @@ class Login : Komponent() {
     var activeTab = LoginTab.LOGIN
     var loginForm = LoginForm()
 
+    init {
+        style("version") {
+            marginLeft = "15px"
+            fontSize = "12px"
+        }
+    }
+
     fun login() {
         if (loginForm.login.isBlank()) {
             Modal.showAlert("Error", "Login name must be filled in!")
@@ -98,7 +105,7 @@ class Login : Komponent() {
                             onClickFunction = {
                                 activeTab = LoginTab.LOGIN
 
-                                refresh()
+                                update()
                             }
                         }
                     }
@@ -112,7 +119,7 @@ class Login : Komponent() {
                             onClickFunction = {
                                 activeTab = LoginTab.REGISTER
 
-                                refresh()
+                                update()
                             }
                         }
                     }

@@ -115,7 +115,7 @@ class PasswordGenerator(val password: Password) : Komponent() {
 
                             generatedPassword = generatePassword(passwordLength, includeNumbers, includeSpecial)
 
-                            refresh()
+                            update()
                         }
                     }
                 }

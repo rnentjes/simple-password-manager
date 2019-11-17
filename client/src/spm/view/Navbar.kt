@@ -20,19 +20,26 @@ import spm.view.Modal
 class Navbar(val main: Komponent, val container: Komponent): Komponent() {
     var search = UserState.currentSearch
 
+    init {
+        style("version") {
+            marginLeft = "15px"
+            fontSize = "12px"
+        }
+    }
+
     fun searchPasswords(e: Event) {
         e.preventDefault()
 
         UserState.currentSearch = search
         UserState.currentGroup = null
 
-        container.refresh()
+        container.update()
     }
 
     fun logout(e: Event) {
         UserState.logout()
 
-        main.refresh()
+        main.update()
     }
 
     fun settings(e: Event) {

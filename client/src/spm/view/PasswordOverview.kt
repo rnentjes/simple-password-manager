@@ -88,7 +88,7 @@ class PasswordOverview(val container: Komponent) : Komponent() {
                   throw IllegalStateException("Add button modal has existing password!?")
                 }
                 UserState.saveData()
-                container.refresh()
+                container.update()
 
                 true
               } else {

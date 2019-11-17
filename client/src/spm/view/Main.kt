@@ -29,7 +29,7 @@ class Main : Komponent() {
         UserState.loadData(tk.next())
         UserState.readOnly = tk.next() == "true"
 
-        refresh()
+        update()
     }
 
     override fun render(consumer: HtmlBuilder) = consumer.div {

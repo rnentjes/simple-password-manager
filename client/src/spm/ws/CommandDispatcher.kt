@@ -42,13 +42,13 @@ object CommandDispatcher {
                 UserState.currentGroup = UserState.topGroup?.findById(id)
             }
 
-            mainComponent.refresh()
+            mainComponent.update()
         }
         commands["BLOCKED"] = { ws, tk ->
             UserState.readOnly = true
             UserState.obtainedLock = false
 
-            mainComponent.refresh()
+            mainComponent.update()
         }
     }
 

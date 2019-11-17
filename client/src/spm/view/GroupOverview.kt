@@ -22,6 +22,11 @@ fun HtmlBlockTag.groupOverview(container: Komponent) {
 
 class GroupOverview(val container: Komponent) : Komponent() {
 
+  init {
+    style("selected", Styles.selected)
+    style("found", Styles.found)
+  }
+
   private fun createGroup(consumer: TagConsumer<HTMLElement>, topGroup: Group, group: Group) {
     consumer.ul(classes = "tree") {
       li {
@@ -71,7 +76,7 @@ class GroupOverview(val container: Komponent) : Komponent() {
             UserState.currentGroup = group
             UserState.currentSearch = ""
 
-            container.refresh()
+            container.update()
           }
 
         }
