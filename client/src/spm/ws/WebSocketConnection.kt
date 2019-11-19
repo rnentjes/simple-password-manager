@@ -9,6 +9,7 @@ import org.w3c.dom.WebSocket
 import org.w3c.dom.events.Event
 import spm.state.UserState
 import spm.view.Modal
+import spm.view.RemovePasswordConfirm
 import kotlin.browser.document
 import kotlin.browser.window
 

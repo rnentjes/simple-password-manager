@@ -170,6 +170,32 @@ class PasswordOverviewRow(
     }
   }
 
+  private fun removeHistory(password: Password) {
+    WebSocketConnection.lock { ws, tk ->
+      val response = tk.next()
+
+      if (response == "LOCKED") {
+        Modal.openModal(
+            "Remove password",
+            ClearHistoryConfirm(),
+            okButtonClass = "btn-danger",
+            ok = {
+              password.history.clear()
+              UserState.saveData()
+              update()
+
+              true
+            },
+            cancel = {
+              ws.send("UNLOCK")
+            }
+        )
+      } else {
+        Modal.showAlert("Blocked", "Unable to obtain modify lock.")
+      }
+    }
+  }
+
   override fun render(consumer: HtmlBuilder) = consumer.tr {
 
     if (showGroup) {
@@ -187,18 +213,7 @@ class PasswordOverviewRow(
             tooltip = "Clear history",
             btnClass = "btn-xs btn-danger"
         ) {
-          Modal.openModal(
-              "Remove password",
-              ClearHistoryConfirm(),
-              okButtonClass = "btn-danger",
-              ok = {
-                password.history.clear()
-                UserState.saveData()
-                update()
-
-                true
-              }
-          )
+          removeHistory(password)
         })
       }
     }
