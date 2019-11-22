@@ -4,7 +4,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath "com.eriwen:gradle-js-plugin:1.12.1"
+    classpath files("lib/gradle-js-plugin-2.14.2-SNAPSHOT.jar")
   }
 }
 
