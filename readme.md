@@ -30,6 +30,7 @@ to the server.
 
 ## How to run
 
+### Manual java
 Download the latest zip, extract it and run the jar file:
 
 ```
@@ -44,6 +45,10 @@ The application will create a data directory in the current directory where it w
 This is the file you need to backup (when the application is not running).
 
 You can also use another database by changing the properties. The application will try to create the database on first use.
+
+### Docker
+
+Take a look at [this repo](https://github.com/achaiah/simple-pass-mngr-docker) from [@achaiah](https://github.com/achaiah) to find docker instructions.
 
 ## Settings
 
